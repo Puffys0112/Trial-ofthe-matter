@@ -5,6 +5,44 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MediSeal Quality Week — Escape Room</title>
   <style>
+    /* ── Login Screen ── */
+    #login-screen {
+      position: fixed; inset: 0; z-index: 500;
+      background: var(--bg);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; padding: 20px;
+    }
+    .login-card {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 10px; padding: 32px 36px;
+      width: 100%; max-width: 400px; text-align: center;
+    }
+    .login-logo    { font-size: 2.5rem; margin-bottom: 8px; }
+    .login-company { color: var(--accent); font-size: 0.68rem; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 3px; }
+    .login-title   { font-size: 1.4rem; font-weight: bold; color: var(--text); margin-bottom: 2px; }
+    .login-sub     { font-size: 0.72rem; color: var(--dim); letter-spacing: 2px; margin-bottom: 22px; }
+    .lf { text-align: left; margin-bottom: 14px; }
+    .lf label { display: block; font-size: 0.7rem; color: var(--dim); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 5px; }
+    .lf select, .lf input {
+      width: 100%; background: var(--bg); border: 1px solid var(--border);
+      color: var(--text); padding: 9px 12px; border-radius: 4px;
+      font-family: inherit; font-size: 0.88rem; outline: none;
+    }
+    .lf select:focus, .lf input:focus { border-color: var(--accent); }
+    .login-submit { width: 100%; padding: 10px; font-size: 0.88rem; margin-top: 4px; }
+    #login-error  { color: var(--danger); font-size: 0.78rem; min-height: 20px; margin-bottom: 8px; }
+    .login-links  { margin-top: 14px; font-size: 0.74rem; color: var(--dim); }
+    .login-links a { color: var(--accent); text-decoration: none; margin: 0 6px; }
+    .login-links a:hover { text-decoration: underline; }
+    /* ── Already played screen ── */
+    #already-played-screen {
+      position: fixed; inset: 0; z-index: 500;
+      background: var(--bg); display: none;
+      flex-direction: column; align-items: center; justify-content: center; padding: 20px;
+    }
+    #already-played-screen.show { display: flex; }
+  </style>
+  <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
@@ -333,12 +371,55 @@
 </head>
 <body>
 
+<!-- ═══════════════ LOGIN SCREEN ═══════════════ -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">🏭</div>
+    <div class="login-company">MediSeal Manufacturing Ltd.</div>
+    <div class="login-title">QUALITY WEEK</div>
+    <div class="login-sub">GROUP LOGIN</div>
+    <div id="login-error"></div>
+    <div class="lf">
+      <label>Select Your Group</label>
+      <select id="group-select"><option value="">Loading groups…</option></select>
+    </div>
+    <div class="lf">
+      <label>Group PIN</label>
+      <input type="password" id="group-pin" placeholder="Enter your group PIN" maxlength="10" />
+    </div>
+    <button class="btn primary login-submit" id="login-btn">LOGIN &amp; ENTER FACILITY</button>
+    <div class="login-links">
+      <a href="/admin.html" target="_blank">📊 Leaderboard</a>
+      &nbsp;|&nbsp;
+      <a href="#" id="demo-link">▶ Demo Mode (no score)</a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ ALREADY PLAYED ═══════════════ -->
+<div id="already-played-screen">
+  <div class="login-card">
+    <div class="login-logo">✅</div>
+    <div class="login-company">MediSeal Manufacturing Ltd.</div>
+    <div class="login-title">ALREADY COMPLETED</div>
+    <div class="login-sub" style="margin-bottom:18px">YOUR GROUP HAS PLAYED</div>
+    <p style="color:var(--dim);font-size:0.85rem;margin-bottom:20px;line-height:1.7;">
+      Your group has already completed the Quality Week escape room.<br>
+      Each group can only play once. Check the leaderboard to see your score!
+    </p>
+    <a href="/admin.html" target="_blank" class="btn success" style="display:block;text-align:center;padding:10px;text-decoration:none;">
+      📊 View Leaderboard
+    </a>
+  </div>
+</div>
+
 <!-- ═══════════════ START SCREEN ═══════════════ -->
 <div id="startscreen">
   <div class="start-logo">🏭</div>
   <div class="start-company">MediSeal Manufacturing Ltd.</div>
   <div class="start-title">QUALITY WEEK</div>
   <div class="start-sub">ESCAPE ROOM — INTERNAL AUDIT SIMULATION</div>
+  <div id="group-greeting" style="font-size:0.82rem;color:var(--accent2);margin-bottom:10px;letter-spacing:1px;"></div>
 
   <div class="start-card">
     <h3>Situation Briefing</h3>
@@ -442,9 +523,9 @@
   <div id="end-title">Audit Passed!</div>
   <div id="end-msg">You completed all quality checks.</div>
   <div id="end-stats"></div>
-  <button class="btn success" onclick="location.reload()" style="font-size:0.9rem;padding:10px 28px;">
-    Run Again
-  </button>
+  <a href="/admin.html" target="_blank" class="btn success" style="font-size:0.9rem;padding:10px 28px;text-decoration:none;">
+    📊 View Leaderboard
+  </a>
 </div>
 
 <!-- ═══════════════ SCRIPT ═══════════════ -->
@@ -455,16 +536,117 @@
 // STATE
 // ────────────────────────────────────────────────
 const S = {
-  room:        'receiving',
-  inventory:   [],
+  room:         'receiving',
+  inventory:    [],
   selectedItem: null,
-  notes:       [],
-  solved:      {},   // puzzle id → true
-  found:       {},   // item/thing id → true
-  puzzlesDone: 0,
-  timerSec:    25 * 60,
-  timerInt:    null,
-  over:        false,
+  notes:        [],
+  solved:       {},
+  found:        {},
+  puzzlesDone:  0,
+  timerSec:     25 * 60,
+  timerInt:     null,
+  over:         false,
+  wrongAnswers: 0,
+  authToken:    null,
+  groupName:    null,
+  demoMode:     false,
+  finalScore:   null,
+};
+
+// ────────────────────────────────────────────────
+// API HELPERS
+// ────────────────────────────────────────────────
+async function apiCall(path, method = 'GET', body = null) {
+  const opts = {
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(S.authToken ? { 'X-Auth-Token': S.authToken } : {}),
+    },
+  };
+  if (body) opts.body = JSON.stringify(body);
+  const res  = await fetch(path, opts);
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Request failed');
+  return data;
+}
+
+function calcScore(won) {
+  return Math.max(0,
+    (S.puzzlesDone * 200) +
+    (won ? S.timerSec * 2 : 0) -
+    (S.wrongAnswers * 10)
+  );
+}
+
+async function submitScore(won) {
+  if (S.demoMode || !S.authToken) return null;
+  try {
+    const res = await apiCall('/api/game/submit', 'POST', {
+      puzzlesDone:      S.puzzlesDone,
+      secondsRemaining: S.timerSec,
+      wrongAnswers:     S.wrongAnswers,
+      won,
+    });
+    return res.score;
+  } catch { return null; }
+}
+
+// ────────────────────────────────────────────────
+// LOGIN INIT
+// ────────────────────────────────────────────────
+async function initLogin() {
+  const sel = document.getElementById('group-select');
+  const err = document.getElementById('login-error');
+  try {
+    const groups = await apiCall('/api/groups');
+    sel.innerHTML = '<option value="">— Select your group —</option>' +
+      groups.map(g => `<option value="${g.id}">${g.name}</option>`).join('');
+  } catch {
+    sel.innerHTML = '<option value="">Server unavailable — use Demo Mode</option>';
+    err.textContent = 'Could not reach the server. Use Demo Mode to test the game without scoring.';
+  }
+}
+
+function showStartScreen(groupName) {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('startscreen').style.display  = 'flex';
+  if (groupName) {
+    document.getElementById('group-greeting').textContent = `Logged in as: ${groupName}`;
+  }
+}
+
+document.getElementById('login-btn').onclick = async () => {
+  const groupId = document.getElementById('group-select').value;
+  const pin     = document.getElementById('group-pin').value.trim();
+  const err     = document.getElementById('login-error');
+  err.textContent = '';
+  if (!groupId) { err.textContent = 'Please select your group.'; return; }
+  if (!pin)     { err.textContent = 'Please enter your PIN.'; return; }
+  try {
+    const res = await apiCall('/api/login', 'POST', { groupId, pin });
+    if (res.status === 'completed') {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('already-played-screen').classList.add('show');
+      return;
+    }
+    S.authToken  = res.token;
+    S.groupName  = res.groupName;
+    showStartScreen(res.groupName);
+  } catch (e) {
+    err.textContent = e.message || 'Login failed. Check your PIN and try again.';
+  }
+};
+
+document.getElementById('group-pin').onkeydown = e => {
+  if (e.key === 'Enter') document.getElementById('login-btn').click();
+};
+
+document.getElementById('demo-link').onclick = e => {
+  e.preventDefault();
+  S.demoMode  = true;
+  S.groupName = 'Demo';
+  showStartScreen('Demo Mode');
 };
 
 // ────────────────────────────────────────────────
@@ -673,6 +855,7 @@ function handleAction(action) {
             log('📚 Quality Fact: GMP requires every incoming material to have an approved CoA on file before it can be used in production.', 'fact');
             renderNav();
           } else {
+            S.wrongAnswers++;
             setFeedback('Lot number not recognised. Check the Certificate of Analysis.', 'bad');
           }
         },
@@ -732,6 +915,7 @@ function handleAction(action) {
                     log('📚 Quality Fact: A "Re" value means if you find EXACTLY that many defects, you still REJECT — the accept number is strictly less than Re.', 'fact');
                     renderRoom();
                   } else if (val2.trim().toUpperCase() === 'ACCEPT') {
+                    S.wrongAnswers++;
                     setFeedback('Incorrect. With 4 defects and Re=4, the batch must be REJECTED. Re means reject if ≥ 4 defects — 4 equals 4.', 'bad');
                   } else {
                     setFeedback('Type exactly ACCEPT or REJECT.', 'bad');
@@ -740,6 +924,7 @@ function handleAction(action) {
               });
             }, 900);
           } else if (!isNaN(n)) {
+            S.wrongAnswers++;
             setFeedback(`You counted ${n}, but that doesn't match the inspection record. Look at the tray more carefully.`, 'bad');
           } else {
             setFeedback('Please enter a number.', 'bad');
@@ -780,6 +965,7 @@ function handleAction(action) {
             log('📚 Quality Fact: ISO 13485 §8.3 requires documented procedures for controlling nonconforming product. An NCR creates the traceable quality record.', 'fact');
             renderNav();
           } else {
+            S.wrongAnswers++;
             setFeedback('Batch number not found. Check your notes — the batch number was stated in the scenario briefing.', 'bad');
           }
         },
@@ -820,6 +1006,7 @@ function handleAction(action) {
             log('📚 Quality Fact: ISO/IEC 17025 requires all measurement instruments in QC labs to be calibrated against traceable reference standards at defined intervals.', 'fact');
             renderNav();
           } else {
+            S.wrongAnswers++;
             setFeedback('Incorrect. Correction = standard − reading = 12.50 − 12.53 = ?', 'bad');
           }
         },
@@ -893,12 +1080,14 @@ function handleAction(action) {
                     renderRoom();
                     renderNav();
                   } else {
-                    setFeedback('Incorrect clause. CAPA sits in the "Improvement" section of ISO 13485. Think about section 8.', 'bad');
+                    S.wrongAnswers++;
+                  setFeedback('Incorrect clause. CAPA sits in the "Improvement" section of ISO 13485. Think about section 8.', 'bad');
                   }
                 },
               });
             }, 800);
           } else {
+            S.wrongAnswers++;
             setFeedback('Incorrect. Review the maintenance log and SOP rack findings — the physical evidence points to a specific material change.', 'bad');
           }
         },
@@ -947,6 +1136,7 @@ function handleAction(action) {
             closeModal();
             triggerWin();
           } else {
+            S.wrongAnswers++;
             setFeedback('Incorrect PIN. Check the Batch Release Certificate in your inventory.', 'bad');
           }
         },
@@ -1175,13 +1365,22 @@ function startTimer() {
 // ────────────────────────────────────────────────
 // WIN / LOSE
 // ────────────────────────────────────────────────
-function triggerWin() {
+async function triggerWin() {
   S.over = true;
   clearInterval(S.timerInt);
-  const elapsed  = 25 * 60 - S.timerSec;
-  const em = String(Math.floor(elapsed / 60)).padStart(2,'0');
-  const es = String(elapsed % 60).padStart(2,'0');
+
+  const score     = calcScore(true);
+  S.finalScore    = score;
+  const elapsed   = 25 * 60 - S.timerSec;
+  const em        = String(Math.floor(elapsed / 60)).padStart(2,'0');
+  const es        = String(elapsed % 60).padStart(2,'0');
   const remaining = document.getElementById('timer').textContent;
+
+  const timeBonusPts  = S.timerSec * 2;
+  const penaltyPts    = S.wrongAnswers * 10;
+
+  // Submit to server
+  const serverScore = await submitScore(true);
 
   const end = document.getElementById('endscreen');
   end.className = 'show win';
@@ -1190,36 +1389,51 @@ function triggerWin() {
   document.getElementById('end-msg').textContent   =
     'Exceptional work. You completed every quality check, identified the root cause, raised the CAPA, and correctly dispositioned the nonconforming batch — protecting patients and keeping MediSeal\'s GMP licence intact.';
   document.getElementById('end-stats').innerHTML = `
-    <strong style="color:var(--accent);">Your Quality Record</strong><br>
-    Time taken: <span>${em}:${es}</span><br>
-    Time remaining: <span>${remaining}</span><br>
-    Puzzles completed: <span>6 / 6</span><br>
-    Batch correctly dispositioned: <span>REJECT ✓</span><br>
-    Root cause identified: <span>Wrong lubricant grade ✓</span><br>
-    ISO 13485 clause applied: <span>§8.5 ✓</span>
+    <strong style="color:var(--accent);">Score Breakdown — ${S.demoMode ? 'DEMO' : (S.groupName || '')}</strong><br>
+    Puzzles completed (6 × 200): <span>+${(6*200).toLocaleString()} pts</span><br>
+    Time remaining bonus (${S.timerSec}s × 2): <span>+${timeBonusPts.toLocaleString()} pts</span><br>
+    Wrong answer penalty (${S.wrongAnswers} × −10): <span style="color:var(--danger);">−${penaltyPts.toLocaleString()} pts</span><br>
+    <strong>TOTAL SCORE: <span style="font-size:1.2rem;color:var(--accent2);">${score.toLocaleString()}</span> pts</strong><br><br>
+    Time taken: <span>${em}:${es}</span> &nbsp;|&nbsp; Time remaining: <span>${remaining}</span><br>
+    ${!S.demoMode ? `<a href="/admin.html" target="_blank" style="color:var(--accent);">📊 View Leaderboard</a>` : '<em style="color:var(--dim);">Demo mode — score not saved</em>'}
   `;
 }
 
-function triggerLose() {
+async function triggerLose() {
   S.over = true;
+  clearInterval(S.timerInt);
+
+  const score  = calcScore(false);
+  S.finalScore = score;
+  const penaltyPts = S.wrongAnswers * 10;
+
+  await submitScore(false);
+
   const end = document.getElementById('endscreen');
   end.className = 'show lose';
   document.getElementById('end-icon').textContent  = '⏱️';
   document.getElementById('end-title').textContent = 'LOCKDOWN — AUDIT FAILED';
   document.getElementById('end-msg').textContent   =
-    'Time expired. The FDA auditor arrived before you completed the quality checks. Batch BN-2024-3200\'s status is unresolved. The facility has been placed under a regulatory hold. Quality is everyone\'s responsibility — every second counts.';
+    "Time expired. The FDA auditor arrived before you completed the quality checks. Batch BN-2024-3200's status is unresolved. The facility has been placed under a regulatory hold.";
   document.getElementById('end-stats').innerHTML = `
-    <strong style="color:var(--danger);">Audit Outcome</strong><br>
-    Puzzles completed: <span>${S.puzzlesDone} / 6</span><br>
-    Batch disposition: <span>INCOMPLETE</span><br>
-    Regulatory status: <span style="color:var(--danger);">HOLD</span>
+    <strong style="color:var(--danger);">Score Breakdown — ${S.demoMode ? 'DEMO' : (S.groupName || '')}</strong><br>
+    Puzzles completed (${S.puzzlesDone} × 200): <span>+${(S.puzzlesDone*200).toLocaleString()} pts</span><br>
+    Time bonus (game not completed): <span>0 pts</span><br>
+    Wrong answer penalty (${S.wrongAnswers} × −10): <span style="color:var(--danger);">−${penaltyPts.toLocaleString()} pts</span><br>
+    <strong>TOTAL SCORE: <span style="font-size:1.2rem;color:var(--danger);">${score.toLocaleString()}</span> pts</strong><br><br>
+    Puzzles done: <span>${S.puzzlesDone} / 6</span> &nbsp;|&nbsp; Batch disposition: <span>INCOMPLETE</span><br>
+    ${!S.demoMode ? `<a href="/admin.html" target="_blank" style="color:var(--accent);">📊 View Leaderboard</a>` : '<em style="color:var(--dim);">Demo mode — score not saved</em>'}
   `;
 }
 
 // ────────────────────────────────────────────────
 // INIT
 // ────────────────────────────────────────────────
-document.getElementById('start-btn').onclick = () => {
+document.getElementById('start-btn').onclick = async () => {
+  // Mark game as started on server (non-blocking)
+  if (S.authToken && !S.demoMode) {
+    try { await apiCall('/api/game/start', 'POST', {}); } catch {}
+  }
   document.getElementById('startscreen').style.display = 'none';
   renderRoom();
   renderInventory();
@@ -1230,6 +1444,9 @@ document.getElementById('start-btn').onclick = () => {
   log('Facility lockdown in effect. Report to the Receiving Dock and begin your investigation.', 'warn');
   log('Tip: Examine every hotspot. Collect items. Read your notes. The answers are all here.', 'hint');
 };
+
+// Init login when page loads
+initLogin();
 </script>
 </body>
 </html>

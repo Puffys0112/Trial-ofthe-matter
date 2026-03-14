@@ -1,0 +1,53 @@
+{
+  "adminPassword": "QWAdmin2024",
+  "groups": [
+    {
+      "id": "g1", "name": "Group 1", "pin": "1001",
+      "status": "pending", "score": null, "puzzlesDone": 0,
+      "wrongAnswers": 0, "won": false, "secondsRemaining": 0,
+      "completedAt": null, "startedAt": null
+    },
+    {
+      "id": "g2", "name": "Group 2", "pin": "1002",
+      "status": "pending", "score": null, "puzzlesDone": 0,
+      "wrongAnswers": 0, "won": false, "secondsRemaining": 0,
+      "completedAt": null, "startedAt": null
+    },
+    {
+      "id": "g3", "name": "Group 3", "pin": "1003",
+      "status": "pending", "score": null, "puzzlesDone": 0,
+      "wrongAnswers": 0, "won": false, "secondsRemaining": 0,
+      "completedAt": null, "startedAt": null
+    },
+    {
+      "id": "g4", "name": "Group 4", "pin": "1004",
+      "status": "pending", "score": null, "puzzlesDone": 0,
+      "wrongAnswers": 0, "won": false, "secondsRemaining": 0,
+      "completedAt": null, "startedAt": null
+    },
+    {
+      "id": "g5", "name": "Group 5", "pin": "1005",
+      "status": "pending", "score": null, "puzzlesDone": 0,
+      "wrongAnswers": 0, "won": false, "secondsRemaining": 0,
+      "completedAt": null, "startedAt": null
+    },
+    {
+      "id": "g6", "name": "Group 6", "pin": "1006",
+      "status": "pending", "score": null, "puzzlesDone": 0,
+      "wrongAnswers": 0, "won": false, "secondsRemaining": 0,
+      "completedAt": null, "startedAt": null
+    },
+    {
+      "id": "g7", "name": "Group 7", "pin": "1007",
+      "status": "pending", "score": null, "puzzlesDone": 0,
+      "wrongAnswers": 0, "won": false, "secondsRemaining": 0,
+      "completedAt": null, "startedAt": null
+    },
+    {
+      "id": "g8", "name": "Group 8", "pin": "1008",
+      "status": "pending", "score": null, "puzzlesDone": 0,
+      "wrongAnswers": 0, "won": false, "secondsRemaining": 0,
+      "completedAt": null, "startedAt": null
+    }
+  ]
+}

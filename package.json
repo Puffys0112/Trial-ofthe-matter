@@ -1,0 +1,12 @@
+{
+  "name": "mediseal-quality-week-game",
+  "version": "1.0.0",
+  "description": "MediSeal Quality Week Escape Room — Multiplayer Group Game",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
