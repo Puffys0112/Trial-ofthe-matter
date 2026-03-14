@@ -3,20 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Escape Room: The Abandoned Laboratory</title>
+  <title>MediSeal Quality Week — Escape Room</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #0a0a0f;
-      --panel: #12121a;
-      --border: #2a2a3a;
-      --accent: #00d4aa;
-      --accent2: #ff6b35;
-      --text: #c8c8d8;
-      --dim: #6a6a8a;
-      --danger: #ff4455;
-      --glow: 0 0 12px rgba(0,212,170,0.4);
+      --bg:       #08090f;
+      --panel:    #10111c;
+      --border:   #1e2236;
+      --accent:   #0099e6;
+      --accent2:  #00c97a;
+      --warn:     #f5a623;
+      --danger:   #e63946;
+      --text:     #c4cee0;
+      --dim:      #5a6480;
+      --glow:     0 0 14px rgba(0,153,230,0.35);
+      --glow2:    0 0 14px rgba(0,201,122,0.35);
     }
 
     body {
@@ -27,1023 +29,1207 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 20px;
+      padding: 16px;
     }
 
     /* ── Header ── */
     header {
-      width: 100%;
-      max-width: 900px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 0;
+      width: 100%; max-width: 960px;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 0 12px;
       border-bottom: 1px solid var(--border);
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
-    header h1 { font-size: 1.1rem; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; }
-    #timer {
-      font-size: 1.4rem;
-      color: var(--accent2);
-      font-weight: bold;
-      letter-spacing: 2px;
-    }
-    #timer.urgent { color: var(--danger); animation: pulse 0.8s infinite; }
-    @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+    .header-left { display: flex; flex-direction: column; gap: 2px; }
+    .header-left h1 { font-size: 0.95rem; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; }
+    .header-left span { font-size: 0.7rem; color: var(--dim); letter-spacing: 1px; }
+    #timer { font-size: 1.5rem; color: var(--warn); font-weight: bold; letter-spacing: 3px; }
+    #timer.urgent { color: var(--danger); animation: blink 0.7s infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
     /* ── Layout ── */
     #game-layout {
-      width: 100%;
-      max-width: 900px;
+      width: 100%; max-width: 960px;
       display: grid;
-      grid-template-columns: 1fr 260px;
-      grid-template-rows: auto 1fr;
+      grid-template-columns: 1fr 270px;
       gap: 12px;
     }
 
-    /* ── Room view ── */
+    /* ── Room Panel ── */
     #room-container {
-      grid-column: 1;
-      grid-row: 1 / 3;
       background: var(--panel);
       border: 1px solid var(--border);
       border-radius: 8px;
       overflow: hidden;
-      min-height: 520px;
-      display: flex;
-      flex-direction: column;
+      display: flex; flex-direction: column;
+      min-height: 540px;
     }
+
     #room-art {
-      height: 220px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 4rem;
-      background: linear-gradient(135deg, #0d0d1a 0%, #1a1a2e 100%);
+      height: 200px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 5rem;
+      background: linear-gradient(160deg, #0a0c18 0%, #0d1428 60%, #081420 100%);
       border-bottom: 1px solid var(--border);
-      position: relative;
+      position: relative; overflow: hidden;
+      flex-shrink: 0;
+    }
+    #room-art::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(
+        90deg, transparent, transparent 40px,
+        rgba(0,153,230,0.03) 40px, rgba(0,153,230,0.03) 41px
+      ), repeating-linear-gradient(
+        0deg, transparent, transparent 40px,
+        rgba(0,153,230,0.03) 40px, rgba(0,153,230,0.03) 41px
+      );
+    }
+    #room-badge {
+      position: absolute; top: 10px; right: 12px;
+      font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--accent); opacity: 0.7;
+      font-family: 'Courier New', monospace;
+    }
+
+    #room-title { padding: 14px 18px 4px; font-size: 1.05rem; color: var(--accent); letter-spacing: 1px; }
+    #room-desc  { padding: 0 18px 12px; color: var(--dim); font-size: 0.82rem; line-height: 1.65; }
+
+    /* ── Progress Bar ── */
+    #progress-bar-wrap {
+      margin: 0 18px 10px;
+      background: var(--border);
+      border-radius: 3px;
+      height: 4px;
       overflow: hidden;
     }
-    #room-art::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        0deg, transparent, transparent 2px, rgba(0,212,170,0.02) 2px, rgba(0,212,170,0.02) 4px
-      );
-      pointer-events: none;
-    }
-    #room-title {
-      padding: 14px 18px 6px;
-      font-size: 1.1rem;
-      color: var(--accent);
-      letter-spacing: 1px;
-    }
-    #room-desc {
-      padding: 0 18px 14px;
-      color: var(--dim);
-      font-size: 0.85rem;
-      line-height: 1.6;
-    }
+    #progress-bar { height: 100%; background: var(--accent2); width: 0%; transition: width 0.5s; }
+    #progress-label { padding: 0 18px 6px; font-size: 0.68rem; color: var(--dim); }
 
     /* ── Hotspots ── */
     #hotspots {
-      padding: 10px 18px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
+      padding: 8px 18px 12px;
+      display: flex; flex-wrap: wrap; gap: 7px;
       border-top: 1px solid var(--border);
     }
     .hotspot-btn {
       background: transparent;
       border: 1px solid var(--border);
       color: var(--text);
-      padding: 6px 14px;
+      padding: 6px 13px;
       border-radius: 4px;
       cursor: pointer;
-      font-family: inherit;
-      font-size: 0.8rem;
-      transition: all 0.2s;
+      font-family: inherit; font-size: 0.78rem;
+      transition: all 0.18s;
     }
     .hotspot-btn:hover { border-color: var(--accent); color: var(--accent); box-shadow: var(--glow); }
 
-    /* ── Log ── */
+    /* ── Activity Log ── */
     #log {
       flex: 1;
-      padding: 12px 18px;
+      padding: 10px 18px;
       overflow-y: auto;
       border-top: 1px solid var(--border);
-      max-height: 160px;
-      font-size: 0.8rem;
-      line-height: 1.7;
+      max-height: 175px;
+      font-size: 0.78rem; line-height: 1.75;
     }
-    #log p { margin-bottom: 4px; }
-    #log p.info { color: var(--text); }
-    #log p.success { color: var(--accent); }
-    #log p.fail { color: var(--danger); }
-    #log p.hint { color: var(--accent2); }
+    #log p { margin-bottom: 2px; }
+    #log p.info    { color: var(--text); }
+    #log p.success { color: var(--accent2); }
+    #log p.fail    { color: var(--danger); }
+    #log p.warn    { color: var(--warn); }
+    #log p.hint    { color: var(--accent); }
+    #log p.fact    { color: #aa88ff; font-style: italic; }
 
-    /* ── Side panel ── */
-    #side-panel { grid-column: 2; display: flex; flex-direction: column; gap: 12px; }
+    /* ── Side Panel ── */
+    #side-panel { display: flex; flex-direction: column; gap: 10px; }
 
     .panel-box {
       background: var(--panel);
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 14px;
+      padding: 13px;
     }
     .panel-box h3 {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      color: var(--dim);
-      margin-bottom: 10px;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 6px;
+      font-size: 0.68rem; text-transform: uppercase; letter-spacing: 2px;
+      color: var(--dim); margin-bottom: 9px;
+      border-bottom: 1px solid var(--border); padding-bottom: 6px;
     }
 
     /* ── Inventory ── */
     #inventory-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 6px;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;
     }
     .inv-slot {
       aspect-ratio: 1;
       background: var(--bg);
       border: 1px solid var(--border);
       border-radius: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.4rem;
-      cursor: default;
-      position: relative;
-      transition: border-color 0.2s;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+      position: relative; transition: border-color 0.18s;
     }
-    .inv-slot.filled { border-color: var(--dim); cursor: pointer; }
+    .inv-slot.filled { cursor: pointer; border-color: #2a3050; }
     .inv-slot.filled:hover { border-color: var(--accent); box-shadow: var(--glow); }
-    .inv-slot.selected { border-color: var(--accent); box-shadow: var(--glow); background: rgba(0,212,170,0.08); }
-    .inv-slot[title]:hover::after {
-      content: attr(title);
-      position: absolute;
-      bottom: calc(100% + 4px);
-      left: 50%;
+    .inv-slot.selected { border-color: var(--accent); background: rgba(0,153,230,0.08); box-shadow: var(--glow); }
+    .inv-slot[data-tip]:hover::after {
+      content: attr(data-tip);
+      position: absolute; bottom: calc(100% + 5px); left: 50%;
       transform: translateX(-50%);
-      background: #1e1e2e;
-      border: 1px solid var(--border);
-      padding: 3px 8px;
-      border-radius: 3px;
-      font-size: 0.7rem;
-      white-space: nowrap;
-      pointer-events: none;
-      z-index: 99;
-      color: var(--text);
+      background: #1a1e30; border: 1px solid var(--border);
+      padding: 4px 9px; border-radius: 3px;
+      font-size: 0.68rem; white-space: nowrap;
+      pointer-events: none; z-index: 100; color: var(--text);
     }
 
     /* ── Notes ── */
-    #notes-box { font-size: 0.78rem; color: var(--dim); line-height: 1.6; min-height: 60px; }
-    #notes-box p { margin-bottom: 4px; }
+    #notes-content {
+      font-size: 0.75rem; color: var(--dim); line-height: 1.7;
+      max-height: 160px; overflow-y: auto;
+    }
+    #notes-content p { margin-bottom: 3px; padding-left: 8px; border-left: 2px solid var(--border); }
+    #notes-content p.important { border-left-color: var(--accent2); color: var(--text); }
 
-    /* ── Room nav ── */
+    /* ── Room Nav ── */
     #room-nav { display: flex; flex-direction: column; gap: 6px; }
     .nav-btn {
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 8px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-family: inherit;
-      font-size: 0.8rem;
-      text-align: left;
-      transition: all 0.2s;
+      background: transparent; border: 1px solid var(--border); color: var(--text);
+      padding: 7px 10px; border-radius: 4px; cursor: pointer;
+      font-family: inherit; font-size: 0.78rem; text-align: left;
+      transition: all 0.18s;
     }
     .nav-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); box-shadow: var(--glow); }
-    .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
     .nav-btn.locked::before { content: '🔒 '; }
-    .nav-btn.unlocked::before { content: '➜ '; color: var(--accent); }
+    .nav-btn.open::before   { content: '▶ '; color: var(--accent); }
+    #current-location {
+      font-size: 0.68rem; color: var(--accent2); margin-top: 8px;
+      border-top: 1px solid var(--border); padding-top: 8px;
+    }
 
-    /* ── Modal overlay ── */
+    /* ── Modal ── */
     #modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.85);
-      z-index: 200;
-      align-items: center;
-      justify-content: center;
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.88); z-index: 200;
+      align-items: center; justify-content: center;
     }
     #modal-overlay.show { display: flex; }
     #modal-box {
       background: var(--panel);
       border: 1px solid var(--accent);
       border-radius: 10px;
-      padding: 28px 32px;
-      max-width: 460px;
-      width: 90%;
-      box-shadow: 0 0 40px rgba(0,212,170,0.25);
+      padding: 26px 30px;
+      max-width: 520px; width: 92%;
+      box-shadow: 0 0 50px rgba(0,153,230,0.2);
+      max-height: 90vh; overflow-y: auto;
     }
-    #modal-box h2 { color: var(--accent); font-size: 1rem; margin-bottom: 14px; letter-spacing: 1px; }
-    #modal-box p { font-size: 0.85rem; color: var(--text); line-height: 1.7; margin-bottom: 14px; }
-    #modal-box input[type=text], #modal-box input[type=number] {
-      width: 100%;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 8px 12px;
-      border-radius: 4px;
-      font-family: inherit;
-      font-size: 0.9rem;
-      margin-bottom: 12px;
-      outline: none;
+    #modal-tag {
+      font-size: 0.62rem; text-transform: uppercase; letter-spacing: 2px;
+      color: var(--accent); margin-bottom: 8px;
     }
-    #modal-box input:focus { border-color: var(--accent); box-shadow: var(--glow); }
-    .modal-btns { display: flex; gap: 8px; justify-content: flex-end; margin-top: 4px; }
+    #modal-title { font-size: 1rem; color: var(--text); margin-bottom: 12px; }
+    #modal-body  { font-size: 0.82rem; color: var(--dim); line-height: 1.75; margin-bottom: 14px; }
+    #modal-body strong { color: var(--text); }
+    #modal-body .grid-wrap { margin: 12px 0; }
+    #modal-body .defect-row { display: flex; flex-wrap: wrap; gap: 3px; margin-bottom: 3px; }
+    .plunger-unit {
+      width: 20px; height: 20px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 8px; font-weight: bold;
+    }
+    .plunger-ok   { background: #0d2a1e; border: 1.5px solid #00c97a; color: #00c97a; }
+    .plunger-fail { background: #2a0d10; border: 1.5px solid #e63946; color: #e63946; }
+
+    #modal-choices { display: none; flex-direction: column; gap: 7px; margin-bottom: 12px; }
+    .choice-btn {
+      background: transparent; border: 1px solid var(--border);
+      color: var(--text); padding: 9px 14px;
+      border-radius: 4px; cursor: pointer;
+      font-family: inherit; font-size: 0.8rem; text-align: left;
+      transition: all 0.18s; width: 100%;
+    }
+    .choice-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    #modal-input {
+      width: 100%; background: var(--bg); border: 1px solid var(--border);
+      color: var(--text); padding: 8px 12px;
+      border-radius: 4px; font-family: inherit; font-size: 0.88rem;
+      margin-bottom: 10px; outline: none;
+    }
+    #modal-input:focus { border-color: var(--accent); box-shadow: var(--glow); }
+    #modal-feedback { font-size: 0.78rem; min-height: 18px; margin-bottom: 8px; }
+    #modal-feedback.ok  { color: var(--accent2); }
+    #modal-feedback.bad { color: var(--danger); }
+    .modal-btns { display: flex; gap: 8px; justify-content: flex-end; }
     .btn {
-      padding: 8px 18px;
-      border: 1px solid var(--border);
-      background: transparent;
-      color: var(--text);
-      border-radius: 4px;
-      cursor: pointer;
-      font-family: inherit;
-      font-size: 0.8rem;
-      transition: all 0.2s;
+      padding: 7px 16px; border: 1px solid var(--border);
+      background: transparent; color: var(--text);
+      border-radius: 4px; cursor: pointer;
+      font-family: inherit; font-size: 0.78rem; transition: all 0.18s;
     }
     .btn.primary { border-color: var(--accent); color: var(--accent); }
-    .btn.primary:hover { background: rgba(0,212,170,0.12); box-shadow: var(--glow); }
+    .btn.primary:hover { background: rgba(0,153,230,0.1); box-shadow: var(--glow); }
     .btn:hover:not(.primary) { border-color: var(--dim); }
-    #modal-feedback { font-size: 0.8rem; min-height: 20px; margin-bottom: 6px; }
-    #modal-feedback.ok { color: var(--accent); }
-    #modal-feedback.bad { color: var(--danger); }
+    .btn.success { border-color: var(--accent2); color: var(--accent2); }
+    .btn.success:hover { background: rgba(0,201,122,0.1); box-shadow: var(--glow2); }
 
-    /* ── Win / Lose screens ── */
+    /* ── End Screen ── */
     #endscreen {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: var(--bg);
-      z-index: 300;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      text-align: center;
-      padding: 20px;
+      display: none; position: fixed; inset: 0;
+      background: var(--bg); z-index: 300;
+      flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 24px;
     }
     #endscreen.show { display: flex; }
-    #endscreen .end-icon { font-size: 5rem; margin-bottom: 20px; }
-    #endscreen h2 { font-size: 2rem; margin-bottom: 12px; }
-    #endscreen.win h2 { color: var(--accent); }
-    #endscreen.lose h2 { color: var(--danger); }
-    #endscreen p { color: var(--dim); font-size: 0.9rem; margin-bottom: 24px; }
-    #end-time { font-size: 1.2rem; color: var(--accent2); margin-bottom: 24px; }
+    .end-icon { font-size: 4.5rem; margin-bottom: 18px; }
+    #end-title { font-size: 1.8rem; margin-bottom: 10px; }
+    #endscreen.win  #end-title { color: var(--accent2); }
+    #endscreen.lose #end-title { color: var(--danger); }
+    #end-msg { color: var(--dim); font-size: 0.88rem; max-width: 520px; line-height: 1.7; margin-bottom: 16px; }
+    #end-stats {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 8px; padding: 16px 24px;
+      margin-bottom: 22px; font-size: 0.82rem; line-height: 2;
+      min-width: 280px; text-align: left;
+    }
+    #end-stats span { color: var(--accent2); }
 
-    /* ── Start screen ── */
+    /* ── Start Screen ── */
     #startscreen {
-      display: flex;
-      position: fixed;
-      inset: 0;
-      background: var(--bg);
-      z-index: 300;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      text-align: center;
-      padding: 20px;
+      display: flex; position: fixed; inset: 0;
+      background: var(--bg); z-index: 300;
+      flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 20px; overflow-y: auto;
     }
-    #startscreen .logo { font-size: 3.5rem; margin-bottom: 16px; }
-    #startscreen h1 { font-size: 1.8rem; color: var(--accent); margin-bottom: 6px; letter-spacing: 3px; }
-    #startscreen .sub { color: var(--dim); font-size: 0.9rem; margin-bottom: 28px; line-height: 1.6; max-width: 500px; }
-    .start-story {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 20px 28px;
-      max-width: 520px;
-      margin-bottom: 28px;
-      text-align: left;
-      font-size: 0.85rem;
-      line-height: 1.8;
-      color: var(--text);
+    .start-logo { font-size: 3rem; margin-bottom: 10px; }
+    .start-company { font-size: 0.7rem; letter-spacing: 4px; color: var(--accent); margin-bottom: 4px; text-transform: uppercase; }
+    .start-title   { font-size: 1.7rem; color: var(--text); margin-bottom: 4px; letter-spacing: 2px; }
+    .start-sub     { font-size: 0.75rem; color: var(--dim); margin-bottom: 22px; letter-spacing: 1px; }
+
+    .start-card {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 8px; padding: 18px 24px;
+      max-width: 540px; width: 100%;
+      text-align: left; font-size: 0.83rem; line-height: 1.8;
+      color: var(--text); margin-bottom: 14px;
     }
-    .hint-list {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 14px 20px;
-      max-width: 520px;
-      margin-bottom: 24px;
-      font-size: 0.78rem;
-      color: var(--dim);
-      line-height: 1.8;
-      text-align: left;
+    .start-card h3 { color: var(--accent); font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+    .start-card .tag {
+      display: inline-block; background: rgba(0,153,230,0.12);
+      border: 1px solid var(--accent); color: var(--accent);
+      font-size: 0.68rem; padding: 2px 8px; border-radius: 3px;
+      margin: 2px 3px 2px 0; letter-spacing: 1px;
     }
-    .hint-list strong { color: var(--accent); }
 
     /* ── Scrollbar ── */
-    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
-    @media (max-width: 660px) {
+    @media(max-width:680px) {
       #game-layout { grid-template-columns: 1fr; }
-      #room-container { grid-column: 1; grid-row: 1; }
-      #side-panel { grid-column: 1; grid-row: 2; }
     }
   </style>
 </head>
 <body>
 
-<!-- ═══════════════════════ START SCREEN ═══════════════════════ -->
+<!-- ═══════════════ START SCREEN ═══════════════ -->
 <div id="startscreen">
-  <div class="logo">🔬</div>
-  <h1>THE ABANDONED LABORATORY</h1>
-  <p class="sub">An Online Escape Room Experience</p>
-  <div class="start-story">
-    You wake up on the floor of a cold, dimly lit laboratory. The last thing you remember is
-    accepting a contract job for a biotech company called <strong>NEXUS-7</strong>. The door is
-    locked. The lights flicker. Somewhere deep in the facility an alarm is counting down…<br><br>
-    You have <strong>20 minutes</strong> to find the exit code and escape before the automated
-    lockdown seals the building forever.
+  <div class="start-logo">🏭</div>
+  <div class="start-company">MediSeal Manufacturing Ltd.</div>
+  <div class="start-title">QUALITY WEEK</div>
+  <div class="start-sub">ESCAPE ROOM — INTERNAL AUDIT SIMULATION</div>
+
+  <div class="start-card">
+    <h3>Situation Briefing</h3>
+    A <strong>critical non-conformance alarm</strong> has triggered a facility lockdown at MediSeal's
+    plunger production plant. The batch <strong>BN-2024-3200</strong> — rubber plungers destined for
+    insulin vials and diabetic injection devices — is on hold pending investigation.<br><br>
+    As the on-call <strong>Quality Inspector</strong>, you must work through every station:
+    verify incoming materials, complete an AQL inspection, calibrate instruments, raise a CAPA,
+    and authorise the final batch disposition — all before the <strong>external FDA auditor
+    arrives in 25 minutes</strong>.
   </div>
-  <div class="hint-list">
-    <strong>HOW TO PLAY</strong><br>
-    • Examine objects in each room to find clues and items<br>
-    • Click items in your <strong>Inventory</strong> to select them, then use hotspots<br>
-    • Notes you discover are saved in the <strong>Notes</strong> panel<br>
-    • Navigate between unlocked rooms using the <strong>Rooms</strong> panel<br>
-    • There are <strong>4 rooms</strong> and <strong>5 puzzles</strong> to solve
+
+  <div class="start-card">
+    <h3>Quality Topics Covered</h3>
+    <span class="tag">GMP</span>
+    <span class="tag">AQL / ISO 2859-1</span>
+    <span class="tag">CAPA</span>
+    <span class="tag">ISO 13485</span>
+    <span class="tag">Calibration</span>
+    <span class="tag">Batch Records</span>
+    <span class="tag">NCR</span>
+    <span class="tag">Visual Inspection</span>
+    <span class="tag">Defect Classification</span>
+    <span class="tag">SOP Compliance</span>
   </div>
-  <button class="btn primary" id="start-btn" style="font-size:1rem;padding:12px 36px;">START GAME</button>
+
+  <div class="start-card" style="font-size:0.78rem;color:var(--dim);">
+    <h3>How to Play</h3>
+    • <strong style="color:var(--text);">Examine hotspots</strong> in each area to find clues and collect items<br>
+    • <strong style="color:var(--text);">Select items</strong> in your inventory, then interact with hotspots to use them<br>
+    • <strong style="color:var(--text);">Solve puzzles</strong> — all answers are based on real quality principles<br>
+    • <strong style="color:var(--text);">Check your Notes</strong> panel — clues are recorded automatically<br>
+    • There are <strong style="color:var(--text);">5 rooms</strong> and <strong style="color:var(--text);">6 puzzles</strong> to complete
+  </div>
+
+  <button class="btn primary" id="start-btn" style="font-size:0.95rem;padding:11px 36px;margin-top:6px;">
+    BEGIN AUDIT SIMULATION
+  </button>
 </div>
 
-<!-- ═══════════════════════ HEADER ═══════════════════════ -->
+<!-- ═══════════════ HEADER ═══════════════ -->
 <header>
-  <h1>🔬 Abandoned Laboratory</h1>
-  <div id="timer">20:00</div>
+  <div class="header-left">
+    <h1>🏭 MediSeal — Quality Week</h1>
+    <span>INTERNAL AUDIT SIMULATION &nbsp;|&nbsp; ISO 13485 FACILITY</span>
+  </div>
+  <div id="timer">25:00</div>
 </header>
 
-<!-- ═══════════════════════ GAME LAYOUT ═══════════════════════ -->
+<!-- ═══════════════ GAME LAYOUT ═══════════════ -->
 <div id="game-layout">
 
-  <!-- Room view -->
   <div id="room-container">
-    <div id="room-art">🏢</div>
-    <div id="room-title">Room Name</div>
-    <div id="room-desc">Description here.</div>
+    <div id="room-art">
+      <span id="room-emoji">📦</span>
+      <div id="room-badge">AREA 01</div>
+    </div>
+    <div id="room-title">Receiving Dock</div>
+    <div id="room-desc">Loading…</div>
+    <div id="progress-bar-wrap"><div id="progress-bar"></div></div>
+    <div id="progress-label">Quality checks: 0 / 6 complete</div>
     <div id="hotspots"></div>
     <div id="log"></div>
   </div>
 
-  <!-- Side panel -->
   <div id="side-panel">
     <div class="panel-box">
       <h3>Inventory</h3>
       <div id="inventory-grid"></div>
     </div>
     <div class="panel-box">
-      <h3>Notes</h3>
-      <div id="notes-box"><p style="color:var(--dim);font-size:0.78rem;">Nothing recorded yet.</p></div>
+      <h3>Field Notes</h3>
+      <div id="notes-content"><p>No entries yet.</p></div>
     </div>
     <div class="panel-box">
-      <h3>Rooms</h3>
+      <h3>Areas</h3>
       <div id="room-nav"></div>
     </div>
   </div>
 </div>
 
-<!-- ═══════════════════════ MODAL ═══════════════════════ -->
+<!-- ═══════════════ MODAL ═══════════════ -->
 <div id="modal-overlay">
   <div id="modal-box">
-    <h2 id="modal-title">Puzzle</h2>
-    <p id="modal-body"></p>
+    <div id="modal-tag">QUALITY CONTROL</div>
+    <div id="modal-title">Puzzle Title</div>
+    <div id="modal-body">Body text.</div>
+    <div id="modal-choices"></div>
     <input type="text" id="modal-input" placeholder="" style="display:none" />
     <div id="modal-feedback"></div>
     <div class="modal-btns">
-      <button class="btn" id="modal-cancel">Cancel</button>
+      <button class="btn" id="modal-cancel">Close</button>
       <button class="btn primary" id="modal-submit" style="display:none">Submit</button>
-      <button class="btn primary" id="modal-close-btn">Close</button>
     </div>
   </div>
 </div>
 
-<!-- ═══════════════════════ END SCREEN ═══════════════════════ -->
+<!-- ═══════════════ END SCREEN ═══════════════ -->
 <div id="endscreen">
   <div class="end-icon" id="end-icon">🎉</div>
-  <h2 id="end-title">You Escaped!</h2>
-  <p id="end-msg">Congratulations, you made it out of the laboratory.</p>
-  <div id="end-time"></div>
-  <button class="btn primary" onclick="location.reload()" style="font-size:0.95rem;padding:10px 28px;">Play Again</button>
+  <div id="end-title">Audit Passed!</div>
+  <div id="end-msg">You completed all quality checks.</div>
+  <div id="end-stats"></div>
+  <button class="btn success" onclick="location.reload()" style="font-size:0.9rem;padding:10px 28px;">
+    Run Again
+  </button>
 </div>
 
-<!-- ═══════════════════════ GAME SCRIPT ═══════════════════════ -->
+<!-- ═══════════════ SCRIPT ═══════════════ -->
 <script>
-// ─────────────────────────────────────────────
-//  GAME STATE
-// ─────────────────────────────────────────────
-const state = {
-  currentRoom: 'storage',
-  inventory: [],          // array of item ids
-  selectedItem: null,     // id of selected inventory item
-  notes: [],              // strings
-  solved: {},             // puzzle-id -> true
-  found: {},              // item-id   -> true
-  timerSeconds: 20 * 60,
-  timerInterval: null,
-  gameOver: false,
+'use strict';
+
+// ────────────────────────────────────────────────
+// STATE
+// ────────────────────────────────────────────────
+const S = {
+  room:        'receiving',
+  inventory:   [],
+  selectedItem: null,
+  notes:       [],
+  solved:      {},   // puzzle id → true
+  found:       {},   // item/thing id → true
+  puzzlesDone: 0,
+  timerSec:    25 * 60,
+  timerInt:    null,
+  over:        false,
 };
 
-// ─────────────────────────────────────────────
-//  ITEM DEFINITIONS
-// ─────────────────────────────────────────────
+// ────────────────────────────────────────────────
+// ITEMS
+// ────────────────────────────────────────────────
 const ITEMS = {
-  rusty_key:   { id: 'rusty_key',   emoji: '🗝️',  name: 'Rusty Key',        desc: 'An old tarnished key. Might open something.' },
-  torn_note:   { id: 'torn_note',   emoji: '📄',  name: 'Torn Note',         desc: 'A scrap of paper: "Cabinet code = month I joined + lucky 7 = 37"' },
-  cabinet_doc: { id: 'cabinet_doc', emoji: '📋',  name: 'Lab Report',        desc: 'Lab report: Chemical mix order — Blue ➜ Green ➜ Red. Then press CONFIRM.' },
-  keycard:     { id: 'keycard',     emoji: '💳',  name: 'Access Keycard',    desc: 'A blue keycard. Level-2 clearance. Needed for the server room.' },
-  usb_drive:   { id: 'usb_drive',   emoji: '💾',  name: 'USB Drive',         desc: 'A flash drive labeled "NEXUS-7 / EXIT_CODE.enc".' },
-  wire_cutter: { id: 'wire_cutter', emoji: '✂️',  name: 'Wire Cutters',      desc: 'Heavy-duty cutters. Could snip a padlock chain.' },
-  exit_code:   { id: 'exit_code',   emoji: '📟',  name: 'Exit Code Paper',   desc: 'Printed slip: EXIT CODE = 7749' },
+  coa: {
+    emoji: '📋', name: 'Certificate of Analysis',
+    desc: 'CoA — Rubber Compound RC-500 | Lot: RM-4471 | Supplier: Kautschuk GmbH | Status: PENDING GMP VERIFICATION. All incoming materials must be verified per GMP.',
+  },
+  aql_table: {
+    emoji: '📊', name: 'AQL Sampling Chart',
+    desc: 'ISO 2859-1 AQL Table: Lot size 3,200 | Inspection Level II | AQL 1.0 → Sample code letter K → Sample size: 125 | Accept ≤ 3 | Reject ≥ 4.',
+  },
+  ncr_form: {
+    emoji: '🚫', name: 'Non-Conformance Report',
+    desc: 'NCR-0892: Batch BN-2024-3200 — 4 defects found in sample of 125. Exceeds Re=4. Batch disposition: REJECTED. Raised per SOP-QC-015.',
+  },
+  cal_ref: {
+    emoji: '📐', name: 'Calibration Reference',
+    desc: 'Certified Gauge Block: 12.50 mm (±0.001 mm). Certificate No. CAL-7734. Traceable to national standards per ISO/IEC 17025. Use to verify instrument accuracy.',
+  },
+  maint_log: {
+    emoji: '🔧', name: 'Maintenance Log',
+    desc: 'Log entry 14/03/24 — Station 3 mould tooling: Release lubricant replaced with Grade B-7 (synthetic). CORRECT grade per SOP-MAINT-009 is Grade A-3 (food-grade silicone). No deviation form raised!',
+  },
+  capa_report: {
+    emoji: '📝', name: 'Completed CAPA Report',
+    desc: 'CAPA-0112: Root cause — Incorrect lubricant grade used on mould tooling (Grade B-7 instead of A-3). Immediate action: production hold. Preventive: SOP update + retraining. Ref: ISO 13485 §8.5.',
+  },
+  batch_cert: {
+    emoji: '🔏', name: 'Batch Release Certificate',
+    desc: 'Batch BN-2024-3200 | Disposition: REJECT & Quarantine | Reason: NCR-0892 / CAPA-0112. QA Auth PIN: 4471. Signed under ISO 13485 §8.3 — Control of Nonconforming Product.',
+  },
 };
 
-// ─────────────────────────────────────────────
-//  ROOM DEFINITIONS
-// ─────────────────────────────────────────────
+// ────────────────────────────────────────────────
+// ROOMS
+// ────────────────────────────────────────────────
 const ROOMS = {
-  storage: {
-    id: 'storage',
-    name: 'Storage Room',
+  receiving: {
+    id: 'receiving', badge: 'AREA 01 — RECEIVING DOCK',
+    name: 'Receiving Dock',
     emoji: '📦',
-    desc: 'You wake up among dusty shelving units stacked with crates. A flickering fluorescent tube casts long shadows. There\'s a metal door to the north — locked. A potted plant sits in the corner, looking oddly alive.',
+    desc: 'Raw materials arrive here for incoming quality control. Under GMP, every incoming batch must have a Certificate of Analysis (CoA) reviewed and verified before the material can be released to production. A red HOLD light flashes above the pallet of rubber compound. The GMP terminal on the wall reads: "MATERIAL ON HOLD — VERIFICATION REQUIRED."',
     hotspots: [
-      { id: 'hs_plant',    label: 'Examine Plant',       action: 'examine_plant' },
-      { id: 'hs_shelf',    label: 'Search Shelves',      action: 'search_shelves' },
-      { id: 'hs_door_n',   label: 'Try North Door',      action: 'try_north_door' },
-      { id: 'hs_cabinet',  label: 'Locked Cabinet',      action: 'open_cabinet' },
+      { label: 'Inspect Pallet (Rubber Compound)', action: 'inspect_pallet'    },
+      { label: 'Check Clipboard',                  action: 'check_clipboard'   },
+      { label: 'GMP Receiving Terminal',            action: 'gmp_terminal'     },
+      { label: 'Quality Week Noticeboard',          action: 'read_noticeboard' },
     ],
-    exits: { lab: { locked: true, puzzle: 'lock_cabinet_check' } },
   },
-  lab: {
-    id: 'lab',
-    name: 'Chemical Laboratory',
-    emoji: '⚗️',
-    desc: 'Benches lined with test tubes, burners, and colourful chemicals fill the room. A heavy smell of reagents hangs in the air. A sealed storage locker stands against the wall. To the east, a door is secured with a keycard reader.',
+  production: {
+    id: 'production', badge: 'AREA 02 — PRODUCTION LINE',
+    name: 'Production Line — Plunger Assembly',
+    emoji: '🏭',
+    desc: 'The main moulding and assembly line for rubber plungers used in insulin vials and prefilled syringes. The line is halted at Station 3 — an amber light pulses above it. A visual inspection light-box station is set up as part of Quality Week. The AQL sampling chart is pinned beside it. The door to the QC Laboratory has a sign: "ENTRY REQUIRES NCR FILING."',
     hotspots: [
-      { id: 'hs_chemicals', label: 'Mix Chemicals',      action: 'mix_chemicals' },
-      { id: 'hs_locker',    label: 'Storage Locker',     action: 'open_locker' },
-      { id: 'hs_bench',     label: 'Search Bench',       action: 'search_bench' },
+      { label: 'AQL Sampling Chart (Wall)',  action: 'read_aql_chart'    },
+      { label: 'Visual Inspection Light Box', action: 'use_lightbox'    },
+      { label: 'Examine Station 3 Mould',    action: 'examine_mould'   },
+      { label: 'NCR Filing Station',         action: 'file_ncr'        },
     ],
-    exits: { server: { locked: true, puzzle: 'keycard_check' } },
   },
-  server: {
-    id: 'server',
-    name: 'Server Room',
-    emoji: '🖥️',
-    desc: 'Racks of humming servers stretch from floor to ceiling. Blue LEDs pulse rhythmically. A workstation in the corner has a USB port and a login terminal. Cables snake across the floor. A chained door leads further into the facility.',
+  qclab: {
+    id: 'qclab', badge: 'AREA 03 — QC LABORATORY',
+    name: 'Quality Control Laboratory',
+    emoji: '🔬',
+    desc: 'The QC lab smells of IPA and calibration fluid. Dimensional gauges, particle counters, and sterility test equipment line the benches. A micrometer station in the corner carries a yellow "OUT OF CALIBRATION — DO NOT USE" sticker. The calibration reference cabinet is mounted on the wall. A sign on the QA Office door: "CALIBRATION SIGN-OFF REQUIRED FOR ENTRY."',
     hotspots: [
-      { id: 'hs_usb_port',  label: 'USB Workstation',   action: 'use_usb_station' },
-      { id: 'hs_terminal',  label: 'Login Terminal',    action: 'use_terminal' },
-      { id: 'hs_chain',     label: 'Chained Door',      action: 'try_chain_door' },
+      { label: 'Calibration Reference Cabinet', action: 'open_cal_cabinet' },
+      { label: 'Micrometer Station',            action: 'use_micrometer'  },
+      { label: 'SOP Document Rack',             action: 'check_sop_rack'  },
+      { label: 'Equipment Logbook',             action: 'check_equip_log' },
     ],
-    exits: { exit_room: { locked: true, puzzle: 'chain_check' } },
   },
-  exit_room: {
-    id: 'exit_room',
-    name: 'Exit Corridor',
-    emoji: '🚪',
-    desc: 'A long corridor leads to a heavy blast door. A numeric keypad glows red beside it. There\'s graffiti on the wall: "They lied about everything." A dead security guard slumped in a chair clutches nothing useful.',
+  qaoffice: {
+    id: 'qaoffice', badge: 'AREA 04 — QA / COMPLIANCE',
+    name: 'QA & Compliance Office',
+    emoji: '🗂️',
+    desc: 'The hub of quality operations. ISO 13485 clause labels run across the filing cabinets. The CAPA workstation shows: "NON-CONFORMANCE #NCR-0892 — AWAITING ROOT CAUSE ANALYSIS." A maintenance log has been left open on the side table — someone was in a hurry. The batch record safe on the wall requires CAPA completion to unlock.',
     hotspots: [
-      { id: 'hs_keypad',    label: 'Use Exit Keypad',   action: 'use_exit_keypad' },
-      { id: 'hs_graffiti',  label: 'Read Graffiti',     action: 'read_graffiti' },
-      { id: 'hs_guard',     label: 'Search Guard',      action: 'search_guard' },
+      { label: 'Maintenance Log (Side Table)', action: 'read_maint_log'   },
+      { label: 'CAPA Workstation',             action: 'use_capa_station' },
+      { label: 'ISO 13485 Filing Cabinet',     action: 'check_iso_files'  },
+      { label: 'Batch Record Safe',            action: 'open_batch_safe'  },
     ],
-    exits: {},
+  },
+  dispatch: {
+    id: 'dispatch', badge: 'AREA 05 — DISPATCH / RELEASE',
+    name: 'Dispatch & Release Bay',
+    emoji: '🚚',
+    desc: 'The final checkpoint before product leaves the facility. A quarantine cage holds batch BN-2024-3200 — padlocked pending QA sign-off. The batch release terminal glows amber. Under ISO 13485 §8.3, no nonconforming product may leave the site without documented disposition. A Quality Week banner reads: "ZERO DEFECTS SAVES LIVES."',
+    hotspots: [
+      { label: 'Batch Release Terminal', action: 'use_release_terminal' },
+      { label: 'Quarantine Cage',        action: 'inspect_quarantine'   },
+      { label: 'Quality Week Banner',    action: 'read_qw_banner'       },
+    ],
   },
 };
 
-// Room navigation order / adjacency
-const ROOM_CONNECTIONS = {
-  storage:   ['lab'],
-  lab:       ['storage', 'server'],
-  server:    ['lab', 'exit_room'],
-  exit_room: ['server'],
+const ROOM_ORDER = ['receiving', 'production', 'qclab', 'qaoffice', 'dispatch'];
+
+const EXITS = {
+  receiving:  ['production'],
+  production: ['receiving', 'qclab'],
+  qclab:      ['production', 'qaoffice'],
+  qaoffice:   ['qclab', 'dispatch'],
+  dispatch:   ['qaoffice'],
 };
 
-// ─────────────────────────────────────────────
-//  ACTION HANDLERS  (return log message obj)
-// ─────────────────────────────────────────────
+// ────────────────────────────────────────────────
+// NAVIGATION LOCKS
+// ────────────────────────────────────────────────
+function canEnter(roomId) {
+  if (roomId === 'production') return !!S.solved.coa_verified;
+  if (roomId === 'qclab')      return !!S.solved.ncr_filed;
+  if (roomId === 'qaoffice')   return !!S.solved.calibration_done;
+  if (roomId === 'dispatch')   return !!S.solved.capa_done;
+  return true;
+}
+
+function lockReason(roomId) {
+  if (roomId === 'production') return 'Raw material verification required first (GMP Receiving Terminal).';
+  if (roomId === 'qclab')      return 'File the NCR at the NCR Filing Station on the production line first.';
+  if (roomId === 'qaoffice')   return 'Complete instrument calibration in the QC Lab first.';
+  if (roomId === 'dispatch')   return 'Complete and authorise the CAPA report in the QA Office first.';
+  return 'Blocked.';
+}
+
+function goTo(roomId) {
+  if (!canEnter(roomId)) { log(lockReason(roomId), 'fail'); return; }
+  S.room = roomId;
+  renderRoom(); renderNav();
+}
+
+// ────────────────────────────────────────────────
+// INSPECTION GRID BUILDER
+// ────────────────────────────────────────────────
+function buildInspectionGrid() {
+  // 5 rows × 10 cols = 50 plungers shown; 4 defects at fixed positions
+  const defects = new Set([3, 18, 31, 46]);
+  let html = '<div class="grid-wrap">';
+  html += '<p style="font-size:0.75rem;color:#5a6480;margin-bottom:6px;">Visual Inspection Tray — Representative sample (50 shown). Count all defective plungers <span style="color:#e63946">●</span>:</p>';
+  for (let row = 0; row < 5; row++) {
+    html += '<div class="defect-row">';
+    for (let col = 0; col < 10; col++) {
+      const idx = row * 10 + col;
+      if (defects.has(idx)) {
+        html += '<div class="plunger-unit plunger-fail" title="DEFECT">✗</div>';
+      } else {
+        html += '<div class="plunger-unit plunger-ok"  title="PASS">✓</div>';
+      }
+    }
+    html += '</div>';
+  }
+  html += '<p style="font-size:0.72rem;color:#5a6480;margin-top:6px;">';
+  html += '<span style="color:#00c97a">●</span> Pass &nbsp;|&nbsp; <span style="color:#e63946">●</span> Defect (flash, dimensional deviation, or surface contamination)';
+  html += '</p></div>';
+  return html;
+}
+
+// ────────────────────────────────────────────────
+// ACTION HANDLERS
+// ────────────────────────────────────────────────
 function handleAction(action) {
-  switch(action) {
+  switch (action) {
 
-    // ── Storage Room ──────────────────────────
-    case 'examine_plant':
-      if (!state.found.rusty_key) {
-        state.found.rusty_key = true;
-        addItem('rusty_key');
-        return { msg: 'You dig into the soil. Your fingers close around something metal — a rusty key!', cls: 'success' };
+    // ── RECEIVING ──────────────────────────────────────────
+    case 'inspect_pallet':
+      if (!S.found.pallet) {
+        S.found.pallet = true;
+        return { msg: 'Pallet label: Rubber Compound RC-500 | Batch RM-4471 | Kautschuk GmbH. The HOLD sticker is applied — awaiting CoA review per GMP incoming goods procedure.', cls: 'info' };
       }
-      return { msg: 'Just dirt now. You already took the key.', cls: 'info' };
+      return { msg: 'Pallet still on HOLD. Verify the CoA at the GMP terminal.', cls: 'warn' };
 
-    case 'search_shelves':
-      if (!state.found.torn_note) {
-        state.found.torn_note = true;
-        addItem('torn_note');
-        addNote('Cabinet code = "month I joined + lucky 7 = 37"  →  code is <strong>37</strong>');
-        return { msg: 'Behind a dusty crate you find a torn note. Added to Notes.', cls: 'success' };
+    case 'check_clipboard':
+      if (!S.found.coa) {
+        S.found.coa = true;
+        addItem('coa');
+        addNote('CoA found — Lot <strong>RM-4471</strong>, supplier Kautschuk GmbH. Must be entered into GMP terminal to release material.', true);
+        return { msg: 'Certificate of Analysis found on the clipboard. Added to inventory.', cls: 'success' };
       }
-      return { msg: 'You\'ve already searched these shelves.', cls: 'info' };
+      return { msg: 'You already have the CoA.', cls: 'info' };
 
-    case 'try_north_door':
-      if (!state.solved.lab_door) {
-        openModal({
-          title: 'North Door',
-          body: 'The door is locked with a deadbolt. It looks like it needs a key.',
-          noInput: true,
-        });
+    case 'gmp_terminal':
+      if (S.solved.coa_verified) {
+        return { msg: 'GMP Terminal: Material RM-4471 VERIFIED ✓. Production line access granted.', cls: 'success' };
       }
-      return { msg: 'The north door is firmly locked.', cls: 'info' };
-
-    case 'open_cabinet':
-      if (state.solved.cabinet_open) {
-        return { msg: 'The cabinet is already open. You took everything useful.', cls: 'info' };
+      if (!S.inventory.includes('coa')) {
+        return { msg: 'The GMP terminal requires a Certificate of Analysis. Find it first.', cls: 'warn' };
       }
-      if (!state.inventory.includes('rusty_key')) {
-        return { msg: 'The cabinet is locked with a combination. There\'s also a keyhole... you need something to turn.', cls: 'info' };
-      }
-      // Has rusty key — unlock with 4-digit combo
       openModal({
-        title: '🔐 Locked Cabinet',
-        body: 'The cabinet has a 4-digit combination lock AND a keyhole. You insert the rusty key to disengage the secondary lock. Now enter the 4-digit code:',
-        placeholder: 'e.g. 1234',
-        submitLabel: 'Unlock',
-        onSubmit: (val) => {
-          if (val.trim() === '0037' || val.trim() === '37') {
-            state.solved.cabinet_open = true;
-            state.found.cabinet_doc = true;
-            removeItem('rusty_key');
-            addItem('cabinet_doc');
-            addNote('Chemical mix order: <strong>Blue ➜ Green ➜ Red</strong>, then CONFIRM');
+        tag: 'GMP — INCOMING MATERIAL VERIFICATION',
+        title: 'GMP Receiving Terminal',
+        body: 'Under Good Manufacturing Practice (GMP), all incoming raw materials must be verified against their Certificate of Analysis before use in production.<br><br>The terminal is requesting the <strong>material lot number</strong> from the CoA. Enter it below to release the material from HOLD:',
+        placeholder: 'e.g. RM-XXXX',
+        submitLabel: 'Verify & Release',
+        onSubmit: val => {
+          const v = val.trim().toUpperCase().replace(/\s/g,'');
+          if (v === 'RM4471' || v === 'RM-4471' || v === '4471') {
+            S.solved.coa_verified = true;
+            puzzleDone();
             closeModal();
-            log('The cabinet clicks open! Inside you find a Lab Report.', 'success');
-            // Also unlock the lab door
-            state.solved.lab_door = true;
-            addItem('keycard'); // stub — actually we unlock door
-            state.found.keycard = true; // give keycard hint
-            log('You also notice the magnetic door sensor has disengaged — the north door is now unlocked!', 'hint');
-            renderRoom();
+            log('✓ MATERIAL VERIFIED — Lot RM-4471 released from HOLD. Production line is now accessible.', 'success');
+            log('📚 Quality Fact: GMP requires every incoming material to have an approved CoA on file before it can be used in production.', 'fact');
             renderNav();
           } else {
-            setModalFeedback('Wrong code. Check your notes.', 'bad');
+            setFeedback('Lot number not recognised. Check the Certificate of Analysis.', 'bad');
           }
-        }
+        },
       });
       return null;
 
-    // ── Lab Room ──────────────────────────────
-    case 'mix_chemicals':
-      if (state.solved.chemicals) {
-        return { msg: 'The mixture is already done. The locker opened.', cls: 'info' };
-      }
-      if (!state.inventory.includes('cabinet_doc')) {
-        return { msg: 'There are three coloured bottles: Blue, Green, and Red. You\'re not sure of the order — you need instructions.', cls: 'info' };
-      }
+    case 'read_noticeboard':
       openModal({
-        title: '⚗️ Mix Chemicals',
-        body: 'You have the lab report. Pour the chemicals in the correct order by typing the sequence (e.g. B,G,R):',
-        placeholder: 'Enter order: B, G, R',
-        submitLabel: 'Mix',
-        onSubmit: (val) => {
-          const clean = val.replace(/\s/g,'').toUpperCase();
-          if (clean === 'B,G,R' || clean === 'BGR' || clean === 'BLUE,GREEN,RED') {
-            state.solved.chemicals = true;
-            closeModal();
-            log('The mixture fizzes and glows green. A satisfying click — the storage locker unlatches!', 'success');
-            renderRoom();
-          } else {
-            setModalFeedback('Wrong order — the mixture turns grey and inert. Try again.', 'bad');
-          }
-        }
-      });
-      return null;
-
-    case 'open_locker':
-      if (!state.solved.chemicals) {
-        return { msg: 'The storage locker is sealed. It seems to respond to something chemical — maybe mixing the chemicals triggers it?', cls: 'info' };
-      }
-      if (state.solved.locker_looted) {
-        return { msg: 'You\'ve already taken everything from the locker.', cls: 'info' };
-      }
-      state.solved.locker_looted = true;
-      state.found.keycard = true;
-      state.found.wire_cutter = true;
-      addItem('keycard');
-      addItem('wire_cutter');
-      addNote('Access Keycard (Level-2) found — needed for the Server Room door');
-      return { msg: 'Inside the locker: an Access Keycard and a pair of wire cutters!', cls: 'success' };
-
-    case 'search_bench':
-      if (!state.found.bench_searched) {
-        state.found.bench_searched = true;
-        return { msg: 'Lab notebooks, broken pipettes, chemical residue... nothing immediately useful. But a bench label reads: "Server Room East — Keycard Access Only."', cls: 'info' };
-      }
-      return { msg: 'You\'ve already rifled through the bench.', cls: 'info' };
-
-    // ── Server Room ───────────────────────────
-    case 'use_usb_station':
-      if (!state.inventory.includes('usb_drive')) {
-        return { msg: 'There\'s a USB port here. You don\'t have anything to plug in.', cls: 'info' };
-      }
-      if (state.solved.usb_used) {
-        return { msg: 'You already read the USB. The exit code is in your notes.', cls: 'info' };
-      }
-      state.solved.usb_used = true;
-      state.found.exit_code = true;
-      addItem('exit_code');
-      addNote('EXIT CODE = <strong>7749</strong>  (from USB drive)');
-      return { msg: 'The workstation whirs. The USB auto-runs and prints a slip: EXIT CODE = 7749. You grab it.', cls: 'success' };
-
-    case 'use_terminal':
-      openModal({
-        title: '🖥️ Login Terminal',
-        body: 'The terminal prompts for a NEXUS-7 employee ID. You spot a sticky note on the monitor: "default admin = N7-0001". Try logging in?',
+        tag: 'QUALITY WEEK',
+        title: 'Quality Week Noticeboard',
+        body: '<strong>QUALITY WEEK — MediSeal Manufacturing</strong><br><br>This week we celebrate our commitment to excellence. Every rubber plunger we manufacture ends up in an insulin vial or a diabetic injection device — used by real patients every single day.<br><br><strong>Key reminders:</strong><br>• Follow your SOP — every time, without exception<br>• Any deviation must have a raised deviation record<br>• AQL is not optional: it protects patients and our licence to operate<br>• If you\'re unsure, ASK before acting<br><br><em>"Quality is not an act, it is a habit." — Aristotle</em>',
         noInput: true,
-        extraBtn: {
-          label: 'Login as N7-0001',
-          action: () => {
-            if (!state.solved.terminal) {
-              state.solved.terminal = true;
-              if (!state.found.usb_drive) {
-                state.found.usb_drive = true;
-                addItem('usb_drive');
-                addNote('USB Drive unlocked via server terminal — contains encrypted exit code');
-                closeModal();
-                log('Login successful. System ejects a USB Drive labeled "EXIT_CODE.enc". You grab it.', 'success');
-              } else {
-                closeModal();
-                log('You\'re already logged in and the USB was already ejected.', 'info');
-              }
-            } else {
-              closeModal();
-              log('You\'re already logged in.', 'info');
-            }
-          }
-        }
       });
       return null;
 
-    case 'try_chain_door':
-      if (!state.inventory.includes('wire_cutter')) {
-        return { msg: 'The door is held shut by a heavy chain and padlock. You need something to cut it.', cls: 'info' };
+    // ── PRODUCTION ──────────────────────────────────────────
+    case 'read_aql_chart':
+      if (!S.found.aql_table) {
+        S.found.aql_table = true;
+        addItem('aql_table');
+        addNote('AQL Chart: Lot 3,200 | Level II | AQL 1.0 → Sample size <strong>125</strong> | Ac=3, Re=4', true);
+        log('📚 Quality Fact: AQL (Acceptable Quality Level) per ISO 2859-1 defines the worst acceptable defect rate. Ac = accept if ≤ this many defects; Re = reject if ≥ this many.', 'fact');
+        return { msg: 'AQL Sampling Chart added to inventory and key figures noted.', cls: 'success' };
       }
-      if (state.solved.chain_cut) {
-        return { msg: 'The chain is already cut. The exit corridor is open.', cls: 'info' };
+      return { msg: 'You already have the AQL chart details noted.', cls: 'info' };
+
+    case 'use_lightbox':
+      if (!S.found.aql_table) {
+        return { msg: 'The inspection station is ready but you should check the AQL chart on the wall first to know your sample size and acceptance criteria.', cls: 'warn' };
       }
-      state.solved.chain_cut = true;
-      removeItem('wire_cutter');
-      state.solved.chain_check = true;
-      log('You snip through the padlock chain with the wire cutters. The door swings open!', 'success');
-      renderNav();
-      renderRoom();
+      if (S.solved.inspection_done) {
+        return { msg: 'Inspection complete. NCR-0892 raised. 4 defects found — batch rejected.', cls: 'info' };
+      }
+      openModal({
+        tag: 'VISUAL INSPECTION — AQL SAMPLING',
+        title: 'Inspection Light Box — Sample from Batch BN-2024-3200',
+        body: 'You have pulled a sample of <strong>125 plungers</strong> per your AQL chart (ISO 2859-1, Level II, AQL 1.0).<br><br>Using the light box and magnification stand, you inspect each plunger for: flash on sealing lip, dimensional deviation, surface contamination, and incomplete fill.<br>' + buildInspectionGrid() + 'How many <strong>defective plungers</strong> did you find in the tray above?',
+        placeholder: 'Enter defect count (number only)',
+        submitLabel: 'Record Count',
+        onSubmit: val => {
+          const n = parseInt(val.trim(), 10);
+          if (n === 4) {
+            setFeedback('✓ Correct — 4 defects found.', 'ok');
+            setTimeout(() => {
+              openModal({
+                tag: 'AQL BATCH DECISION',
+                title: 'AQL Disposition — Step 2 of 2',
+                body: 'You found <strong>4 defects</strong> in your sample of 125.<br><br>According to your AQL chart for this batch:<br><br><div style="background:#0a0c18;padding:10px 14px;border-radius:4px;font-size:0.8rem;border:1px solid #1e2236;margin:10px 0;">Sample size: 125 &nbsp;|&nbsp; AQL 1.0<br>Accept (Ac): ≤ <strong>3</strong> defects<br>Reject (Re): ≥ <strong>4</strong> defects<br><br>Defects found: <strong style="color:#e63946">4</strong></div>What is your batch disposition? Type <strong>ACCEPT</strong> or <strong>REJECT</strong>:',
+                placeholder: 'ACCEPT or REJECT',
+                submitLabel: 'Record Disposition',
+                onSubmit: val2 => {
+                  if (val2.trim().toUpperCase() === 'REJECT') {
+                    S.solved.inspection_done = true;
+                    puzzleDone();
+                    closeModal();
+                    log('✓ Batch BN-2024-3200 REJECTED — 4 defects equals the rejection number (Re=4). An NCR must now be raised.', 'success');
+                    log('📚 Quality Fact: A "Re" value means if you find EXACTLY that many defects, you still REJECT — the accept number is strictly less than Re.', 'fact');
+                    renderRoom();
+                  } else if (val2.trim().toUpperCase() === 'ACCEPT') {
+                    setFeedback('Incorrect. With 4 defects and Re=4, the batch must be REJECTED. Re means reject if ≥ 4 defects — 4 equals 4.', 'bad');
+                  } else {
+                    setFeedback('Type exactly ACCEPT or REJECT.', 'bad');
+                  }
+                },
+              });
+            }, 900);
+          } else if (!isNaN(n)) {
+            setFeedback(`You counted ${n}, but that doesn't match the inspection record. Look at the tray more carefully.`, 'bad');
+          } else {
+            setFeedback('Please enter a number.', 'bad');
+          }
+        },
+      });
       return null;
 
-    // ── Exit Corridor ─────────────────────────
-    case 'use_exit_keypad':
+    case 'examine_mould':
+      if (!S.found.mould) {
+        S.found.mould = true;
+        return { msg: 'Station 3 mould tooling: A fresh sheen of lubricant on the mould surfaces — but the colour is slightly off. A used canister in the bin reads "Grade B-7 Synthetic". The SOP by the station calls for "Grade A-3 food-grade silicone lubricant." This could be significant.', cls: 'warn' };
+      }
+      return { msg: 'The wrong lubricant is clearly visible on the mould. This needs a proper root cause investigation in the QA office.', cls: 'warn' };
+
+    case 'file_ncr':
+      if (!S.solved.inspection_done) {
+        return { msg: 'You cannot raise an NCR until the AQL inspection is complete and a rejection decision has been made.', cls: 'warn' };
+      }
+      if (S.solved.ncr_filed) {
+        return { msg: 'NCR-0892 is already raised. The QC Lab is now accessible.', cls: 'info' };
+      }
       openModal({
-        title: '🚪 Exit Keypad',
-        body: 'The blast door keypad glows red. Enter the 4-digit exit code:',
-        placeholder: '4-digit code',
-        submitLabel: 'Unlock',
-        onSubmit: (val) => {
-          if (val.trim() === '7749') {
+        tag: 'NON-CONFORMANCE REPORT (NCR)',
+        title: 'NCR Filing Station',
+        body: 'Under ISO 13485, any product failing to meet specified requirements must have a Non-Conformance Report raised immediately. This creates the quality record and triggers the CAPA process.<br><br>Enter the <strong>batch number</strong> this NCR applies to:',
+        placeholder: 'e.g. BN-2024-XXXX',
+        submitLabel: 'Raise NCR',
+        onSubmit: val => {
+          const v = val.trim().toUpperCase().replace(/\s/g,'');
+          if (v === 'BN-2024-3200' || v === 'BN20243200' || v === '3200') {
+            S.solved.ncr_filed = true;
+            S.found.ncr_form = true;
+            addItem('ncr_form');
+            puzzleDone();
+            closeModal();
+            log('✓ NCR-0892 raised for batch BN-2024-3200. QC Laboratory access granted.', 'success');
+            log('📚 Quality Fact: ISO 13485 §8.3 requires documented procedures for controlling nonconforming product. An NCR creates the traceable quality record.', 'fact');
+            renderNav();
+          } else {
+            setFeedback('Batch number not found. Check your notes — the batch number was stated in the scenario briefing.', 'bad');
+          }
+        },
+      });
+      return null;
+
+    // ── QC LAB ──────────────────────────────────────────────
+    case 'open_cal_cabinet':
+      if (!S.found.cal_ref) {
+        S.found.cal_ref = true;
+        addItem('cal_ref');
+        addNote('Calibration Reference: Certified Gauge Block = <strong>12.50 mm</strong> (±0.001 mm). Use to verify micrometer SN-7734.', true);
+        return { msg: 'Calibration cabinet opened. Inside: a certified gauge block reference standard — 12.50 mm, traceable per ISO/IEC 17025. Added to inventory.', cls: 'success' };
+      }
+      return { msg: 'You already have the calibration reference noted.', cls: 'info' };
+
+    case 'use_micrometer':
+      if (S.solved.calibration_done) {
+        return { msg: 'Micrometer SN-7734 is now calibrated and its correction factor is recorded. QA Office access granted.', cls: 'success' };
+      }
+      if (!S.inventory.includes('cal_ref')) {
+        return { msg: 'The micrometer carries an OUT OF CALIBRATION sticker. You need the certified reference standard from the calibration cabinet before you can proceed.', cls: 'warn' };
+      }
+      openModal({
+        tag: 'INSTRUMENT CALIBRATION',
+        title: 'Micrometer Station — SN-7734',
+        body: 'Calibration is essential for measurement accuracy in a medical device facility. An uncalibrated instrument can pass defective product or reject conforming product — both are costly.<br><br>You place the <strong>certified 12.50 mm gauge block</strong> in the micrometer. The display reads: <strong style="color:#f5a623;">12.53 mm</strong><br><br>Calculate and enter the <strong>correction factor</strong> (certified value − instrument reading).<br><small style="color:#5a6480;">Include the sign: e.g. +0.05 or -0.03</small>',
+        placeholder: 'e.g. -0.03',
+        submitLabel: 'Apply Correction',
+        onSubmit: val => {
+          const v = val.trim().replace(/\s/g, '');
+          // Accept -0.03, 0.03, -.03, -0.030 etc.
+          if (v === '-0.03' || v === '0.03' || v === '-0.030' || v === '-.03') {
+            S.solved.calibration_done = true;
+            puzzleDone();
+            closeModal();
+            log('✓ Correction factor −0.03 mm applied and logged. Calibration certificate recorded. QA Office access granted.', 'success');
+            log('📚 Quality Fact: ISO/IEC 17025 requires all measurement instruments in QC labs to be calibrated against traceable reference standards at defined intervals.', 'fact');
+            renderNav();
+          } else {
+            setFeedback('Incorrect. Correction = standard − reading = 12.50 − 12.53 = ?', 'bad');
+          }
+        },
+      });
+      return null;
+
+    case 'check_sop_rack':
+      if (!S.found.sop_checked) {
+        S.found.sop_checked = true;
+        addNote('SOP rack: SOP-QC-015 (Visual Inspection), SOP-QC-022 (AQL Sampling), SOP-MAINT-009 (Mould Lubricant — Grade A-3 ONLY)');
+        return { msg: 'SOP Document Rack: You find SOP-MAINT-009 "Mould Tooling Maintenance." Section 4.2 clearly states: "Use Grade A-3 food-grade silicone lubricant only. Using unapproved alternatives will contaminate product and void GMP compliance." This matches what you saw at Station 3.', cls: 'warn' };
+      }
+      return { msg: 'SOPs noted. The mould lubricant SOP (MAINT-009) is the critical one here.', cls: 'info' };
+
+    case 'check_equip_log':
+      if (!S.found.equip_log) {
+        S.found.equip_log = true;
+        return { msg: 'Equipment Logbook for Micrometer SN-7734: Last calibration 180 days ago. Calibration interval: 90 days. Status: OVERDUE. This explains the dimensional issues found during inspection.', cls: 'warn' };
+      }
+      return { msg: 'Micrometer SN-7734 was 90 days overdue for calibration.', cls: 'info' };
+
+    // ── QA OFFICE ──────────────────────────────────────────
+    case 'read_maint_log':
+      if (!S.found.maint_log) {
+        S.found.maint_log = true;
+        addItem('maint_log');
+        addNote('Maintenance Log — Station 3: Lubricant changed to <strong>Grade B-7</strong> (wrong). Correct grade: <strong>Grade A-3</strong>. No deviation raised!', true);
+        return { msg: 'Maintenance Log found. Station 3 maintenance entry: lubricant changed to Grade B-7 instead of Grade A-3 per SOP-MAINT-009. No deviation form was raised. This is a critical GMP compliance failure. Added to inventory.', cls: 'warn' };
+      }
+      return { msg: 'You\'ve already reviewed the maintenance log. Key finding: wrong lubricant grade used.', cls: 'info' };
+
+    case 'use_capa_station':
+      if (S.solved.capa_done) {
+        return { msg: 'CAPA-0112 is complete. Batch record safe is now unlocked.', cls: 'success' };
+      }
+      if (!S.inventory.includes('maint_log')) {
+        return { msg: 'CAPA workstation is open but you need evidence of the root cause before you can complete the analysis. Check the maintenance log on the side table.', cls: 'warn' };
+      }
+      // Step 1 — Root cause multiple choice
+      openModal({
+        tag: 'CAPA — CORRECTIVE & PREVENTIVE ACTION',
+        title: 'CAPA Workstation — NCR-0892 Root Cause Analysis',
+        body: 'A Corrective Action and Preventive Action (CAPA) must identify the <strong>true root cause</strong> of a non-conformance — not just the symptom — so that it can be permanently eliminated.<br><br>Based on your investigation findings, select the <strong>root cause</strong> of the dimensional non-conformances in batch BN-2024-3200:',
+        choices: [
+          { label: 'A)  Operator fatigue during the night shift', correct: false },
+          { label: 'B)  Wrong lubricant grade used on mould tooling (Grade B-7 instead of Grade A-3)', correct: true },
+          { label: 'C)  Incoming rubber compound out of specification', correct: false },
+          { label: 'D)  Autoclave temperature excursion during sterilisation', correct: false },
+        ],
+        onChoice: (correct, label) => {
+          if (correct) {
+            setFeedback('✓ Correct root cause identified.', 'ok');
+            setTimeout(() => {
+              // Step 2 — ISO 13485 clause
+              openModal({
+                tag: 'CAPA — ISO 13485 COMPLIANCE CHECK',
+                title: 'CAPA Step 2 of 2 — ISO 13485 Reference',
+                body: 'Root cause confirmed: <strong>Wrong lubricant grade on mould tooling.</strong><br><br>Under <strong>ISO 13485</strong> — the international Quality Management System standard for medical device manufacturers — all organisations must establish and maintain documented procedures for CAPA.<br><br>Enter the <strong>ISO 13485 clause number</strong> that mandates CAPA procedures:<br><small style="color:#5a6480;">(Hint: it\'s in the section covering "Improvement" — check the ISO 13485 filing cabinet if needed)</small>',
+                placeholder: 'e.g. 7.1 or 8.5',
+                submitLabel: 'Submit Clause',
+                onSubmit: val => {
+                  const v = val.trim().replace(/\s/g, '');
+                  if (v === '8.5' || v === '8.5.2' || v === '8.5.3' || v === '85') {
+                    S.solved.capa_done = true;
+                    S.found.capa_report = true;
+                    addItem('capa_report');
+                    puzzleDone();
+                    closeModal();
+                    log('✓ CAPA-0112 completed — ISO 13485 §8.5 referenced. Batch record safe is now unlocked.', 'success');
+                    log('📚 Quality Fact: ISO 13485 §8.5.2 (Corrective Action) requires investigating causes of nonconformities and taking action to prevent recurrence. §8.5.3 covers preventive actions.', 'fact');
+                    renderRoom();
+                    renderNav();
+                  } else {
+                    setFeedback('Incorrect clause. CAPA sits in the "Improvement" section of ISO 13485. Think about section 8.', 'bad');
+                  }
+                },
+              });
+            }, 800);
+          } else {
+            setFeedback('Incorrect. Review the maintenance log and SOP rack findings — the physical evidence points to a specific material change.', 'bad');
+          }
+        },
+      });
+      return null;
+
+    case 'check_iso_files':
+      if (!S.found.iso_checked) {
+        S.found.iso_checked = true;
+        addNote('ISO 13485 key clauses: §4 QMS | §6 Resources | §7 Product Realisation | <strong>§8 Measurement, Analysis & Improvement</strong> — includes §8.3 Nonconforming Product, §8.5.2 Corrective Action, §8.5.3 Preventive Action');
+        return { msg: 'ISO 13485 Filing Cabinet: The CAPA section is under §8 (Measurement, Analysis and Improvement). Specifically: §8.5.2 Corrective Action and §8.5.3 Preventive Action. Combined, this is referred to as "Clause 8.5."', cls: 'hint' };
+      }
+      return { msg: 'ISO 13485 §8.5 covers CAPA. That\'s what you need for the CAPA workstation.', cls: 'info' };
+
+    case 'open_batch_safe':
+      if (!S.solved.capa_done) {
+        return { msg: 'The batch record safe displays: "CAPA COMPLETION REQUIRED." Complete the CAPA workstation first.', cls: 'warn' };
+      }
+      if (S.solved.batch_retrieved) {
+        return { msg: 'You already have the Batch Release Certificate.', cls: 'info' };
+      }
+      S.solved.batch_retrieved = true;
+      S.found.batch_cert = true;
+      addItem('batch_cert');
+      addNote('Batch Release Certificate — Auth PIN: <strong>4471</strong>. Disposition: REJECT & Quarantine.', true);
+      return { msg: 'Batch Record Safe unlocked. Inside: the Batch Release Certificate for BN-2024-3200 — Disposition: REJECT & QUARANTINE. QA Auth PIN: 4471. Added to inventory.', cls: 'success' };
+
+    // ── DISPATCH ──────────────────────────────────────────────
+    case 'use_release_terminal':
+      if (S.solved.game_won) {
+        return { msg: 'Batch BN-2024-3200 has been authorised for quarantine. All quality records are complete.', cls: 'success' };
+      }
+      if (!S.inventory.includes('batch_cert')) {
+        return { msg: 'The release terminal requires a Batch Release Certificate with an authorisation PIN. Obtain this from the QA Office.', cls: 'warn' };
+      }
+      openModal({
+        tag: 'BATCH RELEASE TERMINAL — ISO 13485 §8.3',
+        title: 'Batch Disposition Authorisation',
+        body: 'Under <strong>ISO 13485 §8.3</strong>, all nonconforming product must be formally dispositioned. You have the Batch Release Certificate for <strong>BN-2024-3200</strong> which contains the QA authorisation PIN.<br><br>Enter the <strong>4-digit QA Auth PIN</strong> to complete the batch disposition:',
+        placeholder: '4-digit PIN',
+        submitLabel: 'Authorise Disposition',
+        onSubmit: val => {
+          if (val.trim() === '4471') {
+            S.solved.game_won = true;
+            puzzleDone();
             closeModal();
             triggerWin();
           } else {
-            setModalFeedback('ACCESS DENIED. Wrong code.', 'bad');
+            setFeedback('Incorrect PIN. Check the Batch Release Certificate in your inventory.', 'bad');
           }
-        }
+        },
       });
       return null;
 
-    case 'read_graffiti':
-      return { msg: '"They lied about everything. The cure was real. NEXUS-7 buried it. If you\'re reading this — RUN."', cls: 'hint' };
+    case 'inspect_quarantine':
+      return { msg: 'The quarantine cage holds pallet Q-2024-0892 — batch BN-2024-3200, tagged with NCR-0892. Label reads: "HOLD — DO NOT SHIP. Awaiting QA disposition." 3,200 plungers destined for diabetic patients are waiting for your final call.', cls: 'warn' };
 
-    case 'search_guard':
-      if (!state.found.guard_searched) {
-        state.found.guard_searched = true;
-        return { msg: 'The guard\'s radio is dead. His badge reads "SECURITY LVL-1". Nothing useful — he never had exit clearance.', cls: 'info' };
-      }
-      return { msg: 'There\'s nothing left to take.', cls: 'info' };
+    case 'read_qw_banner':
+      openModal({
+        tag: 'QUALITY WEEK MESSAGE',
+        title: '"Zero Defects Saves Lives"',
+        body: '<strong>QUALITY WEEK — MediSeal Manufacturing</strong><br><br>Our plungers are used in:<br>• Insulin vials for Type 1 and Type 2 diabetics<br>• Prefilled syringes for insulin pens<br>• Lyophilised drug vials for critical medications<br><br>A single defective plunger that reaches a patient could mean:<br>• Incorrect insulin dose delivery<br>• Sterility breach → patient infection<br>• Loss of dose → life-threatening hypoglycaemia<br><br><strong>This is why AQL, CAPA, calibration, and GMP are not bureaucracy — they are patient safety.</strong><br><br><em>Every check you make protects a real person.</em>',
+        noInput: true,
+      });
+      return null;
 
     default:
       return { msg: `Unknown action: ${action}`, cls: 'fail' };
   }
 }
 
-// ─────────────────────────────────────────────
-//  ROOM NAVIGATION LOGIC
-// ─────────────────────────────────────────────
-function canEnterRoom(roomId) {
-  if (roomId === 'lab')       return !!state.solved.lab_door || !!state.solved.cabinet_open;
-  if (roomId === 'server')    return !!state.inventory.includes('keycard') || !!state.solved.keycard_used;
-  if (roomId === 'exit_room') return !!state.solved.chain_cut;
-  return true;
-}
-
-function tryNavigate(roomId) {
-  if (canEnterRoom(roomId)) {
-    if (roomId === 'server' && state.inventory.includes('keycard')) {
-      state.solved.keycard_used = true;
-      log('You swipe the keycard. The reader beeps green and the door opens.', 'success');
-    }
-    state.currentRoom = roomId;
-    renderRoom();
-    renderNav();
-  } else {
-    let hint = 'The way is blocked.';
-    if (roomId === 'lab')       hint = 'The north door is locked. Find a way to open the cabinet first.';
-    if (roomId === 'server')    hint = 'The keycard reader blocks entry. You need an Access Keycard.';
-    if (roomId === 'exit_room') hint = 'A heavy chain bars this door. You need something to cut it.';
-    log(hint, 'fail');
-  }
-}
-
-// ─────────────────────────────────────────────
-//  INVENTORY HELPERS
-// ─────────────────────────────────────────────
+// ────────────────────────────────────────────────
+// HELPERS
+// ────────────────────────────────────────────────
 function addItem(id) {
-  if (!state.inventory.includes(id)) {
-    state.inventory.push(id);
+  if (!S.inventory.includes(id)) {
+    S.inventory.push(id);
     renderInventory();
   }
 }
 
-function removeItem(id) {
-  state.inventory = state.inventory.filter(i => i !== id);
-  if (state.selectedItem === id) state.selectedItem = null;
-  renderInventory();
-}
-
-function addNote(html) {
-  state.notes.push(html);
+function addNote(html, important = false) {
+  S.notes.push({ html, important });
   renderNotes();
 }
 
-// ─────────────────────────────────────────────
-//  LOG
-// ─────────────────────────────────────────────
-function log(msg, cls = 'info') {
-  const logEl = document.getElementById('log');
-  const p = document.createElement('p');
-  p.className = cls;
-  p.innerHTML = '> ' + msg;
-  logEl.appendChild(p);
-  logEl.scrollTop = logEl.scrollHeight;
+function puzzleDone() {
+  S.puzzlesDone++;
+  updateProgress();
 }
 
-// ─────────────────────────────────────────────
-//  RENDER FUNCTIONS
-// ─────────────────────────────────────────────
-function renderRoom() {
-  const room = ROOMS[state.currentRoom];
-  document.getElementById('room-art').textContent = room.emoji;
-  document.getElementById('room-title').textContent = room.name;
-  document.getElementById('room-desc').textContent = room.desc;
+function updateProgress() {
+  const total = 6;
+  const pct = (S.puzzlesDone / total) * 100;
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('progress-label').textContent =
+    `Quality checks: ${S.puzzlesDone} / ${total} complete`;
+}
 
-  const hsEl = document.getElementById('hotspots');
-  hsEl.innerHTML = '';
-  room.hotspots.forEach(hs => {
-    const btn = document.createElement('button');
-    btn.className = 'hotspot-btn';
-    btn.textContent = hs.label;
-    btn.addEventListener('click', () => {
-      const result = handleAction(hs.action);
+function log(msg, cls = 'info') {
+  const el = document.getElementById('log');
+  const p = document.createElement('p');
+  p.className = cls;
+  p.innerHTML = '› ' + msg;
+  el.appendChild(p);
+  el.scrollTop = el.scrollHeight;
+}
+
+// ────────────────────────────────────────────────
+// RENDER
+// ────────────────────────────────────────────────
+function renderRoom() {
+  const r = ROOMS[S.room];
+  document.getElementById('room-emoji').textContent = r.emoji;
+  document.getElementById('room-badge').textContent = r.badge;
+  document.getElementById('room-title').textContent = r.name;
+  document.getElementById('room-desc').textContent = r.desc;
+
+  const hs = document.getElementById('hotspots');
+  hs.innerHTML = '';
+  r.hotspots.forEach(h => {
+    const b = document.createElement('button');
+    b.className = 'hotspot-btn';
+    b.textContent = h.label;
+    b.onclick = () => {
+      const result = handleAction(h.action);
       if (result) log(result.msg, result.cls);
-    });
-    hsEl.appendChild(btn);
+    };
+    hs.appendChild(b);
   });
 }
 
 function renderInventory() {
   const grid = document.getElementById('inventory-grid');
   grid.innerHTML = '';
-  const slots = 8;
-  for (let i = 0; i < slots; i++) {
+  const SLOTS = 8;
+  for (let i = 0; i < SLOTS; i++) {
     const slot = document.createElement('div');
     slot.className = 'inv-slot';
-    const itemId = state.inventory[i];
-    if (itemId) {
-      const item = ITEMS[itemId];
+    const id = S.inventory[i];
+    if (id) {
+      const item = ITEMS[id];
       slot.classList.add('filled');
       slot.textContent = item.emoji;
-      slot.title = item.name;
-      if (state.selectedItem === itemId) slot.classList.add('selected');
-      slot.addEventListener('click', () => {
-        if (state.selectedItem === itemId) {
-          state.selectedItem = null;
-          log('Deselected ' + item.name + '.', 'info');
+      slot.dataset.tip = item.name;
+      if (S.selectedItem === id) slot.classList.add('selected');
+      slot.onclick = () => {
+        if (S.selectedItem === id) {
+          S.selectedItem = null;
+          log('Deselected.', 'info');
         } else {
-          state.selectedItem = itemId;
-          log('Selected: ' + item.name + ' — ' + item.desc, 'hint');
+          S.selectedItem = id;
+          log(`Selected: ${item.name} — ${item.desc}`, 'hint');
         }
         renderInventory();
-      });
+      };
     }
     grid.appendChild(slot);
   }
 }
 
 function renderNotes() {
-  const box = document.getElementById('notes-box');
-  if (state.notes.length === 0) {
-    box.innerHTML = '<p style="color:var(--dim);font-size:0.78rem;">Nothing recorded yet.</p>';
-  } else {
-    box.innerHTML = state.notes.map(n => `<p>• ${n}</p>`).join('');
+  const box = document.getElementById('notes-content');
+  if (!S.notes.length) {
+    box.innerHTML = '<p>No entries yet.</p>';
+    return;
   }
+  box.innerHTML = S.notes.map(n =>
+    `<p${n.important ? ' class="important"' : ''}>${n.html}</p>`
+  ).join('');
+  box.scrollTop = box.scrollHeight;
 }
 
 function renderNav() {
   const nav = document.getElementById('room-nav');
   nav.innerHTML = '';
-  const adjacent = ROOM_CONNECTIONS[state.currentRoom] || [];
-  const allRooms = ['storage', 'lab', 'server', 'exit_room'];
-
-  // Show all rooms as accessible reference, highlight adjacent
-  allRooms.forEach(roomId => {
-    const room = ROOMS[roomId];
-    const isAdjacent = adjacent.includes(roomId);
-    const isCurrent = roomId === state.currentRoom;
-    if (isCurrent) return; // skip current
-
+  const adj = EXITS[S.room] || [];
+  adj.forEach(roomId => {
+    const r = ROOMS[roomId];
+    const unlocked = canEnter(roomId);
     const btn = document.createElement('button');
-    btn.className = 'nav-btn';
-    const unlocked = canEnterRoom(roomId);
-
-    if (!isAdjacent) {
-      // Non-adjacent room — disabled
-      btn.disabled = true;
-      btn.textContent = room.name;
-      btn.style.opacity = '0.2';
-    } else if (unlocked) {
-      btn.classList.add('unlocked');
-      btn.textContent = room.name;
-      btn.addEventListener('click', () => tryNavigate(roomId));
-    } else {
-      btn.classList.add('locked');
-      btn.textContent = room.name;
-      btn.addEventListener('click', () => tryNavigate(roomId));
-    }
+    btn.className = 'nav-btn ' + (unlocked ? 'open' : 'locked');
+    btn.textContent = r.name;
+    btn.onclick = () => goTo(roomId);
     nav.appendChild(btn);
   });
-
-  // Always show current location
-  const cur = document.createElement('div');
-  cur.style.cssText = 'font-size:0.72rem;color:var(--accent);margin-top:8px;border-top:1px solid var(--border);padding-top:8px;';
-  cur.innerHTML = `📍 You are in: <strong>${ROOMS[state.currentRoom].name}</strong>`;
-  nav.appendChild(cur);
+  const loc = document.createElement('div');
+  loc.id = 'current-location';
+  loc.innerHTML = `📍 ${ROOMS[S.room].name}`;
+  nav.appendChild(loc);
 }
 
-// ─────────────────────────────────────────────
-//  MODAL
-// ─────────────────────────────────────────────
-let _modalCallback = null;
-let _extraBtnCallback = null;
+// ────────────────────────────────────────────────
+// MODAL
+// ────────────────────────────────────────────────
+let _onSubmit  = null;
 
-function openModal({ title, body, placeholder, submitLabel, onSubmit, noInput, extraBtn }) {
-  document.getElementById('modal-title').textContent = title;
-  document.getElementById('modal-body').innerHTML = body;
+function openModal({ tag, title, body, placeholder, submitLabel, onSubmit, noInput, choices, onChoice }) {
+  document.getElementById('modal-tag').textContent   = tag   || 'QUALITY CONTROL';
+  document.getElementById('modal-title').textContent = title || '';
+  document.getElementById('modal-body').innerHTML    = body  || '';
   document.getElementById('modal-feedback').textContent = '';
-  document.getElementById('modal-feedback').className = '';
+  document.getElementById('modal-feedback').className   = '';
 
   const inp = document.getElementById('modal-input');
   const sub = document.getElementById('modal-submit');
-  const closeBtn = document.getElementById('modal-close-btn');
+  const choicesEl = document.getElementById('modal-choices');
 
-  if (noInput) {
+  choicesEl.innerHTML = '';
+  choicesEl.style.display = 'none';
+
+  if (choices && choices.length) {
+    inp.style.display = 'none';
+    sub.style.display = 'none';
+    choicesEl.style.display = 'flex';
+    choices.forEach(ch => {
+      const b = document.createElement('button');
+      b.className = 'choice-btn';
+      b.textContent = ch.label;
+      b.onclick = () => onChoice && onChoice(ch.correct, ch.label);
+      choicesEl.appendChild(b);
+    });
+  } else if (noInput) {
     inp.style.display = 'none';
     sub.style.display = 'none';
   } else {
     inp.style.display = 'block';
-    inp.value = '';
-    inp.placeholder = placeholder || '';
+    inp.placeholder   = placeholder || '';
+    inp.value         = '';
     sub.style.display = 'inline-block';
-    sub.textContent = submitLabel || 'Submit';
+    sub.textContent   = submitLabel || 'Submit';
+    setTimeout(() => inp.focus(), 60);
   }
 
-  // Extra button (like "Login")
-  const existing = document.getElementById('extra-modal-btn');
-  if (existing) existing.remove();
-  if (extraBtn) {
-    const btn = document.createElement('button');
-    btn.id = 'extra-modal-btn';
-    btn.className = 'btn primary';
-    btn.textContent = extraBtn.label;
-    _extraBtnCallback = extraBtn.action;
-    btn.addEventListener('click', _extraBtnCallback);
-    document.querySelector('.modal-btns').insertBefore(btn, closeBtn);
-  }
-
-  _modalCallback = onSubmit || null;
-  closeBtn.style.display = noInput ? 'inline-block' : 'none';
-
+  _onSubmit = onSubmit || null;
   document.getElementById('modal-overlay').classList.add('show');
-  if (!noInput) setTimeout(() => inp.focus(), 50);
 }
 
 function closeModal() {
   document.getElementById('modal-overlay').classList.remove('show');
-  _modalCallback = null;
+  _onSubmit = null;
 }
 
-function setModalFeedback(msg, type) {
+function setFeedback(msg, type) {
   const el = document.getElementById('modal-feedback');
   el.textContent = msg;
-  el.className = type; // 'ok' or 'bad'
+  el.className   = type;
 }
 
-document.getElementById('modal-submit').addEventListener('click', () => {
-  if (_modalCallback) {
-    const val = document.getElementById('modal-input').value;
-    _modalCallback(val);
-  }
-});
+document.getElementById('modal-submit').onclick = () => {
+  if (_onSubmit) _onSubmit(document.getElementById('modal-input').value);
+};
+document.getElementById('modal-input').onkeydown = e => {
+  if (e.key === 'Enter' && _onSubmit) _onSubmit(document.getElementById('modal-input').value);
+};
+document.getElementById('modal-cancel').onclick = closeModal;
 
-document.getElementById('modal-input').addEventListener('keydown', (e) => {
-  if (e.key === 'Enter' && _modalCallback) {
-    const val = document.getElementById('modal-input').value;
-    _modalCallback(val);
-  }
-});
-
-document.getElementById('modal-cancel').addEventListener('click', closeModal);
-document.getElementById('modal-close-btn').addEventListener('click', closeModal);
-
-// ─────────────────────────────────────────────
-//  TIMER
-// ─────────────────────────────────────────────
+// ────────────────────────────────────────────────
+// TIMER
+// ────────────────────────────────────────────────
 function startTimer() {
-  state.timerInterval = setInterval(() => {
-    if (state.gameOver) return;
-    state.timerSeconds--;
-    updateTimerDisplay();
-    if (state.timerSeconds <= 0) {
-      clearInterval(state.timerInterval);
-      triggerLose();
-    }
+  S.timerInt = setInterval(() => {
+    if (S.over) return;
+    S.timerSec--;
+    const m = Math.floor(S.timerSec / 60);
+    const s = S.timerSec % 60;
+    const el = document.getElementById('timer');
+    el.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    if (S.timerSec <= 120) el.classList.add('urgent');
+    if (S.timerSec <= 0) { clearInterval(S.timerInt); triggerLose(); }
   }, 1000);
 }
 
-function updateTimerDisplay() {
-  const m = Math.floor(state.timerSeconds / 60);
-  const s = state.timerSeconds % 60;
-  const el = document.getElementById('timer');
-  el.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-  if (state.timerSeconds <= 120) el.classList.add('urgent');
-  else el.classList.remove('urgent');
-}
-
-// ─────────────────────────────────────────────
-//  WIN / LOSE
-// ─────────────────────────────────────────────
+// ────────────────────────────────────────────────
+// WIN / LOSE
+// ────────────────────────────────────────────────
 function triggerWin() {
-  state.gameOver = true;
-  clearInterval(state.timerInterval);
-  const elapsed = 20 * 60 - state.timerSeconds;
-  const m = Math.floor(elapsed / 60);
-  const s = elapsed % 60;
+  S.over = true;
+  clearInterval(S.timerInt);
+  const elapsed  = 25 * 60 - S.timerSec;
+  const em = String(Math.floor(elapsed / 60)).padStart(2,'0');
+  const es = String(elapsed % 60).padStart(2,'0');
+  const remaining = document.getElementById('timer').textContent;
+
   const end = document.getElementById('endscreen');
-  end.classList.add('show', 'win');
-  document.getElementById('end-icon').textContent = '🎉';
-  document.getElementById('end-title').textContent = 'You Escaped!';
-  document.getElementById('end-msg').textContent =
-    'You outsmarted NEXUS-7 and made it through the blast door. The truth about Project CURE is in your hands now.';
-  document.getElementById('end-time').textContent = `Time: ${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  end.className = 'show win';
+  document.getElementById('end-icon').textContent  = '🏆';
+  document.getElementById('end-title').textContent = 'Audit Simulation Passed!';
+  document.getElementById('end-msg').textContent   =
+    'Exceptional work. You completed every quality check, identified the root cause, raised the CAPA, and correctly dispositioned the nonconforming batch — protecting patients and keeping MediSeal\'s GMP licence intact.';
+  document.getElementById('end-stats').innerHTML = `
+    <strong style="color:var(--accent);">Your Quality Record</strong><br>
+    Time taken: <span>${em}:${es}</span><br>
+    Time remaining: <span>${remaining}</span><br>
+    Puzzles completed: <span>6 / 6</span><br>
+    Batch correctly dispositioned: <span>REJECT ✓</span><br>
+    Root cause identified: <span>Wrong lubricant grade ✓</span><br>
+    ISO 13485 clause applied: <span>§8.5 ✓</span>
+  `;
 }
 
 function triggerLose() {
-  state.gameOver = true;
+  S.over = true;
   const end = document.getElementById('endscreen');
-  end.classList.add('show', 'lose');
-  document.getElementById('end-icon').textContent = '☠️';
-  document.getElementById('end-title').textContent = 'LOCKDOWN COMPLETE';
-  document.getElementById('end-msg').textContent =
-    'The automated lockdown sealed every exit. You are trapped inside the abandoned laboratory forever. NEXUS-7 wins.';
-  document.getElementById('end-time').textContent = 'Time: 00:00';
+  end.className = 'show lose';
+  document.getElementById('end-icon').textContent  = '⏱️';
+  document.getElementById('end-title').textContent = 'LOCKDOWN — AUDIT FAILED';
+  document.getElementById('end-msg').textContent   =
+    'Time expired. The FDA auditor arrived before you completed the quality checks. Batch BN-2024-3200\'s status is unresolved. The facility has been placed under a regulatory hold. Quality is everyone\'s responsibility — every second counts.';
+  document.getElementById('end-stats').innerHTML = `
+    <strong style="color:var(--danger);">Audit Outcome</strong><br>
+    Puzzles completed: <span>${S.puzzlesDone} / 6</span><br>
+    Batch disposition: <span>INCOMPLETE</span><br>
+    Regulatory status: <span style="color:var(--danger);">HOLD</span>
+  `;
 }
 
-// ─────────────────────────────────────────────
-//  INIT
-// ─────────────────────────────────────────────
-document.getElementById('start-btn').addEventListener('click', () => {
+// ────────────────────────────────────────────────
+// INIT
+// ────────────────────────────────────────────────
+document.getElementById('start-btn').onclick = () => {
   document.getElementById('startscreen').style.display = 'none';
   renderRoom();
   renderInventory();
   renderNotes();
   renderNav();
+  updateProgress();
   startTimer();
-  log('You wake up on a cold concrete floor. The room smells of dust and chemicals.', 'info');
-  log('Examine your surroundings. Find a way out.', 'hint');
-});
+  log('Facility lockdown in effect. Report to the Receiving Dock and begin your investigation.', 'warn');
+  log('Tip: Examine every hotspot. Collect items. Read your notes. The answers are all here.', 'hint');
+};
 </script>
 </body>
 </html>
