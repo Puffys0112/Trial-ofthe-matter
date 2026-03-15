@@ -614,13 +614,8 @@ function calcScore(won) {
 async function submitScore(won) {
   if (S.demoMode || !S.authToken) return null;
   try {
-    const res = await apiCall('/api/game/submit', 'POST', {
-      puzzlesDone:      S.puzzlesDone,
-      secondsRemaining: S.timerSec,
-      wrongAnswers:     S.wrongAnswers,
-      won,
-    });
-    return res.score;
+    const res = await apiCall('/api/game/submit', 'POST', { won });
+    return res;
   } catch { return null; }
 }
 
@@ -892,6 +887,7 @@ function handleAction(action) {
             renderNav();
           } else {
             S.wrongAnswers++;
+            if (S.socket) S.socket.emit('wrong_answer');
             setFeedback('Lot number not recognised. Check the Certificate of Analysis.', 'bad');
           }
         },
@@ -953,6 +949,7 @@ function handleAction(action) {
                     renderRoom();
                   } else if (val2.trim().toUpperCase() === 'ACCEPT') {
                     S.wrongAnswers++;
+                    if (S.socket) S.socket.emit('wrong_answer');
                     setFeedback('Incorrect. With 4 defects and Re=4, the batch must be REJECTED. Re means reject if ≥ 4 defects — 4 equals 4.', 'bad');
                   } else {
                     setFeedback('Type exactly ACCEPT or REJECT.', 'bad');
@@ -962,6 +959,7 @@ function handleAction(action) {
             }, 900);
           } else if (!isNaN(n)) {
             S.wrongAnswers++;
+            if (S.socket) S.socket.emit('wrong_answer');
             setFeedback(`You counted ${n}, but that doesn't match the inspection record. Look at the tray more carefully.`, 'bad');
           } else {
             setFeedback('Please enter a number.', 'bad');
@@ -1004,6 +1002,7 @@ function handleAction(action) {
             renderNav();
           } else {
             S.wrongAnswers++;
+            if (S.socket) S.socket.emit('wrong_answer');
             setFeedback('Batch number not found. Check your notes — the batch number was stated in the scenario briefing.', 'bad');
           }
         },
@@ -1046,6 +1045,7 @@ function handleAction(action) {
             renderNav();
           } else {
             S.wrongAnswers++;
+            if (S.socket) S.socket.emit('wrong_answer');
             setFeedback('Incorrect. Correction = standard − reading = 12.50 − 12.53 = ?', 'bad');
           }
         },
@@ -1113,6 +1113,7 @@ function handleAction(action) {
                     S.found.capa_report = true;
                     addItem('capa_report');
                     puzzleDone();
+                    if (S.socket) S.socket.emit('puzzle_solved', { key: 'capa_done', puzzlesDone: S.puzzlesDone });
                     closeModal();
                     log('✓ CAPA-0112 completed — ISO 13485 §8.5 referenced. Batch record safe is now unlocked.', 'success');
                     log('📚 Quality Fact: ISO 13485 §8.5.2 (Corrective Action) requires investigating causes of nonconformities and taking action to prevent recurrence. §8.5.3 covers preventive actions.', 'fact');
@@ -1120,6 +1121,7 @@ function handleAction(action) {
                     renderNav();
                   } else {
                     S.wrongAnswers++;
+                    if (S.socket) S.socket.emit('wrong_answer');
                   setFeedback('Incorrect clause. CAPA sits in the "Improvement" section of ISO 13485. Think about section 8.', 'bad');
                   }
                 },
@@ -1127,6 +1129,7 @@ function handleAction(action) {
             }, 800);
           } else {
             S.wrongAnswers++;
+            if (S.socket) S.socket.emit('wrong_answer');
             setFeedback('Incorrect. Review the maintenance log and SOP rack findings — the physical evidence points to a specific material change.', 'bad');
           }
         },
@@ -1149,6 +1152,7 @@ function handleAction(action) {
         return { msg: 'You already have the Batch Release Certificate.', cls: 'info' };
       }
       S.solved.batch_retrieved = true;
+      if (S.socket) S.socket.emit('puzzle_solved', { key: 'batch_retrieved', puzzlesDone: S.puzzlesDone });
       S.found.batch_cert = true;
       addItem('batch_cert');
       addNote('Batch Release Certificate — Auth PIN: <strong>4471</strong>. Disposition: REJECT & Quarantine.', true);
@@ -1172,10 +1176,12 @@ function handleAction(action) {
           if (val.trim() === '4471') {
             S.solved.game_won = true;
             puzzleDone();
+            if (S.socket) S.socket.emit('puzzle_solved', { key: 'game_won', puzzlesDone: S.puzzlesDone });
             closeModal();
             triggerWin();
           } else {
             S.wrongAnswers++;
+            if (S.socket) S.socket.emit('wrong_answer');
             setFeedback('Incorrect PIN. Check the Batch Release Certificate in your inventory.', 'bad');
           }
         },
@@ -1407,64 +1413,48 @@ function startTimer() {
 // WIN / LOSE
 // ────────────────────────────────────────────────
 async function triggerWin() {
+  if (S.over) return;
   S.over = true;
   clearInterval(S.timerInt);
-
-  const score     = calcScore(true);
-  S.finalScore    = score;
-  const elapsed   = 25 * 60 - S.timerSec;
-  const em        = String(Math.floor(elapsed / 60)).padStart(2,'0');
-  const es        = String(elapsed % 60).padStart(2,'0');
-  const remaining = document.getElementById('timer').textContent;
-
-  const timeBonusPts  = S.timerSec * 2;
-  const penaltyPts    = S.wrongAnswers * 10;
-
-  // Submit to server
-  const serverScore = await submitScore(true);
-
-  const end = document.getElementById('endscreen');
-  end.className = 'show win';
-  document.getElementById('end-icon').textContent  = '🏆';
-  document.getElementById('end-title').textContent = 'Audit Simulation Passed!';
-  document.getElementById('end-msg').textContent   =
-    'Exceptional work. You completed every quality check, identified the root cause, raised the CAPA, and correctly dispositioned the nonconforming batch — protecting patients and keeping MediSeal\'s GMP licence intact.';
-  document.getElementById('end-stats').innerHTML = `
-    <strong style="color:var(--accent);">Score Breakdown — ${S.demoMode ? 'DEMO' : (S.groupName || '')}</strong><br>
-    Puzzles completed (6 × 200): <span>+${(6*200).toLocaleString()} pts</span><br>
-    Time remaining bonus (${S.timerSec}s × 2): <span>+${timeBonusPts.toLocaleString()} pts</span><br>
-    Wrong answer penalty (${S.wrongAnswers} × −10): <span style="color:var(--danger);">−${penaltyPts.toLocaleString()} pts</span><br>
-    <strong>TOTAL SCORE: <span style="font-size:1.2rem;color:var(--accent2);">${score.toLocaleString()}</span> pts</strong><br><br>
-    Time taken: <span>${em}:${es}</span> &nbsp;|&nbsp; Time remaining: <span>${remaining}</span><br>
-    ${!S.demoMode ? `<a href="/admin.html" target="_blank" style="color:var(--accent);">📊 View Leaderboard</a>` : '<em style="color:var(--dim);">Demo mode — score not saved</em>'}
-  `;
+  const result = await submitScore(true);
+  if (!S.over) return; // game_over socket beat us to it
+  showEndScreen(true, result || { score: calcScore(true), puzzlesDone: S.puzzlesDone, wrongAnswers: S.wrongAnswers, secondsRemaining: S.timerSec });
 }
 
 async function triggerLose() {
+  if (S.over) return;
   S.over = true;
   clearInterval(S.timerInt);
+  const result = await submitScore(false);
+  showEndScreen(false, result || { score: calcScore(false), puzzlesDone: S.puzzlesDone, wrongAnswers: S.wrongAnswers, secondsRemaining: S.timerSec });
+}
 
-  const score  = calcScore(false);
-  S.finalScore = score;
-  const penaltyPts = S.wrongAnswers * 10;
-
-  await submitScore(false);
+function showEndScreen(won, data) {
+  const score            = data.score            || 0;
+  const puzzlesDone      = data.puzzlesDone      || 0;
+  const wrongAnswers     = data.wrongAnswers      || 0;
+  const secondsRemaining = data.secondsRemaining  || 0;
+  const timeBonusPts     = won ? secondsRemaining * 2 : 0;
+  const penaltyPts       = wrongAnswers * 10;
+  const elapsed          = 25 * 60 - secondsRemaining;
+  const em = String(Math.floor(elapsed / 60)).padStart(2,'0');
+  const es = String(elapsed % 60).padStart(2,'0');
 
   const end = document.getElementById('endscreen');
-  end.className = 'show lose';
-  document.getElementById('end-icon').textContent  = '⏱️';
-  document.getElementById('end-title').textContent = 'LOCKDOWN — AUDIT FAILED';
-  document.getElementById('end-msg').textContent   =
-    "Time expired. The FDA auditor arrived before you completed the quality checks. Batch BN-2024-3200's status is unresolved. The facility has been placed under a regulatory hold.";
-  document.getElementById('end-stats').innerHTML = `
-    <strong style="color:var(--danger);">Score Breakdown — ${S.demoMode ? 'DEMO' : (S.groupName || '')}</strong><br>
-    Puzzles completed (${S.puzzlesDone} × 200): <span>+${(S.puzzlesDone*200).toLocaleString()} pts</span><br>
-    Time bonus (game not completed): <span>0 pts</span><br>
-    Wrong answer penalty (${S.wrongAnswers} × −10): <span style="color:var(--danger);">−${penaltyPts.toLocaleString()} pts</span><br>
-    <strong>TOTAL SCORE: <span style="font-size:1.2rem;color:var(--danger);">${score.toLocaleString()}</span> pts</strong><br><br>
-    Puzzles done: <span>${S.puzzlesDone} / 6</span> &nbsp;|&nbsp; Batch disposition: <span>INCOMPLETE</span><br>
-    ${!S.demoMode ? `<a href="/admin.html" target="_blank" style="color:var(--accent);">📊 View Leaderboard</a>` : '<em style="color:var(--dim);">Demo mode — score not saved</em>'}
-  `;
+  end.className = 'show ' + (won ? 'win' : 'lose');
+  document.getElementById('end-icon').textContent  = won ? '🏆' : '⏱️';
+  document.getElementById('end-title').textContent = won ? 'Audit Simulation Passed!' : 'LOCKDOWN — AUDIT FAILED';
+  document.getElementById('end-msg').textContent   = won
+    ? "Excellent work! Your group completed all quality checks, identified the root cause, and correctly dispositioned the nonconforming batch — protecting patients and MediSeal's GMP licence."
+    : "Time expired. The FDA auditor arrived before your group completed all quality checks. Batch BN-2024-3200 remains unresolved.";
+  document.getElementById('end-stats').innerHTML =
+    '<strong style="color:' + (won ? 'var(--accent)' : 'var(--danger)') + '">Score Breakdown — ' + (S.demoMode ? 'DEMO' : escHtml(S.groupName || '')) + '</strong><br>' +
+    'Puzzles completed (' + puzzlesDone + ' × 200): <span>+' + (puzzlesDone * 200).toLocaleString() + ' pts</span><br>' +
+    'Time bonus' + (won ? ' (' + secondsRemaining + 's × 2)' : ' (not completed)') + ': <span>' + (won ? '+' + timeBonusPts.toLocaleString() : '0') + ' pts</span><br>' +
+    'Wrong answer penalty (' + wrongAnswers + ' × −10): <span style="color:var(--danger);">−' + penaltyPts.toLocaleString() + ' pts</span><br>' +
+    '<strong>TOTAL SCORE: <span style="font-size:1.2rem;color:' + (won ? 'var(--accent2)' : 'var(--danger)') + ';">' + score.toLocaleString() + '</span> pts</strong><br><br>' +
+    'Time taken: <span>' + em + ':' + es + '</span><br>' +
+    (S.demoMode ? '<em style="color:var(--dim);">Demo — score not saved</em>' : '<a href="/admin.html" target="_blank" style="color:var(--accent);">📊 View Leaderboard</a>');
 }
 
 // ────────────────────────────────────────────────
@@ -1482,12 +1472,150 @@ document.getElementById('start-btn').onclick = async () => {
   renderNav();
   updateProgress();
   startTimer();
+  connectSocket();
   log('Facility lockdown in effect. Report to the Receiving Dock and begin your investigation.', 'warn');
   log('Tip: Examine every hotspot. Collect items. Read your notes. The answers are all here.', 'hint');
 };
 
 // Init login when page loads
 initLogin();
+
+// ────────────────────────────────────────────────
+// SOCKET.IO — REAL-TIME GROUP SYNC
+// ────────────────────────────────────────────────
+const PUZZLE_LABELS = {
+  coa_verified:     'GMP Material Verification',
+  inspection_done:  'AQL Visual Inspection',
+  ncr_filed:        'Non-Conformance Report',
+  calibration_done: 'Instrument Calibration',
+  capa_done:        'CAPA Root Cause Analysis',
+  batch_retrieved:  'Batch Record Retrieved',
+  game_won:         'Final Batch Release',
+};
+
+function connectSocket() {
+  if (!S.authToken || S.demoMode) return;
+  const sock = window.io({ auth: { token: S.authToken, memberName: S.memberName || 'Member' } });
+  S.socket = sock;
+
+  sock.on('connect', () => {
+    document.getElementById('chat-input').disabled     = false;
+    document.getElementById('chat-input').placeholder  = 'Message your team…';
+  });
+
+  sock.on('state_init', ({ state, chats, members }) => {
+    if (state) applyServerState(state);
+    if (chats)   chats.forEach(c => appendChat(c.from, c.text, c.ts, c.from === S.memberName));
+    if (members) updateMembersOnline(members);
+  });
+
+  sock.on('puzzle_solved', ({ key, puzzlesDone, fromName }) => {
+    if (S.solved[key]) return;
+    S.solved[key]  = true;
+    S.puzzlesDone  = Math.max(S.puzzlesDone, puzzlesDone);
+    updateProgress(); renderNav(); renderRoom();
+    log(`✓ ${fromName} completed: ${PUZZLE_LABELS[key] || key}`, 'success');
+  });
+
+  sock.on('item_found', ({ itemId, fromName }) => {
+    if (S.inventory.includes(itemId)) return;
+    addItem(itemId, false);
+    log(`🤝 ${fromName} found: ${ITEMS[itemId] ? ITEMS[itemId].name : itemId}`, 'hint');
+  });
+
+  sock.on('note_added', ({ html, important }) => {
+    addNote(html, important, false);
+  });
+
+  sock.on('chat', msg => {
+    appendChat(msg.from, msg.text, msg.ts, msg.from === S.memberName);
+  });
+
+  sock.on('member_join', ({ memberName, members }) => {
+    updateMembersOnline(members);
+    appendSystemChat(memberName + ' joined the team');
+    if (memberName !== S.memberName) log('👋 ' + memberName + ' joined your group!', 'hint');
+  });
+
+  sock.on('member_leave', ({ memberName, members }) => {
+    updateMembersOnline(members);
+    appendSystemChat(memberName + ' left');
+  });
+
+  sock.on('game_over', data => {
+    if (S.over) return;
+    S.over = true;
+    clearInterval(S.timerInt);
+    showEndScreen(data.won, data);
+  });
+
+  sock.on('kicked', ({ reason }) => {
+    alert('Admin action: ' + reason + '\nPlease refresh and login again.');
+    location.reload();
+  });
+
+  sock.on('disconnect', () => {
+    document.getElementById('chat-input').disabled    = true;
+    document.getElementById('chat-input').placeholder = 'Reconnecting…';
+  });
+}
+
+function applyServerState(state) {
+  if (!state) return;
+  if (state.solved)   Object.entries(state.solved).forEach(([k, v]) => { if (v) S.solved[k] = true; });
+  if (state.inventory) state.inventory.forEach(id => { if (!S.inventory.includes(id)) S.inventory.push(id); });
+  if (state.notes && state.notes.length) S.notes = [...state.notes];
+  if (state.puzzlesDone !== undefined)   S.puzzlesDone = Math.max(S.puzzlesDone, state.puzzlesDone);
+  if (state.timerSec   !== undefined)    S.timerSec    = state.timerSec;
+  renderInventory(); renderNotes(); renderNav(); updateProgress();
+  const m = Math.floor(S.timerSec / 60), s = S.timerSec % 60;
+  document.getElementById('timer').textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+}
+
+function updateMembersOnline(members) {
+  const el = document.getElementById('members-online');
+  if (el) el.textContent = members.length + ' online';
+}
+
+// ── Chat helpers ────────────────────────────────
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function appendChat(from, text, ts, isSelf) {
+  const el   = document.getElementById('chat-msgs');
+  const div  = document.createElement('div');
+  div.className = 'cm ' + (isSelf ? 'cm-own' : 'cm-other');
+  const time = new Date(ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  div.innerHTML =
+    '<span class="cm-name">' + escHtml(from) + '</span>' +
+    '<span class="cm-time">[' + time + ']</span>' +
+    '<span class="cm-text"> ' + escHtml(text) + '</span>';
+  el.appendChild(div);
+  el.scrollTop = el.scrollHeight;
+}
+
+function appendSystemChat(text) {
+  const el  = document.getElementById('chat-msgs');
+  const div = document.createElement('div');
+  div.className = 'cm cm-system';
+  div.textContent = '— ' + text + ' —';
+  el.appendChild(div);
+  el.scrollTop = el.scrollHeight;
+}
+
+function sendChat() {
+  const inp  = document.getElementById('chat-input');
+  const text = inp.value.trim();
+  if (!text || !S.socket) return;
+  S.socket.emit('chat', { text });
+  inp.value = '';
+}
+
+document.getElementById('chat-send-btn').onclick = sendChat;
+document.getElementById('chat-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') sendChat();
+});
 </script>
 </body>
 </html>
