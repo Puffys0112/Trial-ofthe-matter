@@ -367,7 +367,23 @@
     @media(max-width:680px) {
       #game-layout { grid-template-columns: 1fr; }
     }
+
+    /* ── Chat Panel ── */
+    #chat-msgs { height: 110px; overflow-y: auto; margin-bottom: 6px; font-size: 0.73rem; line-height: 1.55; }
+    .cm { margin-bottom: 2px; word-break: break-word; }
+    .cm-own .cm-name { font-weight: bold; color: var(--accent2); }
+    .cm-other .cm-name { font-weight: bold; color: var(--accent); }
+    .cm-system { color: var(--dim); font-style: italic; font-size: 0.68rem; padding: 1px 0; }
+    .cm-text { color: var(--text); }
+    .cm-time { color: var(--dim); font-size: 0.65rem; margin: 0 3px; }
+    #chat-input-row { display: flex; gap: 5px; }
+    #chat-input { flex: 1; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 5px 8px; border-radius: 4px; font-family: inherit; font-size: 0.76rem; outline: none; }
+    #chat-input:focus { border-color: var(--accent); }
+    #chat-send-btn { background: transparent; border: 1px solid var(--accent); color: var(--accent); padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.82rem; }
+    #chat-send-btn:hover { background: rgba(0,153,230,0.1); }
+    #members-online { font-size: 0.64rem; color: var(--accent2); font-weight: normal; letter-spacing: 1px; }
   </style>
+  <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
 
@@ -386,6 +402,10 @@
     <div class="lf">
       <label>Group PIN</label>
       <input type="password" id="group-pin" placeholder="Enter your group PIN" maxlength="10" />
+    </div>
+    <div class="lf">
+      <label>Your Name</label>
+      <input type="text" id="member-name" placeholder="e.g. Alice" maxlength="24" autocomplete="off" />
     </div>
     <button class="btn primary login-submit" id="login-btn">LOGIN &amp; ENTER FACILITY</button>
     <div class="login-links">
@@ -495,6 +515,16 @@
       <div id="notes-content"><p>No entries yet.</p></div>
     </div>
     <div class="panel-box">
+      <h3 style="display:flex;align-items:center;justify-content:space-between;">
+        Group Chat <span id="members-online"></span>
+      </h3>
+      <div id="chat-msgs"></div>
+      <div id="chat-input-row">
+        <input type="text" id="chat-input" placeholder="Connect first…" maxlength="200" autocomplete="off" disabled />
+        <button id="chat-send-btn" title="Send">↑</button>
+      </div>
+    </div>
+    <div class="panel-box">
       <h3>Areas</h3>
       <div id="room-nav"></div>
     </div>
@@ -551,6 +581,8 @@ const S = {
   groupName:    null,
   demoMode:     false,
   finalScore:   null,
+  memberName:  null,
+  socket:      null,
 };
 
 // ────────────────────────────────────────────────
@@ -623,6 +655,7 @@ document.getElementById('login-btn').onclick = async () => {
   err.textContent = '';
   if (!groupId) { err.textContent = 'Please select your group.'; return; }
   if (!pin)     { err.textContent = 'Please enter your PIN.'; return; }
+  const name = document.getElementById('member-name').value.trim() || 'Member';
   try {
     const res = await apiCall('/api/login', 'POST', { groupId, pin });
     if (res.status === 'completed') {
@@ -632,6 +665,7 @@ document.getElementById('login-btn').onclick = async () => {
     }
     S.authToken  = res.token;
     S.groupName  = res.groupName;
+    S.memberName = name;
     showStartScreen(res.groupName);
   } catch (e) {
     err.textContent = e.message || 'Login failed. Check your PIN and try again.';
@@ -646,6 +680,7 @@ document.getElementById('demo-link').onclick = e => {
   e.preventDefault();
   S.demoMode  = true;
   S.groupName = 'Demo';
+  S.memberName = 'Demo';
   showStartScreen('Demo Mode');
 };
 
@@ -850,6 +885,7 @@ function handleAction(action) {
           if (v === 'RM4471' || v === 'RM-4471' || v === '4471') {
             S.solved.coa_verified = true;
             puzzleDone();
+            if (S.socket) S.socket.emit('puzzle_solved', { key: 'coa_verified', puzzlesDone: S.puzzlesDone });
             closeModal();
             log('✓ MATERIAL VERIFIED — Lot RM-4471 released from HOLD. Production line is now accessible.', 'success');
             log('📚 Quality Fact: GMP requires every incoming material to have an approved CoA on file before it can be used in production.', 'fact');
@@ -910,6 +946,7 @@ function handleAction(action) {
                   if (val2.trim().toUpperCase() === 'REJECT') {
                     S.solved.inspection_done = true;
                     puzzleDone();
+                    if (S.socket) S.socket.emit('puzzle_solved', { key: 'inspection_done', puzzlesDone: S.puzzlesDone });
                     closeModal();
                     log('✓ Batch BN-2024-3200 REJECTED — 4 defects equals the rejection number (Re=4). An NCR must now be raised.', 'success');
                     log('📚 Quality Fact: A "Re" value means if you find EXACTLY that many defects, you still REJECT — the accept number is strictly less than Re.', 'fact');
@@ -960,6 +997,7 @@ function handleAction(action) {
             S.found.ncr_form = true;
             addItem('ncr_form');
             puzzleDone();
+            if (S.socket) S.socket.emit('puzzle_solved', { key: 'ncr_filed', puzzlesDone: S.puzzlesDone });
             closeModal();
             log('✓ NCR-0892 raised for batch BN-2024-3200. QC Laboratory access granted.', 'success');
             log('📚 Quality Fact: ISO 13485 §8.3 requires documented procedures for controlling nonconforming product. An NCR creates the traceable quality record.', 'fact');
@@ -1001,6 +1039,7 @@ function handleAction(action) {
           if (v === '-0.03' || v === '0.03' || v === '-0.030' || v === '-.03') {
             S.solved.calibration_done = true;
             puzzleDone();
+            if (S.socket) S.socket.emit('puzzle_solved', { key: 'calibration_done', puzzlesDone: S.puzzlesDone });
             closeModal();
             log('✓ Correction factor −0.03 mm applied and logged. Calibration certificate recorded. QA Office access granted.', 'success');
             log('📚 Quality Fact: ISO/IEC 17025 requires all measurement instruments in QC labs to be calibrated against traceable reference standards at defined intervals.', 'fact');
@@ -1163,16 +1202,18 @@ function handleAction(action) {
 // ────────────────────────────────────────────────
 // HELPERS
 // ────────────────────────────────────────────────
-function addItem(id) {
+function addItem(id, broadcast = true) {
   if (!S.inventory.includes(id)) {
     S.inventory.push(id);
     renderInventory();
+    if (broadcast && S.socket && !S.demoMode) S.socket.emit('item_found', { itemId: id });
   }
 }
 
-function addNote(html, important = false) {
+function addNote(html, important = false, broadcast = true) {
   S.notes.push({ html, important });
   renderNotes();
+  if (broadcast && S.socket && !S.demoMode) S.socket.emit('note_added', { html, important });
 }
 
 function puzzleDone() {

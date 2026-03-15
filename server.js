@@ -1,53 +1,97 @@
 'use strict';
 const express  = require('express');
+const http     = require('http');
+const { Server: SocketIO } = require('socket.io');
 const fs       = require('fs');
 const path     = require('path');
 const crypto   = require('crypto');
 const os       = require('os');
 
-const app       = express();
+const app        = express();
+const httpServer = http.createServer(app);
+const io         = new SocketIO(httpServer);
+
 const PORT      = 3000;
 const DATA_FILE = path.join(__dirname, 'data', 'groups.json');
+const GAME_SECS = 25 * 60; // 1500 seconds
 
 app.use(express.json());
 app.use(express.static(__dirname));
 
-// ── In-memory session stores ───────────────────────────────────────────────
+// ── Token store: multiple simultaneous tokens per group are ALL valid ──────
 // { token: { groupId, loginTime } }
-const groupTokens = {};
-// Set of valid admin tokens
+const groupTokens = new Map();
+
+// ── Admin token store ──────────────────────────────────────────────────────
 const adminTokens = new Set();
 
-// ── Data helpers ───────────────────────────────────────────────────────────
-function load() {
-  return JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
-}
-function save(data) {
-  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
-}
+// ── Per-group live game session (server-authoritative) ─────────────────────
+// Initialised on first /api/game/start for that group.
+// {
+//   solved:       { [key]: boolean },
+//   inventory:    string[],
+//   notes:        { html, important }[],
+//   puzzlesDone:  number,
+//   wrongAnswers: number,
+//   startedAt:    number (Date.now()),
+// }
+const groupSessions = new Map();
 
-// ── Auth middleware ────────────────────────────────────────────────────────
+// ── Per-group chat history (last 60 messages) ──────────────────────────────
+const groupChats = new Map();
+
+// ── Data helpers ───────────────────────────────────────────────────────────
+function load() { return JSON.parse(fs.readFileSync(DATA_FILE, 'utf8')); }
+function save(d) { fs.writeFileSync(DATA_FILE, JSON.stringify(d, null, 2)); }
+
+// ── HTTP auth middleware ───────────────────────────────────────────────────
 function requireGroup(req, res, next) {
   const token = req.headers['x-auth-token'];
-  if (!token || !groupTokens[token]) return res.status(401).json({ error: 'Unauthorized' });
-  req.groupId = groupTokens[token].groupId;
+  if (!token) return res.status(401).json({ error: 'Unauthorized' });
+  const sess = groupTokens.get(token);
+  if (!sess) return res.status(401).json({ error: 'Unauthorized' });
+  if (Date.now() - sess.loginTime > 4 * 60 * 60 * 1000) {
+    groupTokens.delete(token);
+    return res.status(401).json({ error: 'Session expired. Please login again.' });
+  }
+  req.groupId = sess.groupId;
   next();
 }
+
 function requireAdmin(req, res, next) {
   const token = req.headers['x-auth-token'];
   if (!token || !adminTokens.has(token)) return res.status(401).json({ error: 'Unauthorized' });
   next();
 }
 
-// ── Public endpoints ───────────────────────────────────────────────────────
+// ── Helper: seconds remaining for a group ─────────────────────────────────
+function calcSecsRemaining(groupId) {
+  const sess = groupSessions.get(groupId);
+  if (!sess || !sess.startedAt) return GAME_SECS;
+  return Math.max(0, GAME_SECS - Math.floor((Date.now() - sess.startedAt) / 1000));
+}
 
-// List group names (for the login dropdown)
+// ── Helper: members currently online in a group ───────────────────────────
+function getOnlineMembers(groupId) {
+  const room = io.sockets.adapter.rooms.get(groupId);
+  if (!room) return [];
+  const names = [];
+  for (const sid of room) {
+    const s = io.sockets.sockets.get(sid);
+    if (s && s.memberName) names.push(s.memberName);
+  }
+  return names;
+}
+
+// ── HTTP Routes ────────────────────────────────────────────────────────────
+
+// List all groups (for login dropdown)
 app.get('/api/groups', (req, res) => {
   const data = load();
   res.json(data.groups.map(g => ({ id: g.id, name: g.name })));
 });
 
-// Group login
+// Group member login — multiple members can log in simultaneously
 app.post('/api/login', (req, res) => {
   const { groupId, pin } = req.body || {};
   if (!groupId || !pin) return res.status(400).json({ error: 'Group and PIN required.' });
@@ -55,82 +99,95 @@ app.post('/api/login', (req, res) => {
   const data  = load();
   const group = data.groups.find(g => g.id === groupId);
   if (!group || group.pin !== String(pin)) {
-    return res.status(401).json({ error: 'Invalid group or PIN. Please try again.' });
+    return res.status(401).json({ error: 'Invalid group or PIN.' });
   }
-
   if (group.status === 'completed') {
     return res.json({ status: 'completed', groupName: group.name });
   }
 
-  // Invalidate any old tokens for this group
-  Object.keys(groupTokens).forEach(t => {
-    if (groupTokens[t].groupId === groupId) delete groupTokens[t];
-  });
-
-  const token = crypto.randomBytes(20).toString('hex');
-  groupTokens[token] = { groupId: group.id, loginTime: Date.now() };
+  // Create a new token — do NOT invalidate others (multiple members need concurrent tokens)
+  const token = crypto.randomBytes(22).toString('hex');
+  groupTokens.set(token, { groupId, loginTime: Date.now() });
 
   res.json({ token, groupName: group.name, status: group.status });
 });
 
-// Mark game as started (called when the group clicks "Begin Audit Simulation")
+// Mark game as started (called when any member clicks "Begin")
 app.post('/api/game/start', requireGroup, (req, res) => {
   const data  = load();
   const group = data.groups.find(g => g.id === req.groupId);
   if (!group) return res.status(404).json({ error: 'Group not found' });
   if (group.status === 'completed') return res.status(403).json({ error: 'Already completed.' });
 
-  group.status    = 'playing';
-  group.startedAt = new Date().toISOString();
-  save(data);
-  res.json({ ok: true });
+  const isFirstStart = group.status !== 'playing';
+  if (isFirstStart) {
+    group.status    = 'playing';
+    group.startedAt = new Date().toISOString();
+    save(data);
+  }
+
+  // Initialise server session on first start
+  if (!groupSessions.has(req.groupId)) {
+    groupSessions.set(req.groupId, {
+      solved: {}, inventory: [], notes: [],
+      puzzlesDone: 0, wrongAnswers: 0,
+      startedAt: Date.now(),
+    });
+  }
+
+  res.json({ ok: true, timerSec: calcSecsRemaining(req.groupId) });
 });
 
-// Submit final score
+// Submit final score — server uses its own state for authoritative values
 app.post('/api/game/submit', requireGroup, (req, res) => {
-  const { puzzlesDone, secondsRemaining, wrongAnswers, won } = req.body || {};
+  const { won } = req.body || {};
   const data  = load();
   const group = data.groups.find(g => g.id === req.groupId);
   if (!group) return res.status(404).json({ error: 'Group not found' });
-  if (group.status === 'completed') return res.json({ score: group.score }); // idempotent
+  if (group.status === 'completed') return res.json({ score: group.score, alreadyDone: true });
+
+  const sess         = groupSessions.get(req.groupId) || {};
+  const puzzlesDone  = sess.puzzlesDone  || 0;
+  const wrongAnswers = sess.wrongAnswers || 0;
+  const secsLeft     = calcSecsRemaining(req.groupId);
 
   const score = Math.max(0,
-    (Number(puzzlesDone)      * 200) +
-    (won ? Number(secondsRemaining) * 2 : 0) -
-    (Number(wrongAnswers)     * 10)
+    (puzzlesDone  * 200) +
+    (won ? secsLeft * 2 : 0) -
+    (wrongAnswers * 10)
   );
 
   group.status           = 'completed';
   group.score            = score;
-  group.puzzlesDone      = Number(puzzlesDone);
-  group.wrongAnswers     = Number(wrongAnswers);
+  group.puzzlesDone      = puzzlesDone;
+  group.wrongAnswers     = wrongAnswers;
   group.won              = !!won;
-  group.secondsRemaining = Number(secondsRemaining);
+  group.secondsRemaining = secsLeft;
   group.completedAt      = new Date().toISOString();
   save(data);
 
-  res.json({ score });
+  // Broadcast to ALL group members (including submitter)
+  io.to(req.groupId).emit('game_over', { won: !!won, score, puzzlesDone, wrongAnswers, secondsRemaining: secsLeft });
+
+  res.json({ score, puzzlesDone, wrongAnswers, secondsRemaining: secsLeft });
 });
 
-// Public leaderboard (score + summary only)
+// Public leaderboard
 app.get('/api/leaderboard', (req, res) => {
   const data = load();
-  const board = data.groups
-    .filter(g => g.status === 'completed')
-    .map(g => ({
-      name:             g.name,
-      score:            g.score,
-      puzzlesDone:      g.puzzlesDone,
-      won:              g.won,
-      wrongAnswers:     g.wrongAnswers,
-      secondsRemaining: g.secondsRemaining,
-      completedAt:      g.completedAt,
-    }))
-    .sort((a, b) => b.score - a.score);
-  res.json(board);
+  res.json(
+    data.groups
+      .filter(g => g.status === 'completed')
+      .map(g => ({
+        name: g.name, score: g.score, puzzlesDone: g.puzzlesDone,
+        won: g.won, wrongAnswers: g.wrongAnswers,
+        secondsRemaining: g.secondsRemaining, completedAt: g.completedAt,
+      }))
+      .sort((a, b) => b.score - a.score)
+  );
 });
 
-// Group count summary (for admin dashboard cards)
+// Summary for admin cards
 app.get('/api/summary', (req, res) => {
   const data = load();
   res.json({
@@ -141,55 +198,65 @@ app.get('/api/summary', (req, res) => {
   });
 });
 
-// ── Admin endpoints ────────────────────────────────────────────────────────
-
 // Admin login
 app.post('/api/admin/login', (req, res) => {
   const data = load();
   if (!req.body || req.body.password !== data.adminPassword) {
     return res.status(401).json({ error: 'Incorrect admin password.' });
   }
-  const token = crypto.randomBytes(20).toString('hex');
+  const token = crypto.randomBytes(22).toString('hex');
   adminTokens.add(token);
   res.json({ token });
 });
 
-// Admin: full group data (PINs included)
+// Admin: full group data
 app.get('/api/admin/groups', requireAdmin, (req, res) => {
   const data = load();
-  res.json(data.groups);
+  // Enrich with live session data
+  const groups = data.groups.map(g => {
+    const sess = groupSessions.get(g.id);
+    return {
+      ...g,
+      liveMembers: getOnlineMembers(g.id).length,
+      livePuzzles: sess ? sess.puzzlesDone : g.puzzlesDone,
+      liveWrong:   sess ? sess.wrongAnswers : g.wrongAnswers,
+    };
+  });
+  res.json(groups);
 });
 
-// Admin: reset a group back to pending
+// Admin: reset a group
 app.post('/api/admin/reset', requireAdmin, (req, res) => {
   const { groupId } = req.body || {};
   const data  = load();
   const group = data.groups.find(g => g.id === groupId);
   if (!group) return res.status(404).json({ error: 'Group not found' });
 
-  group.status           = 'pending';
-  group.score            = null;
-  group.puzzlesDone      = 0;
-  group.wrongAnswers     = 0;
-  group.won              = false;
-  group.secondsRemaining = 0;
-  group.completedAt      = null;
-  group.startedAt        = null;
+  group.status = 'pending'; group.score = null;
+  group.puzzlesDone = 0; group.wrongAnswers = 0;
+  group.won = false; group.secondsRemaining = 0;
+  group.completedAt = null; group.startedAt = null;
 
-  // Invalidate any active tokens for this group
-  Object.keys(groupTokens).forEach(t => {
-    if (groupTokens[t].groupId === groupId) delete groupTokens[t];
-  });
+  // Clear session and chat
+  groupSessions.delete(groupId);
+  groupChats.delete(groupId);
+
+  // Invalidate all tokens for this group
+  for (const [tok, sess] of groupTokens) {
+    if (sess.groupId === groupId) groupTokens.delete(tok);
+  }
+
+  // Kick any connected sockets
+  io.to(groupId).emit('kicked', { reason: 'Group has been reset by admin.' });
 
   save(data);
   res.json({ ok: true });
 });
 
-// Admin: add a new group
+// Admin: add group
 app.post('/api/admin/groups', requireAdmin, (req, res) => {
   const { name, pin } = req.body || {};
   if (!name || !pin) return res.status(400).json({ error: 'Name and PIN required.' });
-
   const data = load();
   const id   = 'g_' + Date.now();
   data.groups.push({
@@ -202,9 +269,109 @@ app.post('/api/admin/groups', requireAdmin, (req, res) => {
   res.json({ id });
 });
 
-// ── Server info endpoint (for admin page to display share URL) ─────────────
-app.get('/api/server-info', (req, res) => {
-  res.json({ host: req.headers.host });
+// ── Socket.io auth middleware ──────────────────────────────────────────────
+io.use((socket, next) => {
+  const token = socket.handshake.auth.token;
+  if (!token) return next(new Error('Unauthorized'));
+
+  const sess = groupTokens.get(token);
+  if (!sess) return next(new Error('Unauthorized'));
+  if (Date.now() - sess.loginTime > 4 * 60 * 60 * 1000) {
+    groupTokens.delete(token);
+    return next(new Error('Session expired'));
+  }
+
+  socket.groupId    = sess.groupId;
+  socket.memberName = String(socket.handshake.auth.memberName || 'Member').slice(0, 24);
+  next();
+});
+
+// ── Socket.io connection handler ───────────────────────────────────────────
+io.on('connection', (socket) => {
+  const { groupId, memberName } = socket;
+
+  // Join the group's room
+  socket.join(groupId);
+
+  // Build state snapshot for this new member
+  const sess = groupSessions.get(groupId);
+  socket.emit('state_init', {
+    state: sess ? {
+      solved:       sess.solved,
+      inventory:    sess.inventory,
+      notes:        sess.notes,
+      puzzlesDone:  sess.puzzlesDone,
+      wrongAnswers: sess.wrongAnswers,
+      timerSec:     calcSecsRemaining(groupId),
+    } : null,
+    chats:   groupChats.get(groupId) || [],
+    members: getOnlineMembers(groupId),
+  });
+
+  // Notify others in the group
+  socket.to(groupId).emit('member_join', {
+    memberName,
+    members: getOnlineMembers(groupId),
+  });
+
+  // ── Puzzle solved (validated client-side, stored server-side) ────────────
+  socket.on('puzzle_solved', ({ key, puzzlesDone }) => {
+    const gs = groupSessions.get(groupId);
+    if (!gs || gs.solved[key]) return; // already solved — ignore
+    gs.solved[key] = true;
+    gs.puzzlesDone = Math.max(gs.puzzlesDone, Number(puzzlesDone) || 0);
+    // Broadcast to others (sender already updated their local state)
+    socket.to(groupId).emit('puzzle_solved', {
+      key, puzzlesDone: gs.puzzlesDone, fromName: memberName,
+    });
+  });
+
+  // ── Item found ────────────────────────────────────────────────────────────
+  socket.on('item_found', ({ itemId }) => {
+    const gs = groupSessions.get(groupId);
+    if (!gs || gs.inventory.includes(itemId)) return;
+    gs.inventory.push(itemId);
+    socket.to(groupId).emit('item_found', { itemId, fromName: memberName });
+  });
+
+  // ── Note added ────────────────────────────────────────────────────────────
+  socket.on('note_added', ({ html, important }) => {
+    const gs = groupSessions.get(groupId);
+    if (!gs) return;
+    const note = { html: String(html || ''), important: !!important };
+    gs.notes.push(note);
+    socket.to(groupId).emit('note_added', { ...note, fromName: memberName });
+  });
+
+  // ── Wrong answer (increments server-side counter) ─────────────────────────
+  socket.on('wrong_answer', () => {
+    const gs = groupSessions.get(groupId);
+    if (gs) gs.wrongAnswers++;
+  });
+
+  // ── Group chat ────────────────────────────────────────────────────────────
+  socket.on('chat', ({ text }) => {
+    const txt = String(text || '').trim().slice(0, 200);
+    if (!txt) return;
+    const msg = { from: memberName, text: txt, ts: Date.now() };
+
+    if (!groupChats.has(groupId)) groupChats.set(groupId, []);
+    const chats = groupChats.get(groupId);
+    chats.push(msg);
+    if (chats.length > 60) chats.shift();
+
+    // Broadcast to EVERYONE in group including sender
+    io.to(groupId).emit('chat', msg);
+  });
+
+  // ── Disconnect ────────────────────────────────────────────────────────────
+  socket.on('disconnect', () => {
+    // Short delay before announcing departure (handles page reloads gracefully)
+    setTimeout(() => {
+      const remaining = getOnlineMembers(groupId);
+      socket.to(groupId).emit('member_leave', { memberName, members: remaining });
+    }, 500);
+  });
 });
 
 // ── Start ──────────────────────────────────────────────────────────────────
@@ -218,14 +385,14 @@ function getLanIP() {
   return 'localhost';
 }
 
-app.listen(PORT, '0.0.0.0', () => {
+httpServer.listen(PORT, '0.0.0.0', () => {
   const ip = getLanIP();
-  console.log('\n🏭  MediSeal Quality Week — Game Server');
-  console.log('─'.repeat(42));
+  console.log('\n🏭  MediSeal Quality Week — Game Server v2');
+  console.log('─'.repeat(46));
   console.log(`  Local:    http://localhost:${PORT}`);
-  console.log(`  Network:  http://${ip}:${PORT}`);
+  console.log(`  Network:  http://${ip}:${PORT}   ← share with groups`);
   console.log(`  Admin:    http://${ip}:${PORT}/admin.html`);
-  console.log('─'.repeat(42));
-  console.log('  Share the Network URL with participants.');
-  console.log('  Admin password: see data/groups.json\n');
+  console.log('─'.repeat(46));
+  console.log(`  Up to 5 members per group, all on same session.`);
+  console.log(`  Admin password: see data/groups.json\n`);
 });
