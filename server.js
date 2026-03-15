@@ -11,7 +11,7 @@ const app        = express();
 const httpServer = http.createServer(app);
 const io         = new SocketIO(httpServer);
 
-const PORT      = 3000;
+const PORT      = process.env.PORT || 3000;
 const DATA_FILE = path.join(__dirname, 'data', 'groups.json');
 const GAME_SECS = 25 * 60; // 1500 seconds
 
