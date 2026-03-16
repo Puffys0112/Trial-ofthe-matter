@@ -244,6 +244,7 @@ app.post('/api/admin/reset', requireAdmin, (req, res) => {
   // Clear session and chat
   groupSessions.delete(groupId);
   groupChats.delete(groupId);
+  pendingConfirms.delete(groupId);
 
   // Invalidate all tokens for this group
   for (const [tok, sess] of groupTokens) {
@@ -351,6 +352,67 @@ io.on('connection', (socket) => {
   socket.on('wrong_answer', () => {
     const gs = groupSessions.get(groupId);
     if (gs) gs.wrongAnswers++;
+  });
+
+  // ── Collaborative: solver found the correct code ──────────────────────────
+  socket.on('code_found', ({ puzzleKey, code, label }) => {
+    const gs = groupSessions.get(groupId);
+    if (!gs || gs.solved[puzzleKey]) return;
+
+    if (!pendingConfirms.has(groupId)) pendingConfirms.set(groupId, new Map());
+    const gConfirms = pendingConfirms.get(groupId);
+    if (gConfirms.has(puzzleKey)) return; // already pending
+
+    const room = io.sockets.adapter.rooms.get(groupId);
+    const required = room ? room.size : 1;
+    const confirmed = new Set([socket.id]); // solver auto-confirmed
+    gConfirms.set(puzzleKey, { code, fromName: memberName, confirmed, required });
+
+    if (required <= 1) {
+      // Solo — complete immediately
+      gs.solved[puzzleKey] = true;
+      gs.puzzlesDone++;
+      gConfirms.delete(puzzleKey);
+      io.to(groupId).emit('puzzle_complete', { puzzleKey, puzzlesDone: gs.puzzlesDone, code });
+      return;
+    }
+
+    io.to(groupId).emit('code_revealed', {
+      puzzleKey, code, fromName: memberName, label, required, confirmed: 1,
+    });
+  });
+
+  // ── Collaborative: teammate confirms the code ─────────────────────────────
+  socket.on('confirm_code', ({ puzzleKey, code }) => {
+    const gs = groupSessions.get(groupId);
+    if (!gs || gs.solved[puzzleKey]) return;
+
+    const gConfirms = pendingConfirms.get(groupId);
+    if (!gConfirms) return;
+    const pend = gConfirms.get(puzzleKey);
+    if (!pend) return;
+
+    // Accept both exact match and stripped versions (remove dashes/spaces)
+    const normalise = s => String(s || '').trim().toUpperCase().replace(/[-\s]/g, '');
+    if (normalise(code) !== normalise(pend.code)) return;
+    if (pend.confirmed.has(socket.id)) return;
+
+    pend.confirmed.add(socket.id);
+    const count = pend.confirmed.size;
+
+    io.to(groupId).emit('confirm_progress', {
+      puzzleKey, count, required: pend.required, fromName: memberName,
+    });
+
+    const room = io.sockets.adapter.rooms.get(groupId);
+    const online = room ? room.size : 1;
+
+    if (count >= online || count >= pend.required) {
+      gs.solved[puzzleKey] = true;
+      gs.puzzlesDone++;
+      gConfirms.delete(puzzleKey);
+      io.to(groupId).emit('puzzle_complete', { puzzleKey, puzzlesDone: gs.puzzlesDone, code: pend.code });
+    }
   });
 
   // ── Group chat ────────────────────────────────────────────────────────────
