@@ -40,6 +40,10 @@ const groupSessions = new Map();
 // ── Per-group chat history (last 60 messages) ──────────────────────────────
 const groupChats = new Map();
 
+// Per-group collaborative code confirmations
+// groupId → Map { puzzleKey → { code, fromName, confirmed: Set<socketId>, required: number } }
+const pendingConfirms = new Map();
+
 // ── Data helpers ───────────────────────────────────────────────────────────
 function load() { return JSON.parse(fs.readFileSync(DATA_FILE, 'utf8')); }
 function save(d) { fs.writeFileSync(DATA_FILE, JSON.stringify(d, null, 2)); }
