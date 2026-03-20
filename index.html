@@ -41,6 +41,29 @@
       flex-direction: column; align-items: center; justify-content: center; padding: 20px;
     }
     #already-played-screen.show { display: flex; }
+    /* ── Leaderboard Modal (login page) ── */
+    #lb-overlay {
+      position: fixed; inset: 0; z-index: 600;
+      background: rgba(0,0,0,0.82); display: none;
+      align-items: center; justify-content: center; padding: 20px;
+    }
+    #lb-overlay.show { display: flex; }
+    #lb-box {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 10px; padding: 28px 32px;
+      width: 100%; max-width: 700px; max-height: 88vh; overflow-y: auto;
+    }
+    #lb-box h2 { color: var(--accent); font-size: 1rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 16px; }
+    #lb-pw-section { margin-bottom: 16px; }
+    #lb-pw-error { color: var(--danger); font-size: 0.75rem; min-height: 16px; margin-bottom: 6px; }
+    #lb-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    #lb-table th { text-align: left; font-size: 0.62rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--dim); padding: 6px 8px 8px; border-bottom: 1px solid var(--border); }
+    #lb-table td { padding: 8px 8px; border-bottom: 1px solid #14162a; vertical-align: middle; }
+    #lb-table tr:last-child td { border-bottom: none; }
+    .lb-rank { font-size: 1.1rem; }
+    .lb-score { color: var(--accent2); font-weight: bold; }
+    .lb-group { color: var(--text); font-weight: bold; }
+    .login-theme { font-size: 0.62rem; color: var(--dim); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 18px; opacity: 0.75; }
   </style>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -382,6 +405,37 @@
     #chat-send-btn { background: transparent; border: 1px solid var(--accent); color: var(--accent); padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.82rem; }
     #chat-send-btn:hover { background: rgba(0,153,230,0.1); }
     #members-online { font-size: 0.64rem; color: var(--accent2); font-weight: normal; letter-spacing: 1px; }
+    /* ── Team Confirm Overlay ── */
+    #team-confirm-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.88); z-index: 250;
+      align-items: center; justify-content: center;
+    }
+    #team-confirm-overlay.show { display: flex; }
+    #team-confirm-box {
+      background: var(--panel); border: 2px solid var(--warn);
+      border-radius: 10px; padding: 26px 30px;
+      max-width: 460px; width: 92%;
+      box-shadow: 0 0 50px rgba(245,166,35,0.3);
+    }
+    #tc-code-display {
+      background: #0a0c18; border: 1px solid var(--accent);
+      border-radius: 4px; padding: 10px 14px;
+      font-size: 1.1rem; letter-spacing: 3px;
+      text-align: center; color: var(--warn);
+      margin: 12px 0; font-weight: bold;
+    }
+    #tc-input {
+      width: 100%; background: var(--bg); border: 1px solid var(--border);
+      color: var(--text); padding: 8px 12px; border-radius: 4px;
+      font-family: inherit; font-size: 0.88rem;
+      margin-bottom: 10px; outline: none;
+    }
+    #tc-input:focus { border-color: var(--warn); }
+    #tc-progress { font-size: 0.75rem; color: var(--accent2); margin: 8px 0; min-height: 18px; }
+    #tc-feedback { font-size: 0.78rem; min-height: 18px; margin-bottom: 8px; }
+    #tc-feedback.ok  { color: var(--accent2); }
+    #tc-feedback.bad { color: var(--danger); }
   </style>
   <script src="/socket.io/socket.io.js"></script>
 </head>
@@ -394,6 +448,7 @@
     <div class="login-company">MediSeal Manufacturing Ltd.</div>
     <div class="login-title">QUALITY WEEK</div>
     <div class="login-sub">GROUP LOGIN</div>
+    <div class="login-theme">Progress in every step · Quality in every detail</div>
     <div id="login-error"></div>
     <div class="lf">
       <label>Select Your Group</label>
@@ -409,9 +464,57 @@
     </div>
     <button class="btn primary login-submit" id="login-btn">LOGIN &amp; ENTER FACILITY</button>
     <div class="login-links">
-      <a href="/admin.html" target="_blank">📊 Leaderboard</a>
-      &nbsp;|&nbsp;
-      <a href="#" id="demo-link">▶ Demo Mode (no score)</a>
+      <a href="#" id="demo-link">▶ Demo / Admin Mode</a>
+      &nbsp;·&nbsp;
+      <a href="#" id="lb-open-link">📊 Leaderboard</a>
+    </div>
+    <!-- Admin demo password prompt (hidden by default) -->
+    <div id="demo-pw-box" style="display:none;margin-top:12px;text-align:left;">
+      <div class="lf" style="margin-bottom:8px;">
+        <label>Admin Password (required for Demo)</label>
+        <input type="password" id="demo-pw-input" placeholder="Enter admin password" maxlength="60" />
+      </div>
+      <div id="demo-pw-error" style="color:var(--danger);font-size:0.75rem;min-height:16px;margin-bottom:6px;"></div>
+      <button class="btn primary" id="demo-pw-btn" style="width:100%;">Enter Demo Mode</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ LEADERBOARD MODAL ═══════════════ -->
+<div id="lb-overlay">
+  <div id="lb-box">
+    <h2>📊 Leaderboard</h2>
+    <div id="lb-pw-section">
+      <div class="lf" style="margin-bottom:6px;">
+        <label>Admin Password</label>
+        <input type="password" id="lb-pw-input" placeholder="Enter admin password" maxlength="60" autocomplete="off" />
+      </div>
+      <div id="lb-pw-error"></div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn primary" id="lb-pw-btn" style="flex:1;">View Leaderboard</button>
+        <button class="btn" id="lb-close-btn">Close</button>
+      </div>
+    </div>
+    <div id="lb-content" style="display:none;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <span style="font-size:0.72rem;color:var(--dim);letter-spacing:1px;">COMPLETED GROUPS — RANKED BY SCORE</span>
+        <button class="btn" id="lb-close-btn2" style="font-size:0.75rem;padding:4px 12px;">Close</button>
+      </div>
+      <div id="lb-empty" style="display:none;color:var(--dim);font-size:0.85rem;padding:20px 0;text-align:center;">No groups have completed the game yet.</div>
+      <table id="lb-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Group</th>
+            <th>Score</th>
+            <th>Puzzles</th>
+            <th>Time Left</th>
+            <th>Wrong</th>
+            <th>Finished</th>
+          </tr>
+        </thead>
+        <tbody id="lb-tbody"></tbody>
+      </table>
     </div>
   </div>
 </div>
@@ -439,6 +542,7 @@
   <div class="start-company">MediSeal Manufacturing Ltd.</div>
   <div class="start-title">QUALITY WEEK</div>
   <div class="start-sub">ESCAPE ROOM — INTERNAL AUDIT SIMULATION</div>
+  <div style="font-size:0.65rem;color:var(--dim);letter-spacing:2px;text-transform:uppercase;margin-top:-14px;margin-bottom:18px;opacity:0.7;">Progress in every step · Quality in every detail</div>
   <div id="group-greeting" style="font-size:0.82rem;color:var(--accent2);margin-bottom:10px;letter-spacing:1px;"></div>
 
   <div class="start-card">
@@ -464,27 +568,123 @@
     <span class="tag">Visual Inspection</span>
     <span class="tag">Defect Classification</span>
     <span class="tag">SOP Compliance</span>
+    <span class="tag">ISO 9001:2015</span>
+    <span class="tag">ISO 15378:2017</span>
+    <span class="tag">Risk-Based Thinking</span>
   </div>
 
-  <div class="start-card" style="font-size:0.78rem;color:var(--dim);">
+  <div class="start-card" style="font-size:0.82rem;">
     <h3>How to Play</h3>
-    • <strong style="color:var(--text);">Examine hotspots</strong> in each area to find clues and collect items<br>
-    • <strong style="color:var(--text);">Select items</strong> in your inventory, then interact with hotspots to use them<br>
-    • <strong style="color:var(--text);">Solve puzzles</strong> — all answers are based on real quality principles<br>
-    • <strong style="color:var(--text);">Check your Notes</strong> panel — clues are recorded automatically<br>
-    • There are <strong style="color:var(--text);">5 rooms</strong> and <strong style="color:var(--text);">6 puzzles</strong> to complete
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 20px;line-height:1.9;">
+      <div>🔍 <strong style="color:var(--text);">Examine hotspots</strong> in each area to find clues and collect items</div>
+      <div>🎒 <strong style="color:var(--text);">Select an item</strong> from your inventory, then click a hotspot to use it</div>
+      <div>🧩 <strong style="color:var(--text);">Solve puzzles</strong> — every answer is grounded in real quality principles</div>
+      <div>📋 <strong style="color:var(--text);">Check Field Notes</strong> — clues and facts are recorded automatically</div>
+      <div>💬 <strong style="color:var(--text);">Use Group Chat</strong> — coordinate with your team in real time</div>
+      <div>🔑 <strong style="color:var(--text);">Confirm codes together</strong> — key milestones require all members to enter the code</div>
+    </div>
+    <div style="margin-top:10px;padding:8px 12px;background:rgba(0,153,230,0.07);border-left:3px solid var(--accent);border-radius:2px;font-size:0.77rem;color:var(--dim);line-height:1.7;">
+      There are <strong style="color:var(--text);">5 areas</strong> and <strong style="color:var(--text);">8 puzzles</strong> to complete in <strong style="color:var(--text);">25 minutes</strong>.
+      Areas unlock as you progress — you cannot skip ahead.
+    </div>
   </div>
 
-  <button class="btn primary" id="start-btn" style="font-size:0.95rem;padding:11px 36px;margin-top:6px;">
-    BEGIN AUDIT SIMULATION
+  <div class="start-card" style="font-size:0.81rem;">
+    <h3>Rules</h3>
+    <table style="width:100%;border-collapse:collapse;">
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:7px 8px 7px 0;width:28px;font-size:1rem;">👥</td>
+        <td style="padding:7px 0;color:var(--dim);"><strong style="color:var(--text);">Team size:</strong> 3 – 5 members. All must be connected before the game starts.</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:7px 8px 7px 0;font-size:1rem;">⏱️</td>
+        <td style="padding:7px 0;color:var(--dim);"><strong style="color:var(--text);">Simultaneous start:</strong> Every player must click <em>"I'm Ready"</em>. The timer starts for all at the same moment.</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:7px 8px 7px 0;font-size:1rem;">🔑</td>
+        <td style="padding:7px 0;color:var(--dim);"><strong style="color:var(--text);">Team confirmation:</strong> At key checkpoints the code is revealed to all — every member must type it to proceed.</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:7px 8px 7px 0;font-size:1rem;">🚪</td>
+        <td style="padding:7px 0;color:var(--dim);"><strong style="color:var(--text);">Area locks:</strong> Each area is locked until the previous task is completed — complete tasks in order.</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:7px 8px 7px 0;font-size:1rem;">❌</td>
+        <td style="padding:7px 0;color:var(--dim);"><strong style="color:var(--text);">Wrong answers:</strong> Each incorrect answer deducts <strong style="color:var(--danger);">10 points</strong> from your final score — think before you submit.</td>
+      </tr>
+      <tr>
+        <td style="padding:7px 8px 7px 0;font-size:1rem;">🏁</td>
+        <td style="padding:7px 0;color:var(--dim);"><strong style="color:var(--text);">One attempt:</strong> Each group plays once. Results are final and posted to the leaderboard.</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="start-card" style="font-size:0.81rem;">
+    <h3>Scoring</h3>
+    <table style="width:100%;border-collapse:collapse;margin-bottom:10px;">
+      <thead>
+        <tr style="border-bottom:1px solid var(--border);">
+          <th style="text-align:left;font-size:0.65rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--dim);padding:5px 0;">What</th>
+          <th style="text-align:right;font-size:0.65rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--dim);padding:5px 0;">Points</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid #14162a;">
+          <td style="padding:8px 0;color:var(--dim);">✅ Each puzzle solved</td>
+          <td style="padding:8px 0;text-align:right;color:var(--accent2);font-weight:bold;">+200 pts</td>
+        </tr>
+        <tr style="border-bottom:1px solid #14162a;">
+          <td style="padding:8px 0;color:var(--dim);">⏱️ Every second remaining on the clock <em>(win only)</em></td>
+          <td style="padding:8px 0;text-align:right;color:var(--accent2);font-weight:bold;">+2 pts / sec</td>
+        </tr>
+        <tr>
+          <td style="padding:8px 0;color:var(--dim);">❌ Each wrong answer</td>
+          <td style="padding:8px 0;text-align:right;color:var(--danger);font-weight:bold;">−10 pts</td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+      <div style="background:#0a0c18;border:1px solid var(--border);border-radius:6px;padding:10px 14px;text-align:center;">
+        <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--dim);margin-bottom:4px;">Max puzzle pts</div>
+        <div style="font-size:1.2rem;font-weight:bold;color:var(--accent2);">1,600</div>
+        <div style="font-size:0.68rem;color:var(--dim);">8 × 200</div>
+      </div>
+      <div style="background:#0a0c18;border:1px solid var(--border);border-radius:6px;padding:10px 14px;text-align:center;">
+        <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--dim);margin-bottom:4px;">Max time bonus</div>
+        <div style="font-size:1.2rem;font-weight:bold;color:var(--accent2);">3,000</div>
+        <div style="font-size:0.68rem;color:var(--dim);">1,500 sec × 2</div>
+      </div>
+    </div>
+    <div style="margin-top:8px;padding:8px 12px;background:rgba(255,215,0,0.06);border:1px solid rgba(255,215,0,0.25);border-radius:4px;text-align:center;font-size:0.78rem;color:#ffd700;">
+      🏆 Maximum possible score: <strong>4,600 pts</strong> — all puzzles solved, no wrong answers, instant finish
+    </div>
+  </div>
+
+  <!-- Lobby status (shown after login, hidden in demo mode) -->
+  <div id="lobby-status" style="display:none;background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:16px 20px;margin-top:10px;max-width:460px;width:100%;text-align:left;">
+    <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:2px;color:var(--accent);margin-bottom:10px;">👥 TEAM LOBBY</div>
+    <div id="lobby-members" style="font-size:0.82rem;color:var(--dim);margin-bottom:8px;">Connecting…</div>
+    <div id="lobby-ready-bar" style="font-size:0.8rem;color:var(--accent2);margin-bottom:8px;min-height:18px;"></div>
+    <div id="lobby-error-msg" style="font-size:0.78rem;color:var(--danger);min-height:16px;"></div>
+    <p style="font-size:0.73rem;color:var(--dim);margin-top:6px;line-height:1.6;">
+      Groups of <strong style="color:var(--text);">3–5 members</strong> must all be connected before starting.<br>
+      All members click <strong style="color:var(--text);">I'm Ready</strong> to begin simultaneously.
+    </p>
+  </div>
+
+  <button class="btn primary" id="start-btn" style="font-size:0.95rem;padding:11px 36px;margin-top:10px;">
+    I'M READY — BEGIN
   </button>
+  <div id="start-waiting" style="display:none;font-size:0.8rem;color:var(--dim);margin-top:8px;letter-spacing:1px;">
+    ⏳ Waiting for teammates to confirm…
+  </div>
 </div>
 
 <!-- ═══════════════ HEADER ═══════════════ -->
 <header>
   <div class="header-left">
     <h1>🏭 MediSeal — Quality Week</h1>
-    <span>INTERNAL AUDIT SIMULATION &nbsp;|&nbsp; ISO 13485 FACILITY</span>
+    <span>PROGRESS IN EVERY STEP · QUALITY IN EVERY DETAIL</span>
   </div>
   <div id="timer">25:00</div>
 </header>
@@ -500,7 +700,7 @@
     <div id="room-title">Receiving Dock</div>
     <div id="room-desc">Loading…</div>
     <div id="progress-bar-wrap"><div id="progress-bar"></div></div>
-    <div id="progress-label">Quality checks: 0 / 6 complete</div>
+    <div id="progress-label">Quality checks: 0 / 8 complete</div>
     <div id="hotspots"></div>
     <div id="log"></div>
   </div>
@@ -556,6 +756,23 @@
   <a href="/admin.html" target="_blank" class="btn success" style="font-size:0.9rem;padding:10px 28px;text-decoration:none;">
     📊 View Leaderboard
   </a>
+</div>
+
+<!-- ═══════════════ TEAM CONFIRM OVERLAY ═══════════════ -->
+<div id="team-confirm-overlay">
+  <div id="team-confirm-box">
+    <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:2px;color:var(--warn);margin-bottom:6px;">🔑 TEAM CONFIRMATION REQUIRED</div>
+    <div id="tc-title" style="font-size:1rem;color:var(--text);margin-bottom:10px;font-weight:bold;"></div>
+    <div id="tc-body" style="font-size:0.82rem;color:var(--dim);line-height:1.7;margin-bottom:6px;"></div>
+    <div id="tc-code-display"></div>
+    <p style="font-size:0.75rem;color:var(--dim);margin-bottom:8px;">Type the code above to confirm you've received it:</p>
+    <input type="text" id="tc-input" placeholder="Enter the code…" maxlength="20" autocomplete="off" />
+    <div id="tc-feedback"></div>
+    <div id="tc-progress"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;">
+      <button class="btn primary" id="tc-submit">Confirm</button>
+    </div>
+  </div>
 </div>
 
 <!-- ═══════════════ SCRIPT ═══════════════ -->
@@ -661,7 +878,10 @@ document.getElementById('login-btn').onclick = async () => {
     S.authToken  = res.token;
     S.groupName  = res.groupName;
     S.memberName = name;
+    // Connect socket immediately so lobby is live before BEGIN
+    connectSocket();
     showStartScreen(res.groupName);
+    document.getElementById('lobby-status').style.display = 'block';
   } catch (e) {
     err.textContent = e.message || 'Login failed. Check your PIN and try again.';
   }
@@ -671,13 +891,103 @@ document.getElementById('group-pin').onkeydown = e => {
   if (e.key === 'Enter') document.getElementById('login-btn').click();
 };
 
+// Demo mode requires admin password
 document.getElementById('demo-link').onclick = e => {
   e.preventDefault();
-  S.demoMode  = true;
-  S.groupName = 'Demo';
-  S.memberName = 'Demo';
-  showStartScreen('Demo Mode');
+  const box = document.getElementById('demo-pw-box');
+  box.style.display = box.style.display === 'none' ? 'block' : 'none';
 };
+
+document.getElementById('demo-pw-btn').onclick = async () => {
+  const pw  = document.getElementById('demo-pw-input').value;
+  const err = document.getElementById('demo-pw-error');
+  err.textContent = '';
+  try {
+    await apiCall('/api/admin/login', 'POST', { password: pw });
+    S.demoMode   = true;
+    S.groupName  = 'Demo';
+    S.memberName = 'Admin Demo';
+    showStartScreen('Demo Mode (Admin)');
+    document.getElementById('start-btn').textContent = 'BEGIN AUDIT SIMULATION';
+  } catch {
+    err.textContent = 'Incorrect admin password.';
+  }
+};
+
+document.getElementById('demo-pw-input').onkeydown = e => {
+  if (e.key === 'Enter') document.getElementById('demo-pw-btn').click();
+};
+
+// ── Leaderboard (login page) ──────────────────────────────────────────────
+(function() {
+  let lbAdminToken = null;
+
+  function openLbModal() {
+    document.getElementById('lb-overlay').classList.add('show');
+    document.getElementById('lb-pw-section').style.display = 'block';
+    document.getElementById('lb-content').style.display = 'none';
+    document.getElementById('lb-pw-error').textContent = '';
+    document.getElementById('lb-pw-input').value = '';
+    setTimeout(() => document.getElementById('lb-pw-input').focus(), 50);
+  }
+  function closeLbModal() {
+    document.getElementById('lb-overlay').classList.remove('show');
+  }
+
+  async function fetchAndShowLeaderboard(token) {
+    const res = await fetch('/api/leaderboard', { headers: { 'x-auth-token': token } });
+    if (!res.ok) throw new Error('Failed to fetch leaderboard');
+    const groups = await res.json();
+    const tbody = document.getElementById('lb-tbody');
+    tbody.innerHTML = '';
+    const empty = document.getElementById('lb-empty');
+    const tbl   = document.getElementById('lb-table');
+    if (!groups.length) {
+      empty.style.display = 'block';
+      tbl.style.display = 'none';
+    } else {
+      empty.style.display = 'none';
+      tbl.style.display = 'table';
+      const rankEmoji = ['🥇','🥈','🥉'];
+      groups.forEach((g, i) => {
+        const rank = rankEmoji[i] || `#${i+1}`;
+        const timeLeft = g.won && g.secondsRemaining > 0
+          ? `${Math.floor(g.secondsRemaining/60)}:${String(g.secondsRemaining%60).padStart(2,'0')}`
+          : (g.won ? '0:00' : '—');
+        const finished = g.completedAt
+          ? new Date(g.completedAt).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})
+          : '—';
+        const pips = Array.from({length:8}, (_,j) => `<span style="display:inline-block;width:10px;height:10px;border-radius:2px;margin:1px;background:${j < (g.puzzlesDone||0) ? 'var(--accent2)' : 'var(--border)'};"></span>`).join('');
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td class="lb-rank">${rank}</td><td class="lb-group">${g.name}</td><td class="lb-score">${g.score ?? '—'}</td><td>${pips}</td><td style="color:var(--dim)">${timeLeft}</td><td style="color:var(--danger)">${g.wrongAnswers ?? 0}</td><td style="color:var(--dim);font-size:0.75rem;">${finished}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+    document.getElementById('lb-pw-section').style.display = 'none';
+    document.getElementById('lb-content').style.display = 'block';
+  }
+
+  document.getElementById('lb-open-link').onclick = e => { e.preventDefault(); openLbModal(); };
+  document.getElementById('lb-close-btn').onclick = closeLbModal;
+  document.getElementById('lb-close-btn2').onclick = closeLbModal;
+  document.getElementById('lb-overlay').onclick = e => { if (e.target === document.getElementById('lb-overlay')) closeLbModal(); };
+
+  document.getElementById('lb-pw-btn').onclick = async () => {
+    const pw  = document.getElementById('lb-pw-input').value;
+    const err = document.getElementById('lb-pw-error');
+    err.textContent = '';
+    try {
+      const res = await apiCall('/api/admin/login', 'POST', { password: pw });
+      lbAdminToken = res.token;
+      await fetchAndShowLeaderboard(lbAdminToken);
+    } catch {
+      err.textContent = 'Incorrect password.';
+    }
+  };
+  document.getElementById('lb-pw-input').onkeydown = e => {
+    if (e.key === 'Enter') document.getElementById('lb-pw-btn').click();
+  };
+})();
 
 // ────────────────────────────────────────────────
 // ITEMS
@@ -710,6 +1020,14 @@ const ITEMS = {
   batch_cert: {
     emoji: '🔏', name: 'Batch Release Certificate',
     desc: 'Batch BN-2024-3200 | Disposition: REJECT & Quarantine | Reason: NCR-0892 / CAPA-0112. QA Auth PIN: 4471. Signed under ISO 13485 §8.3 — Control of Nonconforming Product.',
+  },
+  stopper_spec: {
+    emoji: '📦', name: 'ISO 15378 Packaging Specification',
+    desc: 'Rubber Stopper Specification — ISO 15378:2017 Primary Packaging Materials for Medicinal Products. Supplier: Kautschuk GmbH. Material: Bromobutyl rubber compound. This standard combines ISO 9001:2015 + GMP for primary packaging suppliers. Key clause reference: ISO 9001:2015 Clause 8.7 — Control of Nonconforming Outputs (defective materials must be identified, segregated, and dispositioned).',
+  },
+  iso9001_cert: {
+    emoji: '🏅', name: 'ISO 9001:2015 Certificate',
+    desc: 'ISO 9001:2015 Quality Management System Certificate — MediSeal Manufacturing Ltd. Scope: Design, manufacture and supply of rubber plungers and closures for medicinal devices. Key concepts: Risk-based thinking (Clause 6.1), Management Review (Clause 9.3).',
   },
 };
 
@@ -747,22 +1065,24 @@ const ROOMS = {
     emoji: '🔬',
     desc: 'The QC lab smells of IPA and calibration fluid. Dimensional gauges, particle counters, and sterility test equipment line the benches. A micrometer station in the corner carries a yellow "OUT OF CALIBRATION — DO NOT USE" sticker. The calibration reference cabinet is mounted on the wall. A sign on the QA Office door: "CALIBRATION SIGN-OFF REQUIRED FOR ENTRY."',
     hotspots: [
-      { label: 'Calibration Reference Cabinet', action: 'open_cal_cabinet' },
-      { label: 'Micrometer Station',            action: 'use_micrometer'  },
-      { label: 'SOP Document Rack',             action: 'check_sop_rack'  },
-      { label: 'Equipment Logbook',             action: 'check_equip_log' },
+      { label: 'Calibration Reference Cabinet',      action: 'open_cal_cabinet'    },
+      { label: 'Micrometer Station',                 action: 'use_micrometer'      },
+      { label: 'SOP Document Rack',                  action: 'check_sop_rack'      },
+      { label: 'Equipment Logbook',                  action: 'check_equip_log'     },
+      { label: 'ISO 15378 Packaging Compliance File', action: 'check_iso15378'     },
     ],
   },
   qaoffice: {
     id: 'qaoffice', badge: 'AREA 04 — QA / COMPLIANCE',
     name: 'QA & Compliance Office',
     emoji: '🗂️',
-    desc: 'The hub of quality operations. ISO 13485 clause labels run across the filing cabinets. The CAPA workstation shows: "NON-CONFORMANCE #NCR-0892 — AWAITING ROOT CAUSE ANALYSIS." A maintenance log has been left open on the side table — someone was in a hurry. The batch record safe on the wall requires CAPA completion to unlock.',
+    desc: 'The hub of quality operations. ISO 13485 clause labels run across the filing cabinets. The CAPA workstation shows: "NON-CONFORMANCE #NCR-0892 — AWAITING ROOT CAUSE ANALYSIS." A maintenance log has been left open on the side table — someone was in a hurry. An ISO 9001 management review board shows last quarter\'s KPIs. The batch record safe on the wall requires CAPA + ISO 9001 verification to unlock.',
     hotspots: [
-      { label: 'Maintenance Log (Side Table)', action: 'read_maint_log'   },
-      { label: 'CAPA Workstation',             action: 'use_capa_station' },
-      { label: 'ISO 13485 Filing Cabinet',     action: 'check_iso_files'  },
-      { label: 'Batch Record Safe',            action: 'open_batch_safe'  },
+      { label: 'Maintenance Log (Side Table)', action: 'read_maint_log'    },
+      { label: 'CAPA Workstation',             action: 'use_capa_station'  },
+      { label: 'ISO 13485 Filing Cabinet',     action: 'check_iso_files'   },
+      { label: 'ISO 9001 Management Review',   action: 'check_iso9001'     },
+      { label: 'Batch Record Safe',            action: 'open_batch_safe'   },
     ],
   },
   dispatch: {
@@ -794,7 +1114,7 @@ const EXITS = {
 function canEnter(roomId) {
   if (roomId === 'production') return !!S.solved.coa_verified;
   if (roomId === 'qclab')      return !!S.solved.ncr_filed;
-  if (roomId === 'qaoffice')   return !!S.solved.calibration_done;
+  if (roomId === 'qaoffice')   return !!S.solved.calibration_done && !!S.solved.iso15378_done;
   if (roomId === 'dispatch')   return !!S.solved.capa_done;
   return true;
 }
@@ -802,7 +1122,7 @@ function canEnter(roomId) {
 function lockReason(roomId) {
   if (roomId === 'production') return 'Raw material verification required first (GMP Receiving Terminal).';
   if (roomId === 'qclab')      return 'File the NCR at the NCR Filing Station on the production line first.';
-  if (roomId === 'qaoffice')   return 'Complete instrument calibration in the QC Lab first.';
+  if (roomId === 'qaoffice')   return 'Complete instrument calibration AND the ISO 15378 packaging compliance check in the QC Lab first.';
   if (roomId === 'dispatch')   return 'Complete and authorise the CAPA report in the QA Office first.';
   return 'Blocked.';
 }
@@ -878,13 +1198,20 @@ function handleAction(action) {
         onSubmit: val => {
           const v = val.trim().toUpperCase().replace(/\s/g,'');
           if (v === 'RM4471' || v === 'RM-4471' || v === '4471') {
-            S.solved.coa_verified = true;
-            puzzleDone();
-            if (S.socket) S.socket.emit('puzzle_solved', { key: 'coa_verified', puzzlesDone: S.puzzlesDone });
-            closeModal();
-            log('✓ MATERIAL VERIFIED — Lot RM-4471 released from HOLD. Production line is now accessible.', 'success');
-            log('📚 Quality Fact: GMP requires every incoming material to have an approved CoA on file before it can be used in production.', 'fact');
-            renderNav();
+            if (S.demoMode || !S.socket) {
+              // Demo / no socket — solve immediately
+              S.solved.coa_verified = true;
+              puzzleDone();
+              closeModal();
+              log('✓ MATERIAL VERIFIED — Lot RM-4471 released from HOLD. Production line is now accessible.', 'success');
+              log('📚 Quality Fact: GMP requires every incoming material to have an approved CoA on file before it can be used in production.', 'fact');
+              renderNav();
+            } else {
+              // Collaborative — notify team, wait for all to confirm
+              setFeedback('✓ Correct lot number! Notifying team — waiting for all members to confirm…', 'ok');
+              document.getElementById('modal-submit').disabled = true;
+              S.socket.emit('code_found', { puzzleKey: 'coa_verified', code: 'RM-4471', label: 'GMP Material Verification (Lot RM-4471)' });
+            }
           } else {
             S.wrongAnswers++;
             if (S.socket) S.socket.emit('wrong_answer');
@@ -1145,8 +1472,8 @@ function handleAction(action) {
       return { msg: 'ISO 13485 §8.5 covers CAPA. That\'s what you need for the CAPA workstation.', cls: 'info' };
 
     case 'open_batch_safe':
-      if (!S.solved.capa_done) {
-        return { msg: 'The batch record safe displays: "CAPA COMPLETION REQUIRED." Complete the CAPA workstation first.', cls: 'warn' };
+      if (!S.solved.capa_done || !S.solved.iso9001_done) {
+        return { msg: 'The batch record safe displays: "CAPA + ISO 9001 VERIFICATION REQUIRED." Complete both the CAPA workstation and ISO 9001 Management Review first.', cls: 'warn' };
       }
       if (S.solved.batch_retrieved) {
         return { msg: 'You already have the Batch Release Certificate.', cls: 'info' };
@@ -1174,11 +1501,18 @@ function handleAction(action) {
         submitLabel: 'Authorise Disposition',
         onSubmit: val => {
           if (val.trim() === '4471') {
-            S.solved.game_won = true;
-            puzzleDone();
-            if (S.socket) S.socket.emit('puzzle_solved', { key: 'game_won', puzzlesDone: S.puzzlesDone });
-            closeModal();
-            triggerWin();
+            if (S.demoMode || !S.socket) {
+              // Demo / no socket — win immediately
+              S.solved.game_won = true;
+              puzzleDone();
+              closeModal();
+              triggerWin();
+            } else {
+              // Collaborative — all members must enter the PIN
+              setFeedback('✓ Correct PIN! All team members must confirm to authorise batch disposition…', 'ok');
+              document.getElementById('modal-submit').disabled = true;
+              S.socket.emit('code_found', { puzzleKey: 'game_won', code: '4471', label: 'Final Batch Disposition (PIN 4471)' });
+            }
           } else {
             S.wrongAnswers++;
             if (S.socket) S.socket.emit('wrong_answer');
@@ -1197,6 +1531,120 @@ function handleAction(action) {
         title: '"Zero Defects Saves Lives"',
         body: '<strong>QUALITY WEEK — MediSeal Manufacturing</strong><br><br>Our plungers are used in:<br>• Insulin vials for Type 1 and Type 2 diabetics<br>• Prefilled syringes for insulin pens<br>• Lyophilised drug vials for critical medications<br><br>A single defective plunger that reaches a patient could mean:<br>• Incorrect insulin dose delivery<br>• Sterility breach → patient infection<br>• Loss of dose → life-threatening hypoglycaemia<br><br><strong>This is why AQL, CAPA, calibration, and GMP are not bureaucracy — they are patient safety.</strong><br><br><em>Every check you make protects a real person.</em>',
         noInput: true,
+      });
+      return null;
+
+    // ── ISO 15378 PUZZLE ──────────────────────────────────────────────────
+    case 'check_iso15378':
+      if (S.solved.iso15378_done) {
+        return { msg: 'ISO 15378:2017 compliance confirmed. QA Office access available once calibration is complete.', cls: 'info' };
+      }
+      if (!S.found.stopper_spec) {
+        S.found.stopper_spec = true;
+        addItem('stopper_spec');
+        addNote('ISO 15378:2017 Packaging Spec: Rubber stoppers from Kautschuk GmbH. Standard combines <strong>ISO 9001:2015 + GMP</strong> for primary packaging. Key ref: <strong>Clause 8.7</strong> — Control of Nonconforming Outputs.', true);
+      }
+      openModal({
+        tag: 'ISO 15378:2017 — PRIMARY PACKAGING COMPLIANCE',
+        title: 'ISO 15378:2017 Compliance Check — Packaging Materials',
+        body: 'ISO 15378:2017 is the international standard for <strong>primary packaging materials for medicinal products</strong>. It is mandatory for any supplier providing rubber stoppers, closures, and containers that come into direct contact with drugs.<br><br>The rubber stoppers in batch BN-2024-3200 were supplied under an ISO 15378:2017 certified QMS. This standard requires compliance with two core frameworks.<br><br><strong>Which two frameworks does ISO 15378:2017 combine?</strong>',
+        choices: [
+          { label: 'A)  ISO 13485 + FDA 21 CFR Part 820', correct: false },
+          { label: 'B)  ISO 9001:2015 + GMP (Good Manufacturing Practice)', correct: true },
+          { label: 'C)  ISO 14971 + ISO 9001:2015', correct: false },
+          { label: 'D)  ISO 2859-1 + ISO 13485', correct: false },
+        ],
+        onChoice: (correct) => {
+          if (correct) {
+            setFeedback('✓ Correct! ISO 15378 = ISO 9001:2015 QMS requirements + GMP requirements.', 'ok');
+            setTimeout(() => {
+              openModal({
+                tag: 'ISO 15378:2017 — STEP 2 OF 2',
+                title: 'ISO 15378:2017 — Supplier Audit Clause',
+                body: 'ISO 15378:2017 follows the same clause structure as ISO 9001:2015 with added GMP requirements. It is essential for qualifying packaging material suppliers like Kautschuk GmbH.<br><br>Under ISO 15378:2017, the clause covering <strong>control of nonconforming outputs</strong> (such as defective rubber stoppers that must be rejected and quarantined) follows ISO 9001:2015 clause numbering.<br><br><em>Hint: Check the ISO 15378 Packaging Specification in your inventory — the clause number is noted there.</em><br><br>Enter the <strong>ISO 9001:2015 clause number</strong> for "Control of nonconforming outputs":',
+                placeholder: 'e.g. 8.7',
+                submitLabel: 'Submit Clause',
+                onSubmit: val => {
+                  const v = val.trim().replace(/\s/g, '');
+                  if (v === '8.7' || v === '87') {
+                    S.solved.iso15378_done = true;
+                    puzzleDone();
+                    if (S.socket) S.socket.emit('puzzle_solved', { key: 'iso15378_done', puzzlesDone: S.puzzlesDone });
+                    closeModal();
+                    log('✓ ISO 15378:2017 compliance verified — Clause 8.7 (Control of Nonconforming Outputs) confirmed. QA Office now accessible.', 'success');
+                    log('📚 Quality Fact: ISO 15378:2017 requires primary packaging suppliers to maintain a QMS aligned with ISO 9001:2015 AND comply with GMP. Clause 8.7 mirrors ISO 9001 — any nonconforming material must be identified, segregated, and dispositioned.', 'fact');
+                    renderNav();
+                  } else {
+                    S.wrongAnswers++;
+                    if (S.socket) S.socket.emit('wrong_answer');
+                    setFeedback('Incorrect. Nonconforming outputs are covered in ISO 9001:2015 section 8 (Operations). Think 8.something.', 'bad');
+                  }
+                },
+              });
+            }, 800);
+          } else {
+            S.wrongAnswers++;
+            if (S.socket) S.socket.emit('wrong_answer');
+            setFeedback('Incorrect. ISO 15378 was designed to add GMP requirements on top of an existing QMS standard — the global quality management benchmark.', 'bad');
+          }
+        },
+      });
+      return null;
+
+    // ── ISO 9001 PUZZLE ───────────────────────────────────────────────────
+    case 'check_iso9001':
+      if (S.solved.iso9001_done) {
+        return { msg: 'ISO 9001:2015 Management Review completed. Batch record safe unlock pending CAPA completion.', cls: 'info' };
+      }
+      if (!S.found.iso9001_cert) {
+        S.found.iso9001_cert = true;
+        addItem('iso9001_cert');
+        addNote('ISO 9001:2015 Certificate — MediSeal. Risk-based thinking: <strong>Clause 6.1</strong>. Management Review: <strong>Clause 9.3</strong>.', true);
+      }
+      openModal({
+        tag: 'ISO 9001:2015 — QUALITY MANAGEMENT SYSTEM',
+        title: 'Management Review Board — ISO 9001:2015 Compliance',
+        body: 'MediSeal is certified to <strong>ISO 9001:2015</strong>, the world\'s most widely adopted QMS standard. ISO 13485 and ISO 15378:2017 both build upon ISO 9001:2015 as their foundation.<br><br>One of the major innovations in ISO 9001:2015 was <strong>risk-based thinking</strong> — requiring organisations to identify and address risks before they become nonconformances.<br><br>Under ISO 9001:2015, which clause specifically requires organisations to determine risks and opportunities and plan actions to address them?',
+        choices: [
+          { label: 'A)  Clause 4.1 — Understanding the organisation and its context', correct: false },
+          { label: 'B)  Clause 6.1 — Actions to address risks and opportunities', correct: true },
+          { label: 'C)  Clause 8.1 — Operational planning and control', correct: false },
+          { label: 'D)  Clause 9.1 — Monitoring, measurement, analysis and evaluation', correct: false },
+        ],
+        onChoice: (correct) => {
+          if (correct) {
+            setFeedback('✓ Correct! Clause 6.1 — risk-based thinking is at the heart of ISO 9001:2015.', 'ok');
+            setTimeout(() => {
+              openModal({
+                tag: 'ISO 9001:2015 — STEP 2 OF 2',
+                title: 'Management Review — ISO 9001:2015 Clause',
+                body: 'Excellent. Risk-based thinking (Clause 6.1) means we proactively identify that things like using the wrong lubricant are a <em>risk</em>, not just a mistake.<br><br>The Management Review is a formal, documented meeting where top management reviews the QMS performance against objectives — reviewing audit results, NCR trends, customer feedback, and CAPA effectiveness.<br><br>Enter the <strong>ISO 9001:2015 clause number</strong> for "Management Review":',
+                placeholder: 'e.g. 9.3',
+                submitLabel: 'Submit Clause',
+                onSubmit: val => {
+                  const v = val.trim().replace(/\s/g, '');
+                  if (v === '9.3' || v === '93') {
+                    S.solved.iso9001_done = true;
+                    puzzleDone();
+                    if (S.socket) S.socket.emit('puzzle_solved', { key: 'iso9001_done', puzzlesDone: S.puzzlesDone });
+                    closeModal();
+                    log('✓ ISO 9001:2015 Management Review verified — Clause 9.3 confirmed. Batch Record Safe now fully unlocked (requires CAPA completion too).', 'success');
+                    log('📚 Quality Fact: ISO 9001:2015 Clause 9.3 requires top management to review the QMS at planned intervals. Inputs include audit results, NCR trends, CAPA status, and process performance. This drives continual improvement.', 'fact');
+                    renderRoom();
+                  } else {
+                    S.wrongAnswers++;
+                    if (S.socket) S.socket.emit('wrong_answer');
+                    setFeedback('Incorrect. Management Review is in section 9 (Performance Evaluation). Think 9.something.', 'bad');
+                  }
+                },
+              });
+            }, 800);
+          } else {
+            S.wrongAnswers++;
+            if (S.socket) S.socket.emit('wrong_answer');
+            setFeedback('Incorrect. Risk-based thinking is about PLANNING for risks — which section of ISO 9001 covers planning?', 'bad');
+          }
+        },
       });
       return null;
 
@@ -1228,7 +1676,7 @@ function puzzleDone() {
 }
 
 function updateProgress() {
-  const total = 6;
+  const total = 8;
   const pct = (S.puzzlesDone / total) * 100;
   document.getElementById('progress-bar').style.width = pct + '%';
   document.getElementById('progress-label').textContent =
@@ -1460,11 +1908,8 @@ function showEndScreen(won, data) {
 // ────────────────────────────────────────────────
 // INIT
 // ────────────────────────────────────────────────
-document.getElementById('start-btn').onclick = async () => {
-  // Mark game as started on server (non-blocking)
-  if (S.authToken && !S.demoMode) {
-    try { await apiCall('/api/game/start', 'POST', {}); } catch {}
-  }
+function doStartGame(timerSec) {
+  if (timerSec !== undefined) S.timerSec = timerSec;
   document.getElementById('startscreen').style.display = 'none';
   renderRoom();
   renderInventory();
@@ -1472,9 +1917,24 @@ document.getElementById('start-btn').onclick = async () => {
   renderNav();
   updateProgress();
   startTimer();
-  connectSocket();
   log('Facility lockdown in effect. Report to the Receiving Dock and begin your investigation.', 'warn');
   log('Tip: Examine every hotspot. Collect items. Read your notes. The answers are all here.', 'hint');
+}
+
+document.getElementById('start-btn').onclick = () => {
+  // Demo mode: start immediately without server sync
+  if (S.demoMode) {
+    doStartGame();
+    return;
+  }
+  // Real mode: signal ready to server; game starts when all members are ready
+  if (S.socket) {
+    document.getElementById('start-btn').disabled = true;
+    document.getElementById('start-btn').textContent = '✓ I\'m Ready — waiting…';
+    document.getElementById('start-waiting').style.display = 'block';
+    document.getElementById('lobby-error-msg').textContent = '';
+    S.socket.emit('player_ready');
+  }
 };
 
 // Init login when page loads
@@ -1491,10 +1951,12 @@ const PUZZLE_LABELS = {
   capa_done:        'CAPA Root Cause Analysis',
   batch_retrieved:  'Batch Record Retrieved',
   game_won:         'Final Batch Release',
+  iso15378_done:    'ISO 15378:2017 Compliance Check',
+  iso9001_done:     'ISO 9001:2015 Management Review',
 };
 
 function connectSocket() {
-  if (!S.authToken || S.demoMode) return;
+  if (!S.authToken || S.demoMode || S.socket) return;
   const sock = window.io({ auth: { token: S.authToken, memberName: S.memberName || 'Member' } });
   S.socket = sock;
 
@@ -1506,7 +1968,14 @@ function connectSocket() {
   sock.on('state_init', ({ state, chats, members }) => {
     if (state) applyServerState(state);
     if (chats)   chats.forEach(c => appendChat(c.from, c.text, c.ts, c.from === S.memberName));
-    if (members) updateMembersOnline(members);
+    if (members) {
+      updateMembersOnline(members);
+      updateLobbyMembers(members);
+    }
+    // If game already running (reconnect mid-game), skip lobby and go straight to game
+    if (state && state.timerSec !== undefined && document.getElementById('startscreen').style.display !== 'none') {
+      doStartGame();
+    }
   });
 
   sock.on('puzzle_solved', ({ key, puzzlesDone, fromName }) => {
@@ -1533,13 +2002,38 @@ function connectSocket() {
 
   sock.on('member_join', ({ memberName, members }) => {
     updateMembersOnline(members);
+    updateLobbyMembers(members);
     appendSystemChat(memberName + ' joined the team');
     if (memberName !== S.memberName) log('👋 ' + memberName + ' joined your group!', 'hint');
   });
 
   sock.on('member_leave', ({ memberName, members }) => {
     updateMembersOnline(members);
+    updateLobbyMembers(members);
     appendSystemChat(memberName + ' left');
+  });
+
+  // ── Lobby events ──────────────────────────────────────────────────────────
+  sock.on('ready_update', ({ readyCount, total, readyNames }) => {
+    const bar = document.getElementById('lobby-ready-bar');
+    if (bar) {
+      const names = readyNames.join(', ') || '—';
+      bar.textContent = `✓ Ready: ${readyCount} / ${total}  (${names})`;
+    }
+  });
+
+  sock.on('game_start', ({ timerSec }) => {
+    doStartGame(timerSec);
+  });
+
+  sock.on('lobby_error', ({ message }) => {
+    const el = document.getElementById('lobby-error-msg');
+    if (el) el.textContent = message;
+    // Re-enable the begin button so player can try again
+    const btn = document.getElementById('start-btn');
+    btn.disabled = false;
+    btn.textContent = 'BEGIN AUDIT SIMULATION';
+    document.getElementById('start-waiting').style.display = 'none';
   });
 
   sock.on('game_over', data => {
@@ -1547,6 +2041,50 @@ function connectSocket() {
     S.over = true;
     clearInterval(S.timerInt);
     showEndScreen(data.won, data);
+  });
+
+  // ── Collaborative code events ─────────────────────────────────────────────
+  sock.on('code_revealed', ({ puzzleKey, code, fromName, label, required, confirmed: confirmedCount }) => {
+    appendSystemChat(`🔑 ${fromName} found: ${label}`);
+    if (fromName === S.memberName) {
+      const fb = document.getElementById('modal-feedback');
+      fb.className = 'ok';
+      fb.textContent = `✓ Correct! Waiting for team (${confirmedCount}/${required} confirmed)…`;
+      document.getElementById('modal-submit').disabled = true;
+      log(`🔑 You found the code for "${label}" — waiting for ${required - confirmedCount} more teammate(s).`, 'hint');
+    } else {
+      showTeamConfirm({ puzzleKey, code, fromName, label, required, confirmedCount });
+      log(`🔑 ${escHtml(fromName)} found the answer to "${label}" — enter the code to confirm!`, 'warn');
+    }
+  });
+
+  sock.on('confirm_progress', ({ puzzleKey, count, required, fromName }) => {
+    if (fromName !== S.memberName) appendSystemChat(`✓ ${fromName} confirmed (${count}/${required})`);
+    if (window._tcPuzzleKey === puzzleKey) {
+      document.getElementById('tc-progress').textContent = `✓ ${count} / ${required} members confirmed`;
+    }
+    const fb = document.getElementById('modal-feedback');
+    if (fb && fb.textContent.includes('Waiting for team')) {
+      fb.textContent = `✓ Waiting for team (${count}/${required} confirmed)…`;
+    }
+  });
+
+  sock.on('puzzle_complete', ({ puzzleKey, puzzlesDone: pd }) => {
+    closeTeamConfirm();
+    if (S.solved[puzzleKey]) return;
+    S.puzzlesDone = Math.max(S.puzzlesDone, pd);
+    if (puzzleKey === 'coa_verified') {
+      S.solved.coa_verified = true;
+      updateProgress(); closeModal();
+      log('✓ ALL MEMBERS CONFIRMED — Lot RM-4471 released from HOLD. Production line accessible.', 'success');
+      log('📚 Quality Fact: GMP requires every incoming material to have an approved CoA on file before it can be used in production.', 'fact');
+      renderNav(); renderRoom();
+    } else if (puzzleKey === 'game_won') {
+      S.solved.game_won = true;
+      updateProgress(); closeModal();
+      log('✓ ALL MEMBERS CONFIRMED BATCH DISPOSITION — Final authorisation complete!', 'success');
+      triggerWin();
+    }
   });
 
   sock.on('kicked', ({ reason }) => {
@@ -1559,6 +2097,55 @@ function connectSocket() {
     document.getElementById('chat-input').placeholder = 'Reconnecting…';
   });
 }
+
+// ── Team Confirmation Helpers ─────────────────────────────────────────────
+window._tcPuzzleKey = null;
+
+function showTeamConfirm({ puzzleKey, code, fromName, label, required, confirmedCount }) {
+  window._tcPuzzleKey = puzzleKey;
+  document.getElementById('tc-title').textContent = label;
+  document.getElementById('tc-body').innerHTML =
+    `<strong>${escHtml(fromName)}</strong> found the answer. All ${required} members must enter this code to proceed:`;
+  document.getElementById('tc-code-display').textContent = code;
+  document.getElementById('tc-input').value = '';
+  document.getElementById('tc-input').disabled = false;
+  document.getElementById('tc-feedback').textContent = '';
+  document.getElementById('tc-feedback').className = '';
+  document.getElementById('tc-progress').textContent = `${confirmedCount} / ${required} members confirmed`;
+  document.getElementById('tc-submit').disabled = false;
+  document.getElementById('team-confirm-overlay').classList.add('show');
+  setTimeout(() => document.getElementById('tc-input').focus(), 60);
+}
+
+function closeTeamConfirm() {
+  document.getElementById('team-confirm-overlay').classList.remove('show');
+  window._tcPuzzleKey = null;
+}
+
+document.getElementById('tc-submit').onclick = () => {
+  const puzzleKey = window._tcPuzzleKey;
+  if (!puzzleKey || !S.socket) return;
+  const inp = document.getElementById('tc-input');
+  const val = inp.value.trim().toUpperCase().replace(/[-\s]/g, '');
+  const code = document.getElementById('tc-code-display').textContent;
+  const expected = code.toUpperCase().replace(/[-\s]/g, '');
+  if (val === expected) {
+    document.getElementById('tc-feedback').textContent = '✓ Confirmed! Waiting for remaining teammates…';
+    document.getElementById('tc-feedback').className = 'ok';
+    document.getElementById('tc-submit').disabled = true;
+    inp.disabled = true;
+    S.socket.emit('confirm_code', { puzzleKey, code });
+  } else {
+    document.getElementById('tc-feedback').textContent = 'Incorrect — enter the code exactly as shown above.';
+    document.getElementById('tc-feedback').className = 'bad';
+    S.wrongAnswers++;
+    if (S.socket) S.socket.emit('wrong_answer');
+  }
+};
+
+document.getElementById('tc-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('tc-submit').click();
+});
 
 function applyServerState(state) {
   if (!state) return;
@@ -1575,6 +2162,16 @@ function applyServerState(state) {
 function updateMembersOnline(members) {
   const el = document.getElementById('members-online');
   if (el) el.textContent = members.length + ' online';
+}
+
+function updateLobbyMembers(members) {
+  const el = document.getElementById('lobby-members');
+  if (!el) return;
+  const count = members.length;
+  const names = members.join(', ') || '—';
+  const statusColor = count >= 3 ? 'var(--accent2)' : 'var(--warn)';
+  el.innerHTML = `<span style="color:${statusColor};">${count}/5 connected</span> &nbsp;— ${escHtml(names)}<br>`
+    + `<span style="font-size:0.72rem;color:var(--dim);">${count < 3 ? 'Need at least 3 members to start.' : count < 5 ? 'Waiting for all members to click ready.' : 'All 5 members connected!'}</span>`;
 }
 
 // ── Chat helpers ────────────────────────────────

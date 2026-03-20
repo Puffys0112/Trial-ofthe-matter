@@ -198,39 +198,6 @@
   <div class="card c-done"><div class="card-val" id="c-done">—</div><div class="card-lbl">Completed</div></div>
 </div>
 
-<!-- ── Leaderboard ── -->
-<section id="leaderboard-section">
-  <h2>🏆 Live Leaderboard</h2>
-  <table class="lb-table">
-    <thead>
-      <tr>
-        <th class="rank-cell">Rank</th>
-        <th>Group</th>
-        <th>Score</th>
-        <th>Puzzles</th>
-        <th>Time Left</th>
-        <th>Wrong</th>
-        <th>Status</th>
-        <th>Finished</th>
-      </tr>
-    </thead>
-    <tbody id="lb-body"></tbody>
-  </table>
-</section>
-
-<!-- ── Scoring guide ── -->
-<details style="margin-bottom:28px;font-size:0.78rem;color:var(--dim);">
-  <summary style="cursor:pointer;color:var(--accent);font-size:0.75rem;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">
-    Scoring Formula
-  </summary>
-  <div style="background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:14px 18px;line-height:2;margin-top:8px;">
-    Each puzzle completed: <strong style="color:var(--text);">× 200 pts</strong> (max 6 × 200 = 1,200 pts)<br>
-    Time remaining bonus (win only): <strong style="color:var(--text);">× 2 pts per second</strong> (max ~3,000 pts)<br>
-    Wrong answer penalty: <strong style="color:var(--danger);">−10 pts each</strong><br>
-    <em>Maximum possible score: 4,200 pts (all 6 puzzles, no wrong answers, instant completion)</em>
-  </div>
-</details>
-
 <hr id="admin-divider" />
 
 <!-- ── Admin Section ── -->
@@ -245,6 +212,39 @@
   </div>
 
   <div id="admin-panel">
+
+    <!-- ── Leaderboard ── -->
+    <section id="leaderboard-section" style="margin-bottom:28px;">
+      <h2 style="font-size:0.72rem;text-transform:uppercase;letter-spacing:2px;color:var(--accent);margin-bottom:12px;">🏆 Live Leaderboard</h2>
+      <table class="lb-table">
+        <thead>
+          <tr>
+            <th class="rank-cell">Rank</th>
+            <th>Group</th>
+            <th>Score</th>
+            <th>Puzzles</th>
+            <th>Time Left</th>
+            <th>Wrong</th>
+            <th>Status</th>
+            <th>Finished</th>
+          </tr>
+        </thead>
+        <tbody id="lb-body"></tbody>
+      </table>
+    </section>
+
+    <!-- ── Scoring guide ── -->
+    <details style="margin-bottom:28px;font-size:0.78rem;color:var(--dim);">
+      <summary style="cursor:pointer;color:var(--accent);font-size:0.75rem;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">
+        Scoring Formula
+      </summary>
+      <div style="background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:14px 18px;line-height:2;margin-top:8px;">
+        Each puzzle completed: <strong style="color:var(--text);">× 200 pts</strong> (max 8 × 200 = 1,600 pts)<br>
+        Time remaining bonus (win only): <strong style="color:var(--text);">× 2 pts per second</strong> (max ~3,000 pts)<br>
+        Wrong answer penalty: <strong style="color:var(--danger);">−10 pts each</strong><br>
+        <em>Maximum possible score: 4,600 pts (all 8 puzzles, no wrong answers, instant completion)</em>
+      </div>
+    </details>
 
     <div class="admin-tools">
       <h3>Add New Group</h3>
@@ -435,7 +435,7 @@ document.getElementById('admin-login-btn').onclick = async () => {
     sessionStorage.setItem('adminToken', adminToken);
     document.getElementById('admin-login-form').style.display = 'none';
     document.getElementById('admin-panel').classList.add('show');
-    await loadAdminGroups();
+    await Promise.all([loadLeaderboard(), loadAdminGroups()]);
   } catch (e) {
     err.textContent = e.message;
   }
@@ -456,7 +456,9 @@ document.getElementById('share-url').textContent =
 
 // ── Refresh loop ───────────────────────────────────────────────────────────
 async function refreshAll() {
-  await Promise.all([loadSummary(), loadLeaderboard(), loadAdminGroups()]);
+  const tasks = [loadSummary()];
+  if (adminToken) tasks.push(loadLeaderboard(), loadAdminGroups());
+  await Promise.all(tasks);
 }
 
 function startRefreshLoop() {
