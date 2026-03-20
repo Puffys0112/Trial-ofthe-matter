@@ -440,9 +440,16 @@
     </div>
     <button class="btn primary login-submit" id="login-btn">LOGIN &amp; ENTER FACILITY</button>
     <div class="login-links">
-      <a href="/admin.html" target="_blank">📊 Leaderboard</a>
-      &nbsp;|&nbsp;
-      <a href="#" id="demo-link">▶ Demo Mode (no score)</a>
+      <a href="#" id="demo-link">▶ Demo / Admin Mode</a>
+    </div>
+    <!-- Admin demo password prompt (hidden by default) -->
+    <div id="demo-pw-box" style="display:none;margin-top:12px;text-align:left;">
+      <div class="lf" style="margin-bottom:8px;">
+        <label>Admin Password (required for Demo)</label>
+        <input type="password" id="demo-pw-input" placeholder="Enter admin password" maxlength="60" />
+      </div>
+      <div id="demo-pw-error" style="color:var(--danger);font-size:0.75rem;min-height:16px;margin-bottom:6px;"></div>
+      <button class="btn primary" id="demo-pw-btn" style="width:100%;">Enter Demo Mode</button>
     </div>
   </div>
 </div>
@@ -509,9 +516,24 @@
     • There are <strong style="color:var(--text);">5 rooms</strong> and <strong style="color:var(--text);">8 puzzles</strong> to complete
   </div>
 
-  <button class="btn primary" id="start-btn" style="font-size:0.95rem;padding:11px 36px;margin-top:6px;">
-    BEGIN AUDIT SIMULATION
+  <!-- Lobby status (shown after login, hidden in demo mode) -->
+  <div id="lobby-status" style="display:none;background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:16px 20px;margin-top:10px;max-width:460px;width:100%;text-align:left;">
+    <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:2px;color:var(--accent);margin-bottom:10px;">👥 TEAM LOBBY</div>
+    <div id="lobby-members" style="font-size:0.82rem;color:var(--dim);margin-bottom:8px;">Connecting…</div>
+    <div id="lobby-ready-bar" style="font-size:0.8rem;color:var(--accent2);margin-bottom:8px;min-height:18px;"></div>
+    <div id="lobby-error-msg" style="font-size:0.78rem;color:var(--danger);min-height:16px;"></div>
+    <p style="font-size:0.73rem;color:var(--dim);margin-top:6px;line-height:1.6;">
+      Groups of <strong style="color:var(--text);">3–5 members</strong> must all be connected before starting.<br>
+      All members click <strong style="color:var(--text);">I'm Ready</strong> to begin simultaneously.
+    </p>
+  </div>
+
+  <button class="btn primary" id="start-btn" style="font-size:0.95rem;padding:11px 36px;margin-top:10px;">
+    I'M READY — BEGIN
   </button>
+  <div id="start-waiting" style="display:none;font-size:0.8rem;color:var(--dim);margin-top:8px;letter-spacing:1px;">
+    ⏳ Waiting for teammates to confirm…
+  </div>
 </div>
 
 <!-- ═══════════════ HEADER ═══════════════ -->
@@ -712,7 +734,10 @@ document.getElementById('login-btn').onclick = async () => {
     S.authToken  = res.token;
     S.groupName  = res.groupName;
     S.memberName = name;
+    // Connect socket immediately so lobby is live before BEGIN
+    connectSocket();
     showStartScreen(res.groupName);
+    document.getElementById('lobby-status').style.display = 'block';
   } catch (e) {
     err.textContent = e.message || 'Login failed. Check your PIN and try again.';
   }
@@ -722,12 +747,31 @@ document.getElementById('group-pin').onkeydown = e => {
   if (e.key === 'Enter') document.getElementById('login-btn').click();
 };
 
+// Demo mode requires admin password
 document.getElementById('demo-link').onclick = e => {
   e.preventDefault();
-  S.demoMode  = true;
-  S.groupName = 'Demo';
-  S.memberName = 'Demo';
-  showStartScreen('Demo Mode');
+  const box = document.getElementById('demo-pw-box');
+  box.style.display = box.style.display === 'none' ? 'block' : 'none';
+};
+
+document.getElementById('demo-pw-btn').onclick = async () => {
+  const pw  = document.getElementById('demo-pw-input').value;
+  const err = document.getElementById('demo-pw-error');
+  err.textContent = '';
+  try {
+    await apiCall('/api/admin/login', 'POST', { password: pw });
+    S.demoMode   = true;
+    S.groupName  = 'Demo';
+    S.memberName = 'Admin Demo';
+    showStartScreen('Demo Mode (Admin)');
+    document.getElementById('start-btn').textContent = 'BEGIN AUDIT SIMULATION';
+  } catch {
+    err.textContent = 'Incorrect admin password.';
+  }
+};
+
+document.getElementById('demo-pw-input').onkeydown = e => {
+  if (e.key === 'Enter') document.getElementById('demo-pw-btn').click();
 };
 
 // ────────────────────────────────────────────────
@@ -1649,11 +1693,8 @@ function showEndScreen(won, data) {
 // ────────────────────────────────────────────────
 // INIT
 // ────────────────────────────────────────────────
-document.getElementById('start-btn').onclick = async () => {
-  // Mark game as started on server (non-blocking)
-  if (S.authToken && !S.demoMode) {
-    try { await apiCall('/api/game/start', 'POST', {}); } catch {}
-  }
+function doStartGame(timerSec) {
+  if (timerSec !== undefined) S.timerSec = timerSec;
   document.getElementById('startscreen').style.display = 'none';
   renderRoom();
   renderInventory();
@@ -1661,9 +1702,24 @@ document.getElementById('start-btn').onclick = async () => {
   renderNav();
   updateProgress();
   startTimer();
-  connectSocket();
   log('Facility lockdown in effect. Report to the Receiving Dock and begin your investigation.', 'warn');
   log('Tip: Examine every hotspot. Collect items. Read your notes. The answers are all here.', 'hint');
+}
+
+document.getElementById('start-btn').onclick = () => {
+  // Demo mode: start immediately without server sync
+  if (S.demoMode) {
+    doStartGame();
+    return;
+  }
+  // Real mode: signal ready to server; game starts when all members are ready
+  if (S.socket) {
+    document.getElementById('start-btn').disabled = true;
+    document.getElementById('start-btn').textContent = '✓ I\'m Ready — waiting…';
+    document.getElementById('start-waiting').style.display = 'block';
+    document.getElementById('lobby-error-msg').textContent = '';
+    S.socket.emit('player_ready');
+  }
 };
 
 // Init login when page loads
@@ -1685,7 +1741,7 @@ const PUZZLE_LABELS = {
 };
 
 function connectSocket() {
-  if (!S.authToken || S.demoMode) return;
+  if (!S.authToken || S.demoMode || S.socket) return;
   const sock = window.io({ auth: { token: S.authToken, memberName: S.memberName || 'Member' } });
   S.socket = sock;
 
@@ -1697,7 +1753,14 @@ function connectSocket() {
   sock.on('state_init', ({ state, chats, members }) => {
     if (state) applyServerState(state);
     if (chats)   chats.forEach(c => appendChat(c.from, c.text, c.ts, c.from === S.memberName));
-    if (members) updateMembersOnline(members);
+    if (members) {
+      updateMembersOnline(members);
+      updateLobbyMembers(members);
+    }
+    // If game already running (reconnect mid-game), skip lobby and go straight to game
+    if (state && state.timerSec !== undefined && document.getElementById('startscreen').style.display !== 'none') {
+      doStartGame();
+    }
   });
 
   sock.on('puzzle_solved', ({ key, puzzlesDone, fromName }) => {
@@ -1724,13 +1787,38 @@ function connectSocket() {
 
   sock.on('member_join', ({ memberName, members }) => {
     updateMembersOnline(members);
+    updateLobbyMembers(members);
     appendSystemChat(memberName + ' joined the team');
     if (memberName !== S.memberName) log('👋 ' + memberName + ' joined your group!', 'hint');
   });
 
   sock.on('member_leave', ({ memberName, members }) => {
     updateMembersOnline(members);
+    updateLobbyMembers(members);
     appendSystemChat(memberName + ' left');
+  });
+
+  // ── Lobby events ──────────────────────────────────────────────────────────
+  sock.on('ready_update', ({ readyCount, total, readyNames }) => {
+    const bar = document.getElementById('lobby-ready-bar');
+    if (bar) {
+      const names = readyNames.join(', ') || '—';
+      bar.textContent = `✓ Ready: ${readyCount} / ${total}  (${names})`;
+    }
+  });
+
+  sock.on('game_start', ({ timerSec }) => {
+    doStartGame(timerSec);
+  });
+
+  sock.on('lobby_error', ({ message }) => {
+    const el = document.getElementById('lobby-error-msg');
+    if (el) el.textContent = message;
+    // Re-enable the begin button so player can try again
+    const btn = document.getElementById('start-btn');
+    btn.disabled = false;
+    btn.textContent = 'BEGIN AUDIT SIMULATION';
+    document.getElementById('start-waiting').style.display = 'none';
   });
 
   sock.on('game_over', data => {
@@ -1859,6 +1947,16 @@ function applyServerState(state) {
 function updateMembersOnline(members) {
   const el = document.getElementById('members-online');
   if (el) el.textContent = members.length + ' online';
+}
+
+function updateLobbyMembers(members) {
+  const el = document.getElementById('lobby-members');
+  if (!el) return;
+  const count = members.length;
+  const names = members.join(', ') || '—';
+  const statusColor = count >= 3 ? 'var(--accent2)' : 'var(--warn)';
+  el.innerHTML = `<span style="color:${statusColor};">${count}/5 connected</span> &nbsp;— ${escHtml(names)}<br>`
+    + `<span style="font-size:0.72rem;color:var(--dim);">${count < 3 ? 'Need at least 3 members to start.' : count < 5 ? 'Waiting for all members to click ready.' : 'All 5 members connected!'}</span>`;
 }
 
 // ── Chat helpers ────────────────────────────────

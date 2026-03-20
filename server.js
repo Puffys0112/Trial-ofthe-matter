@@ -44,6 +44,10 @@ const groupChats = new Map();
 // groupId → Map { puzzleKey → { code, fromName, confirmed: Set<socketId>, required: number } }
 const pendingConfirms = new Map();
 
+// Per-group lobby ready state (before game starts)
+// groupId → Map { socketId → memberName }
+const groupReadyState = new Map();
+
 // ── Data helpers ───────────────────────────────────────────────────────────
 function load() { return JSON.parse(fs.readFileSync(DATA_FILE, 'utf8')); }
 function save(d) { fs.writeFileSync(DATA_FILE, JSON.stringify(d, null, 2)); }
@@ -176,8 +180,8 @@ app.post('/api/game/submit', requireGroup, (req, res) => {
   res.json({ score, puzzlesDone, wrongAnswers, secondsRemaining: secsLeft });
 });
 
-// Public leaderboard
-app.get('/api/leaderboard', (req, res) => {
+// Admin-only leaderboard
+app.get('/api/leaderboard', requireAdmin, (req, res) => {
   const data = load();
   res.json(
     data.groups
@@ -241,10 +245,11 @@ app.post('/api/admin/reset', requireAdmin, (req, res) => {
   group.won = false; group.secondsRemaining = 0;
   group.completedAt = null; group.startedAt = null;
 
-  // Clear session and chat
+  // Clear session, chat, and lobby state
   groupSessions.delete(groupId);
   groupChats.delete(groupId);
   pendingConfirms.delete(groupId);
+  groupReadyState.delete(groupId);
 
   // Invalidate all tokens for this group
   for (const [tok, sess] of groupTokens) {
@@ -354,6 +359,59 @@ io.on('connection', (socket) => {
     if (gs) gs.wrongAnswers++;
   });
 
+  // ── Lobby: player signals ready to start ─────────────────────────────────
+  socket.on('player_ready', () => {
+    // Ignore if game already running for this group
+    if (groupSessions.has(groupId)) return;
+
+    if (!groupReadyState.has(groupId)) groupReadyState.set(groupId, new Map());
+    const rs = groupReadyState.get(groupId);
+    rs.set(socket.id, memberName);
+
+    const room = io.sockets.adapter.rooms.get(groupId);
+    const online = room ? room.size : 1;
+    const readyNames = [...rs.values()];
+    const readyCount = readyNames.length;
+
+    if (online < 3) {
+      socket.emit('lobby_error', { message: `Need at least 3 members online to start. Currently ${online} connected.` });
+      rs.delete(socket.id);
+      return;
+    }
+    if (online > 5) {
+      socket.emit('lobby_error', { message: `Maximum group size is 5. Currently ${online} connected.` });
+      rs.delete(socket.id);
+      return;
+    }
+
+    io.to(groupId).emit('ready_update', { readyCount, total: online, readyNames });
+
+    if (readyCount >= online) {
+      // All online members are ready — start game
+      const data  = load();
+      const group = data.groups.find(g => g.id === groupId);
+      if (!group || group.status === 'completed') return;
+
+      if (group.status !== 'playing') {
+        group.status    = 'playing';
+        group.startedAt = new Date().toISOString();
+        save(data);
+      }
+
+      if (!groupSessions.has(groupId)) {
+        groupSessions.set(groupId, {
+          solved: {}, inventory: [], notes: [],
+          puzzlesDone: 0, wrongAnswers: 0,
+          startedAt: Date.now(),
+          groupSize: online,
+        });
+      }
+
+      groupReadyState.delete(groupId);
+      io.to(groupId).emit('game_start', { timerSec: GAME_SECS });
+    }
+  });
+
   // ── Collaborative: solver found the correct code ──────────────────────────
   socket.on('code_found', ({ puzzleKey, code, label }) => {
     const gs = groupSessions.get(groupId);
@@ -432,6 +490,20 @@ io.on('connection', (socket) => {
 
   // ── Disconnect ────────────────────────────────────────────────────────────
   socket.on('disconnect', () => {
+    // Remove from lobby ready state if present
+    const rs = groupReadyState.get(groupId);
+    if (rs) {
+      rs.delete(socket.id);
+      if (rs.size === 0) groupReadyState.delete(groupId);
+      else {
+        const room = io.sockets.adapter.rooms.get(groupId);
+        const online = room ? room.size : 0;
+        io.to(groupId).emit('ready_update', {
+          readyCount: rs.size, total: Math.max(online - 1, rs.size),
+          readyNames: [...rs.values()],
+        });
+      }
+    }
     // Short delay before announcing departure (handles page reloads gracefully)
     setTimeout(() => {
       const remaining = getOnlineMembers(groupId);
