@@ -382,6 +382,37 @@
     #chat-send-btn { background: transparent; border: 1px solid var(--accent); color: var(--accent); padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.82rem; }
     #chat-send-btn:hover { background: rgba(0,153,230,0.1); }
     #members-online { font-size: 0.64rem; color: var(--accent2); font-weight: normal; letter-spacing: 1px; }
+    /* ── Team Confirm Overlay ── */
+    #team-confirm-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.88); z-index: 250;
+      align-items: center; justify-content: center;
+    }
+    #team-confirm-overlay.show { display: flex; }
+    #team-confirm-box {
+      background: var(--panel); border: 2px solid var(--warn);
+      border-radius: 10px; padding: 26px 30px;
+      max-width: 460px; width: 92%;
+      box-shadow: 0 0 50px rgba(245,166,35,0.3);
+    }
+    #tc-code-display {
+      background: #0a0c18; border: 1px solid var(--accent);
+      border-radius: 4px; padding: 10px 14px;
+      font-size: 1.1rem; letter-spacing: 3px;
+      text-align: center; color: var(--warn);
+      margin: 12px 0; font-weight: bold;
+    }
+    #tc-input {
+      width: 100%; background: var(--bg); border: 1px solid var(--border);
+      color: var(--text); padding: 8px 12px; border-radius: 4px;
+      font-family: inherit; font-size: 0.88rem;
+      margin-bottom: 10px; outline: none;
+    }
+    #tc-input:focus { border-color: var(--warn); }
+    #tc-progress { font-size: 0.75rem; color: var(--accent2); margin: 8px 0; min-height: 18px; }
+    #tc-feedback { font-size: 0.78rem; min-height: 18px; margin-bottom: 8px; }
+    #tc-feedback.ok  { color: var(--accent2); }
+    #tc-feedback.bad { color: var(--danger); }
   </style>
   <script src="/socket.io/socket.io.js"></script>
 </head>
@@ -464,6 +495,9 @@
     <span class="tag">Visual Inspection</span>
     <span class="tag">Defect Classification</span>
     <span class="tag">SOP Compliance</span>
+    <span class="tag">ISO 9001:2015</span>
+    <span class="tag">ISO 15378:2017</span>
+    <span class="tag">Risk-Based Thinking</span>
   </div>
 
   <div class="start-card" style="font-size:0.78rem;color:var(--dim);">
@@ -472,7 +506,7 @@
     • <strong style="color:var(--text);">Select items</strong> in your inventory, then interact with hotspots to use them<br>
     • <strong style="color:var(--text);">Solve puzzles</strong> — all answers are based on real quality principles<br>
     • <strong style="color:var(--text);">Check your Notes</strong> panel — clues are recorded automatically<br>
-    • There are <strong style="color:var(--text);">5 rooms</strong> and <strong style="color:var(--text);">6 puzzles</strong> to complete
+    • There are <strong style="color:var(--text);">5 rooms</strong> and <strong style="color:var(--text);">8 puzzles</strong> to complete
   </div>
 
   <button class="btn primary" id="start-btn" style="font-size:0.95rem;padding:11px 36px;margin-top:6px;">
@@ -484,7 +518,7 @@
 <header>
   <div class="header-left">
     <h1>🏭 MediSeal — Quality Week</h1>
-    <span>INTERNAL AUDIT SIMULATION &nbsp;|&nbsp; ISO 13485 FACILITY</span>
+    <span>INTERNAL AUDIT SIMULATION &nbsp;|&nbsp; ISO 13485 · ISO 9001 · ISO 15378</span>
   </div>
   <div id="timer">25:00</div>
 </header>
@@ -500,7 +534,7 @@
     <div id="room-title">Receiving Dock</div>
     <div id="room-desc">Loading…</div>
     <div id="progress-bar-wrap"><div id="progress-bar"></div></div>
-    <div id="progress-label">Quality checks: 0 / 6 complete</div>
+    <div id="progress-label">Quality checks: 0 / 8 complete</div>
     <div id="hotspots"></div>
     <div id="log"></div>
   </div>
@@ -556,6 +590,23 @@
   <a href="/admin.html" target="_blank" class="btn success" style="font-size:0.9rem;padding:10px 28px;text-decoration:none;">
     📊 View Leaderboard
   </a>
+</div>
+
+<!-- ═══════════════ TEAM CONFIRM OVERLAY ═══════════════ -->
+<div id="team-confirm-overlay">
+  <div id="team-confirm-box">
+    <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:2px;color:var(--warn);margin-bottom:6px;">🔑 TEAM CONFIRMATION REQUIRED</div>
+    <div id="tc-title" style="font-size:1rem;color:var(--text);margin-bottom:10px;font-weight:bold;"></div>
+    <div id="tc-body" style="font-size:0.82rem;color:var(--dim);line-height:1.7;margin-bottom:6px;"></div>
+    <div id="tc-code-display"></div>
+    <p style="font-size:0.75rem;color:var(--dim);margin-bottom:8px;">Type the code above to confirm you've received it:</p>
+    <input type="text" id="tc-input" placeholder="Enter the code…" maxlength="20" autocomplete="off" />
+    <div id="tc-feedback"></div>
+    <div id="tc-progress"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;">
+      <button class="btn primary" id="tc-submit">Confirm</button>
+    </div>
+  </div>
 </div>
 
 <!-- ═══════════════ SCRIPT ═══════════════ -->
@@ -711,6 +762,14 @@ const ITEMS = {
     emoji: '🔏', name: 'Batch Release Certificate',
     desc: 'Batch BN-2024-3200 | Disposition: REJECT & Quarantine | Reason: NCR-0892 / CAPA-0112. QA Auth PIN: 4471. Signed under ISO 13485 §8.3 — Control of Nonconforming Product.',
   },
+  stopper_spec: {
+    emoji: '📦', name: 'ISO 15378 Packaging Specification',
+    desc: 'Rubber Stopper Specification — ISO 15378:2017 Primary Packaging Materials for Medicinal Products. Supplier: Kautschuk GmbH. Material: Bromobutyl rubber compound. This standard combines ISO 9001:2015 requirements with GMP for primary packaging suppliers.',
+  },
+  iso9001_cert: {
+    emoji: '🏅', name: 'ISO 9001:2015 Certificate',
+    desc: 'ISO 9001:2015 Quality Management System Certificate — MediSeal Manufacturing Ltd. Scope: Design, manufacture and supply of rubber plungers and closures for medicinal devices. Key concepts: Risk-based thinking (Clause 6.1), Management Review (Clause 9.3).',
+  },
 };
 
 // ────────────────────────────────────────────────
@@ -747,22 +806,24 @@ const ROOMS = {
     emoji: '🔬',
     desc: 'The QC lab smells of IPA and calibration fluid. Dimensional gauges, particle counters, and sterility test equipment line the benches. A micrometer station in the corner carries a yellow "OUT OF CALIBRATION — DO NOT USE" sticker. The calibration reference cabinet is mounted on the wall. A sign on the QA Office door: "CALIBRATION SIGN-OFF REQUIRED FOR ENTRY."',
     hotspots: [
-      { label: 'Calibration Reference Cabinet', action: 'open_cal_cabinet' },
-      { label: 'Micrometer Station',            action: 'use_micrometer'  },
-      { label: 'SOP Document Rack',             action: 'check_sop_rack'  },
-      { label: 'Equipment Logbook',             action: 'check_equip_log' },
+      { label: 'Calibration Reference Cabinet',      action: 'open_cal_cabinet'    },
+      { label: 'Micrometer Station',                 action: 'use_micrometer'      },
+      { label: 'SOP Document Rack',                  action: 'check_sop_rack'      },
+      { label: 'Equipment Logbook',                  action: 'check_equip_log'     },
+      { label: 'ISO 15378 Packaging Compliance File', action: 'check_iso15378'     },
     ],
   },
   qaoffice: {
     id: 'qaoffice', badge: 'AREA 04 — QA / COMPLIANCE',
     name: 'QA & Compliance Office',
     emoji: '🗂️',
-    desc: 'The hub of quality operations. ISO 13485 clause labels run across the filing cabinets. The CAPA workstation shows: "NON-CONFORMANCE #NCR-0892 — AWAITING ROOT CAUSE ANALYSIS." A maintenance log has been left open on the side table — someone was in a hurry. The batch record safe on the wall requires CAPA completion to unlock.',
+    desc: 'The hub of quality operations. ISO 13485 clause labels run across the filing cabinets. The CAPA workstation shows: "NON-CONFORMANCE #NCR-0892 — AWAITING ROOT CAUSE ANALYSIS." A maintenance log has been left open on the side table — someone was in a hurry. An ISO 9001 management review board shows last quarter\'s KPIs. The batch record safe on the wall requires CAPA + ISO 9001 verification to unlock.',
     hotspots: [
-      { label: 'Maintenance Log (Side Table)', action: 'read_maint_log'   },
-      { label: 'CAPA Workstation',             action: 'use_capa_station' },
-      { label: 'ISO 13485 Filing Cabinet',     action: 'check_iso_files'  },
-      { label: 'Batch Record Safe',            action: 'open_batch_safe'  },
+      { label: 'Maintenance Log (Side Table)', action: 'read_maint_log'    },
+      { label: 'CAPA Workstation',             action: 'use_capa_station'  },
+      { label: 'ISO 13485 Filing Cabinet',     action: 'check_iso_files'   },
+      { label: 'ISO 9001 Management Review',   action: 'check_iso9001'     },
+      { label: 'Batch Record Safe',            action: 'open_batch_safe'   },
     ],
   },
   dispatch: {
@@ -794,7 +855,7 @@ const EXITS = {
 function canEnter(roomId) {
   if (roomId === 'production') return !!S.solved.coa_verified;
   if (roomId === 'qclab')      return !!S.solved.ncr_filed;
-  if (roomId === 'qaoffice')   return !!S.solved.calibration_done;
+  if (roomId === 'qaoffice')   return !!S.solved.calibration_done && !!S.solved.iso15378_done;
   if (roomId === 'dispatch')   return !!S.solved.capa_done;
   return true;
 }
@@ -802,7 +863,7 @@ function canEnter(roomId) {
 function lockReason(roomId) {
   if (roomId === 'production') return 'Raw material verification required first (GMP Receiving Terminal).';
   if (roomId === 'qclab')      return 'File the NCR at the NCR Filing Station on the production line first.';
-  if (roomId === 'qaoffice')   return 'Complete instrument calibration in the QC Lab first.';
+  if (roomId === 'qaoffice')   return 'Complete instrument calibration AND the ISO 15378 packaging compliance check in the QC Lab first.';
   if (roomId === 'dispatch')   return 'Complete and authorise the CAPA report in the QA Office first.';
   return 'Blocked.';
 }
@@ -878,13 +939,20 @@ function handleAction(action) {
         onSubmit: val => {
           const v = val.trim().toUpperCase().replace(/\s/g,'');
           if (v === 'RM4471' || v === 'RM-4471' || v === '4471') {
-            S.solved.coa_verified = true;
-            puzzleDone();
-            if (S.socket) S.socket.emit('puzzle_solved', { key: 'coa_verified', puzzlesDone: S.puzzlesDone });
-            closeModal();
-            log('✓ MATERIAL VERIFIED — Lot RM-4471 released from HOLD. Production line is now accessible.', 'success');
-            log('📚 Quality Fact: GMP requires every incoming material to have an approved CoA on file before it can be used in production.', 'fact');
-            renderNav();
+            if (S.demoMode || !S.socket) {
+              // Demo / no socket — solve immediately
+              S.solved.coa_verified = true;
+              puzzleDone();
+              closeModal();
+              log('✓ MATERIAL VERIFIED — Lot RM-4471 released from HOLD. Production line is now accessible.', 'success');
+              log('📚 Quality Fact: GMP requires every incoming material to have an approved CoA on file before it can be used in production.', 'fact');
+              renderNav();
+            } else {
+              // Collaborative — notify team, wait for all to confirm
+              setFeedback('✓ Correct lot number! Notifying team — waiting for all members to confirm…', 'ok');
+              document.getElementById('modal-submit').disabled = true;
+              S.socket.emit('code_found', { puzzleKey: 'coa_verified', code: 'RM-4471', label: 'GMP Material Verification (Lot RM-4471)' });
+            }
           } else {
             S.wrongAnswers++;
             if (S.socket) S.socket.emit('wrong_answer');
@@ -1145,8 +1213,8 @@ function handleAction(action) {
       return { msg: 'ISO 13485 §8.5 covers CAPA. That\'s what you need for the CAPA workstation.', cls: 'info' };
 
     case 'open_batch_safe':
-      if (!S.solved.capa_done) {
-        return { msg: 'The batch record safe displays: "CAPA COMPLETION REQUIRED." Complete the CAPA workstation first.', cls: 'warn' };
+      if (!S.solved.capa_done || !S.solved.iso9001_done) {
+        return { msg: 'The batch record safe displays: "CAPA + ISO 9001 VERIFICATION REQUIRED." Complete both the CAPA workstation and ISO 9001 Management Review first.', cls: 'warn' };
       }
       if (S.solved.batch_retrieved) {
         return { msg: 'You already have the Batch Release Certificate.', cls: 'info' };
@@ -1174,11 +1242,18 @@ function handleAction(action) {
         submitLabel: 'Authorise Disposition',
         onSubmit: val => {
           if (val.trim() === '4471') {
-            S.solved.game_won = true;
-            puzzleDone();
-            if (S.socket) S.socket.emit('puzzle_solved', { key: 'game_won', puzzlesDone: S.puzzlesDone });
-            closeModal();
-            triggerWin();
+            if (S.demoMode || !S.socket) {
+              // Demo / no socket — win immediately
+              S.solved.game_won = true;
+              puzzleDone();
+              closeModal();
+              triggerWin();
+            } else {
+              // Collaborative — all members must enter the PIN
+              setFeedback('✓ Correct PIN! All team members must confirm to authorise batch disposition…', 'ok');
+              document.getElementById('modal-submit').disabled = true;
+              S.socket.emit('code_found', { puzzleKey: 'game_won', code: '4471', label: 'Final Batch Disposition (PIN 4471)' });
+            }
           } else {
             S.wrongAnswers++;
             if (S.socket) S.socket.emit('wrong_answer');
@@ -1197,6 +1272,120 @@ function handleAction(action) {
         title: '"Zero Defects Saves Lives"',
         body: '<strong>QUALITY WEEK — MediSeal Manufacturing</strong><br><br>Our plungers are used in:<br>• Insulin vials for Type 1 and Type 2 diabetics<br>• Prefilled syringes for insulin pens<br>• Lyophilised drug vials for critical medications<br><br>A single defective plunger that reaches a patient could mean:<br>• Incorrect insulin dose delivery<br>• Sterility breach → patient infection<br>• Loss of dose → life-threatening hypoglycaemia<br><br><strong>This is why AQL, CAPA, calibration, and GMP are not bureaucracy — they are patient safety.</strong><br><br><em>Every check you make protects a real person.</em>',
         noInput: true,
+      });
+      return null;
+
+    // ── ISO 15378 PUZZLE ──────────────────────────────────────────────────
+    case 'check_iso15378':
+      if (S.solved.iso15378_done) {
+        return { msg: 'ISO 15378:2017 compliance confirmed. QA Office access available once calibration is complete.', cls: 'info' };
+      }
+      if (!S.found.stopper_spec) {
+        S.found.stopper_spec = true;
+        addItem('stopper_spec');
+        addNote('ISO 15378:2017 Packaging Spec: Rubber stoppers from Kautschuk GmbH. Standard combines <strong>ISO 9001:2015 + GMP</strong> for primary packaging.', true);
+      }
+      openModal({
+        tag: 'ISO 15378:2017 — PRIMARY PACKAGING COMPLIANCE',
+        title: 'ISO 15378:2017 Compliance Check — Packaging Materials',
+        body: 'ISO 15378:2017 is the international standard for <strong>primary packaging materials for medicinal products</strong>. It is mandatory for any supplier providing rubber stoppers, closures, and containers that come into direct contact with drugs.<br><br>The rubber stoppers in batch BN-2024-3200 were supplied under an ISO 15378:2017 certified QMS. This standard requires compliance with two core frameworks.<br><br><strong>Which two frameworks does ISO 15378:2017 combine?</strong>',
+        choices: [
+          { label: 'A)  ISO 13485 + FDA 21 CFR Part 820', correct: false },
+          { label: 'B)  ISO 9001:2015 + GMP (Good Manufacturing Practice)', correct: true },
+          { label: 'C)  ISO 14971 + ISO 9001:2015', correct: false },
+          { label: 'D)  ISO 2859-1 + ISO 13485', correct: false },
+        ],
+        onChoice: (correct) => {
+          if (correct) {
+            setFeedback('✓ Correct! ISO 15378 = ISO 9001:2015 QMS requirements + GMP requirements.', 'ok');
+            setTimeout(() => {
+              openModal({
+                tag: 'ISO 15378:2017 — STEP 2 OF 2',
+                title: 'ISO 15378:2017 — Supplier Audit Clause',
+                body: 'ISO 15378:2017 follows the same clause structure as ISO 9001:2015 with added GMP requirements. It is essential for qualifying packaging material suppliers like Kautschuk GmbH.<br><br>Under ISO 15378:2017, the clause covering <strong>control of nonconforming outputs</strong> (such as defective rubber stoppers that must be rejected and quarantined) follows ISO 9001:2015 clause numbering.<br><br>Enter the <strong>ISO 9001:2015 clause number</strong> for "Control of nonconforming outputs":',
+                placeholder: 'e.g. 8.7',
+                submitLabel: 'Submit Clause',
+                onSubmit: val => {
+                  const v = val.trim().replace(/\s/g, '');
+                  if (v === '8.7' || v === '87') {
+                    S.solved.iso15378_done = true;
+                    puzzleDone();
+                    if (S.socket) S.socket.emit('puzzle_solved', { key: 'iso15378_done', puzzlesDone: S.puzzlesDone });
+                    closeModal();
+                    log('✓ ISO 15378:2017 compliance verified — Clause 8.7 (Control of Nonconforming Outputs) confirmed. QA Office now accessible.', 'success');
+                    log('📚 Quality Fact: ISO 15378:2017 requires primary packaging suppliers to maintain a QMS aligned with ISO 9001:2015 AND comply with GMP. Clause 8.7 mirrors ISO 9001 — any nonconforming material must be identified, segregated, and dispositioned.', 'fact');
+                    renderNav();
+                  } else {
+                    S.wrongAnswers++;
+                    if (S.socket) S.socket.emit('wrong_answer');
+                    setFeedback('Incorrect. Nonconforming outputs are covered in ISO 9001:2015 section 8 (Operations). Think 8.something.', 'bad');
+                  }
+                },
+              });
+            }, 800);
+          } else {
+            S.wrongAnswers++;
+            if (S.socket) S.socket.emit('wrong_answer');
+            setFeedback('Incorrect. ISO 15378 was designed to add GMP requirements on top of an existing QMS standard — the global quality management benchmark.', 'bad');
+          }
+        },
+      });
+      return null;
+
+    // ── ISO 9001 PUZZLE ───────────────────────────────────────────────────
+    case 'check_iso9001':
+      if (S.solved.iso9001_done) {
+        return { msg: 'ISO 9001:2015 Management Review completed. Batch record safe unlock pending CAPA completion.', cls: 'info' };
+      }
+      if (!S.found.iso9001_cert) {
+        S.found.iso9001_cert = true;
+        addItem('iso9001_cert');
+        addNote('ISO 9001:2015 Certificate — MediSeal. Risk-based thinking: <strong>Clause 6.1</strong>. Management Review: <strong>Clause 9.3</strong>.', true);
+      }
+      openModal({
+        tag: 'ISO 9001:2015 — QUALITY MANAGEMENT SYSTEM',
+        title: 'Management Review Board — ISO 9001:2015 Compliance',
+        body: 'MediSeal is certified to <strong>ISO 9001:2015</strong>, the world\'s most widely adopted QMS standard. ISO 13485 and ISO 15378:2017 both build upon ISO 9001:2015 as their foundation.<br><br>One of the major innovations in ISO 9001:2015 was <strong>risk-based thinking</strong> — requiring organisations to identify and address risks before they become nonconformances.<br><br>Under ISO 9001:2015, which clause specifically requires organisations to determine risks and opportunities and plan actions to address them?',
+        choices: [
+          { label: 'A)  Clause 4.1 — Understanding the organisation and its context', correct: false },
+          { label: 'B)  Clause 6.1 — Actions to address risks and opportunities', correct: true },
+          { label: 'C)  Clause 8.1 — Operational planning and control', correct: false },
+          { label: 'D)  Clause 9.1 — Monitoring, measurement, analysis and evaluation', correct: false },
+        ],
+        onChoice: (correct) => {
+          if (correct) {
+            setFeedback('✓ Correct! Clause 6.1 — risk-based thinking is at the heart of ISO 9001:2015.', 'ok');
+            setTimeout(() => {
+              openModal({
+                tag: 'ISO 9001:2015 — STEP 2 OF 2',
+                title: 'Management Review — ISO 9001:2015 Clause',
+                body: 'Excellent. Risk-based thinking (Clause 6.1) means we proactively identify that things like using the wrong lubricant are a <em>risk</em>, not just a mistake.<br><br>The Management Review is a formal, documented meeting where top management reviews the QMS performance against objectives — reviewing audit results, NCR trends, customer feedback, and CAPA effectiveness.<br><br>Enter the <strong>ISO 9001:2015 clause number</strong> for "Management Review":',
+                placeholder: 'e.g. 9.3',
+                submitLabel: 'Submit Clause',
+                onSubmit: val => {
+                  const v = val.trim().replace(/\s/g, '');
+                  if (v === '9.3' || v === '93') {
+                    S.solved.iso9001_done = true;
+                    puzzleDone();
+                    if (S.socket) S.socket.emit('puzzle_solved', { key: 'iso9001_done', puzzlesDone: S.puzzlesDone });
+                    closeModal();
+                    log('✓ ISO 9001:2015 Management Review verified — Clause 9.3 confirmed. Batch Record Safe now fully unlocked (requires CAPA completion too).', 'success');
+                    log('📚 Quality Fact: ISO 9001:2015 Clause 9.3 requires top management to review the QMS at planned intervals. Inputs include audit results, NCR trends, CAPA status, and process performance. This drives continual improvement.', 'fact');
+                    renderRoom();
+                  } else {
+                    S.wrongAnswers++;
+                    if (S.socket) S.socket.emit('wrong_answer');
+                    setFeedback('Incorrect. Management Review is in section 9 (Performance Evaluation). Think 9.something.', 'bad');
+                  }
+                },
+              });
+            }, 800);
+          } else {
+            S.wrongAnswers++;
+            if (S.socket) S.socket.emit('wrong_answer');
+            setFeedback('Incorrect. Risk-based thinking is about PLANNING for risks — which section of ISO 9001 covers planning?', 'bad');
+          }
+        },
       });
       return null;
 
@@ -1228,7 +1417,7 @@ function puzzleDone() {
 }
 
 function updateProgress() {
-  const total = 6;
+  const total = 8;
   const pct = (S.puzzlesDone / total) * 100;
   document.getElementById('progress-bar').style.width = pct + '%';
   document.getElementById('progress-label').textContent =
@@ -1491,6 +1680,8 @@ const PUZZLE_LABELS = {
   capa_done:        'CAPA Root Cause Analysis',
   batch_retrieved:  'Batch Record Retrieved',
   game_won:         'Final Batch Release',
+  iso15378_done:    'ISO 15378:2017 Compliance Check',
+  iso9001_done:     'ISO 9001:2015 Management Review',
 };
 
 function connectSocket() {
@@ -1549,6 +1740,50 @@ function connectSocket() {
     showEndScreen(data.won, data);
   });
 
+  // ── Collaborative code events ─────────────────────────────────────────────
+  sock.on('code_revealed', ({ puzzleKey, code, fromName, label, required, confirmed: confirmedCount }) => {
+    appendSystemChat(`🔑 ${fromName} found: ${label}`);
+    if (fromName === S.memberName) {
+      const fb = document.getElementById('modal-feedback');
+      fb.className = 'ok';
+      fb.textContent = `✓ Correct! Waiting for team (${confirmedCount}/${required} confirmed)…`;
+      document.getElementById('modal-submit').disabled = true;
+      log(`🔑 You found the code for "${label}" — waiting for ${required - confirmedCount} more teammate(s).`, 'hint');
+    } else {
+      showTeamConfirm({ puzzleKey, code, fromName, label, required, confirmedCount });
+      log(`🔑 ${escHtml(fromName)} found the answer to "${label}" — enter the code to confirm!`, 'warn');
+    }
+  });
+
+  sock.on('confirm_progress', ({ puzzleKey, count, required, fromName }) => {
+    if (fromName !== S.memberName) appendSystemChat(`✓ ${fromName} confirmed (${count}/${required})`);
+    if (window._tcPuzzleKey === puzzleKey) {
+      document.getElementById('tc-progress').textContent = `✓ ${count} / ${required} members confirmed`;
+    }
+    const fb = document.getElementById('modal-feedback');
+    if (fb && fb.textContent.includes('Waiting for team')) {
+      fb.textContent = `✓ Waiting for team (${count}/${required} confirmed)…`;
+    }
+  });
+
+  sock.on('puzzle_complete', ({ puzzleKey, puzzlesDone: pd }) => {
+    closeTeamConfirm();
+    if (S.solved[puzzleKey]) return;
+    S.puzzlesDone = Math.max(S.puzzlesDone, pd);
+    if (puzzleKey === 'coa_verified') {
+      S.solved.coa_verified = true;
+      updateProgress(); closeModal();
+      log('✓ ALL MEMBERS CONFIRMED — Lot RM-4471 released from HOLD. Production line accessible.', 'success');
+      log('📚 Quality Fact: GMP requires every incoming material to have an approved CoA on file before it can be used in production.', 'fact');
+      renderNav(); renderRoom();
+    } else if (puzzleKey === 'game_won') {
+      S.solved.game_won = true;
+      updateProgress(); closeModal();
+      log('✓ ALL MEMBERS CONFIRMED BATCH DISPOSITION — Final authorisation complete!', 'success');
+      triggerWin();
+    }
+  });
+
   sock.on('kicked', ({ reason }) => {
     alert('Admin action: ' + reason + '\nPlease refresh and login again.');
     location.reload();
@@ -1559,6 +1794,55 @@ function connectSocket() {
     document.getElementById('chat-input').placeholder = 'Reconnecting…';
   });
 }
+
+// ── Team Confirmation Helpers ─────────────────────────────────────────────
+window._tcPuzzleKey = null;
+
+function showTeamConfirm({ puzzleKey, code, fromName, label, required, confirmedCount }) {
+  window._tcPuzzleKey = puzzleKey;
+  document.getElementById('tc-title').textContent = label;
+  document.getElementById('tc-body').innerHTML =
+    `<strong>${escHtml(fromName)}</strong> found the answer. All ${required} members must enter this code to proceed:`;
+  document.getElementById('tc-code-display').textContent = code;
+  document.getElementById('tc-input').value = '';
+  document.getElementById('tc-input').disabled = false;
+  document.getElementById('tc-feedback').textContent = '';
+  document.getElementById('tc-feedback').className = '';
+  document.getElementById('tc-progress').textContent = `${confirmedCount} / ${required} members confirmed`;
+  document.getElementById('tc-submit').disabled = false;
+  document.getElementById('team-confirm-overlay').classList.add('show');
+  setTimeout(() => document.getElementById('tc-input').focus(), 60);
+}
+
+function closeTeamConfirm() {
+  document.getElementById('team-confirm-overlay').classList.remove('show');
+  window._tcPuzzleKey = null;
+}
+
+document.getElementById('tc-submit').onclick = () => {
+  const puzzleKey = window._tcPuzzleKey;
+  if (!puzzleKey || !S.socket) return;
+  const inp = document.getElementById('tc-input');
+  const val = inp.value.trim().toUpperCase().replace(/[-\s]/g, '');
+  const code = document.getElementById('tc-code-display').textContent;
+  const expected = code.toUpperCase().replace(/[-\s]/g, '');
+  if (val === expected) {
+    document.getElementById('tc-feedback').textContent = '✓ Confirmed! Waiting for remaining teammates…';
+    document.getElementById('tc-feedback').className = 'ok';
+    document.getElementById('tc-submit').disabled = true;
+    inp.disabled = true;
+    S.socket.emit('confirm_code', { puzzleKey, code });
+  } else {
+    document.getElementById('tc-feedback').textContent = 'Incorrect — enter the code exactly as shown above.';
+    document.getElementById('tc-feedback').className = 'bad';
+    S.wrongAnswers++;
+    if (S.socket) S.socket.emit('wrong_answer');
+  }
+};
+
+document.getElementById('tc-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('tc-submit').click();
+});
 
 function applyServerState(state) {
   if (!state) return;
