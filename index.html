@@ -41,6 +41,29 @@
       flex-direction: column; align-items: center; justify-content: center; padding: 20px;
     }
     #already-played-screen.show { display: flex; }
+    /* ── Leaderboard Modal (login page) ── */
+    #lb-overlay {
+      position: fixed; inset: 0; z-index: 600;
+      background: rgba(0,0,0,0.82); display: none;
+      align-items: center; justify-content: center; padding: 20px;
+    }
+    #lb-overlay.show { display: flex; }
+    #lb-box {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 10px; padding: 28px 32px;
+      width: 100%; max-width: 700px; max-height: 88vh; overflow-y: auto;
+    }
+    #lb-box h2 { color: var(--accent); font-size: 1rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 16px; }
+    #lb-pw-section { margin-bottom: 16px; }
+    #lb-pw-error { color: var(--danger); font-size: 0.75rem; min-height: 16px; margin-bottom: 6px; }
+    #lb-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    #lb-table th { text-align: left; font-size: 0.62rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--dim); padding: 6px 8px 8px; border-bottom: 1px solid var(--border); }
+    #lb-table td { padding: 8px 8px; border-bottom: 1px solid #14162a; vertical-align: middle; }
+    #lb-table tr:last-child td { border-bottom: none; }
+    .lb-rank { font-size: 1.1rem; }
+    .lb-score { color: var(--accent2); font-weight: bold; }
+    .lb-group { color: var(--text); font-weight: bold; }
+    .login-theme { font-size: 0.62rem; color: var(--dim); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 18px; opacity: 0.75; }
   </style>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -425,6 +448,7 @@
     <div class="login-company">MediSeal Manufacturing Ltd.</div>
     <div class="login-title">QUALITY WEEK</div>
     <div class="login-sub">GROUP LOGIN</div>
+    <div class="login-theme">Progress in every step · Quality in every detail</div>
     <div id="login-error"></div>
     <div class="lf">
       <label>Select Your Group</label>
@@ -441,6 +465,8 @@
     <button class="btn primary login-submit" id="login-btn">LOGIN &amp; ENTER FACILITY</button>
     <div class="login-links">
       <a href="#" id="demo-link">▶ Demo / Admin Mode</a>
+      &nbsp;·&nbsp;
+      <a href="#" id="lb-open-link">📊 Leaderboard</a>
     </div>
     <!-- Admin demo password prompt (hidden by default) -->
     <div id="demo-pw-box" style="display:none;margin-top:12px;text-align:left;">
@@ -450,6 +476,45 @@
       </div>
       <div id="demo-pw-error" style="color:var(--danger);font-size:0.75rem;min-height:16px;margin-bottom:6px;"></div>
       <button class="btn primary" id="demo-pw-btn" style="width:100%;">Enter Demo Mode</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ LEADERBOARD MODAL ═══════════════ -->
+<div id="lb-overlay">
+  <div id="lb-box">
+    <h2>📊 Leaderboard</h2>
+    <div id="lb-pw-section">
+      <div class="lf" style="margin-bottom:6px;">
+        <label>Admin Password</label>
+        <input type="password" id="lb-pw-input" placeholder="Enter admin password" maxlength="60" autocomplete="off" />
+      </div>
+      <div id="lb-pw-error"></div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn primary" id="lb-pw-btn" style="flex:1;">View Leaderboard</button>
+        <button class="btn" id="lb-close-btn">Close</button>
+      </div>
+    </div>
+    <div id="lb-content" style="display:none;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <span style="font-size:0.72rem;color:var(--dim);letter-spacing:1px;">COMPLETED GROUPS — RANKED BY SCORE</span>
+        <button class="btn" id="lb-close-btn2" style="font-size:0.75rem;padding:4px 12px;">Close</button>
+      </div>
+      <div id="lb-empty" style="display:none;color:var(--dim);font-size:0.85rem;padding:20px 0;text-align:center;">No groups have completed the game yet.</div>
+      <table id="lb-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Group</th>
+            <th>Score</th>
+            <th>Puzzles</th>
+            <th>Time Left</th>
+            <th>Wrong</th>
+            <th>Finished</th>
+          </tr>
+        </thead>
+        <tbody id="lb-tbody"></tbody>
+      </table>
     </div>
   </div>
 </div>
@@ -477,6 +542,7 @@
   <div class="start-company">MediSeal Manufacturing Ltd.</div>
   <div class="start-title">QUALITY WEEK</div>
   <div class="start-sub">ESCAPE ROOM — INTERNAL AUDIT SIMULATION</div>
+  <div style="font-size:0.65rem;color:var(--dim);letter-spacing:2px;text-transform:uppercase;margin-top:-14px;margin-bottom:18px;opacity:0.7;">Progress in every step · Quality in every detail</div>
   <div id="group-greeting" style="font-size:0.82rem;color:var(--accent2);margin-bottom:10px;letter-spacing:1px;"></div>
 
   <div class="start-card">
@@ -618,7 +684,7 @@
 <header>
   <div class="header-left">
     <h1>🏭 MediSeal — Quality Week</h1>
-    <span>INTERNAL AUDIT SIMULATION &nbsp;|&nbsp; ISO 13485 · ISO 9001 · ISO 15378</span>
+    <span>PROGRESS IN EVERY STEP · QUALITY IN EVERY DETAIL</span>
   </div>
   <div id="timer">25:00</div>
 </header>
@@ -852,6 +918,77 @@ document.getElementById('demo-pw-input').onkeydown = e => {
   if (e.key === 'Enter') document.getElementById('demo-pw-btn').click();
 };
 
+// ── Leaderboard (login page) ──────────────────────────────────────────────
+(function() {
+  let lbAdminToken = null;
+
+  function openLbModal() {
+    document.getElementById('lb-overlay').classList.add('show');
+    document.getElementById('lb-pw-section').style.display = 'block';
+    document.getElementById('lb-content').style.display = 'none';
+    document.getElementById('lb-pw-error').textContent = '';
+    document.getElementById('lb-pw-input').value = '';
+    setTimeout(() => document.getElementById('lb-pw-input').focus(), 50);
+  }
+  function closeLbModal() {
+    document.getElementById('lb-overlay').classList.remove('show');
+  }
+
+  async function fetchAndShowLeaderboard(token) {
+    const res = await fetch('/api/leaderboard', { headers: { 'x-auth-token': token } });
+    if (!res.ok) throw new Error('Failed to fetch leaderboard');
+    const groups = await res.json();
+    const tbody = document.getElementById('lb-tbody');
+    tbody.innerHTML = '';
+    const empty = document.getElementById('lb-empty');
+    const tbl   = document.getElementById('lb-table');
+    if (!groups.length) {
+      empty.style.display = 'block';
+      tbl.style.display = 'none';
+    } else {
+      empty.style.display = 'none';
+      tbl.style.display = 'table';
+      const rankEmoji = ['🥇','🥈','🥉'];
+      groups.forEach((g, i) => {
+        const rank = rankEmoji[i] || `#${i+1}`;
+        const timeLeft = g.won && g.secondsRemaining > 0
+          ? `${Math.floor(g.secondsRemaining/60)}:${String(g.secondsRemaining%60).padStart(2,'0')}`
+          : (g.won ? '0:00' : '—');
+        const finished = g.completedAt
+          ? new Date(g.completedAt).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})
+          : '—';
+        const pips = Array.from({length:8}, (_,j) => `<span style="display:inline-block;width:10px;height:10px;border-radius:2px;margin:1px;background:${j < (g.puzzlesDone||0) ? 'var(--accent2)' : 'var(--border)'};"></span>`).join('');
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td class="lb-rank">${rank}</td><td class="lb-group">${g.name}</td><td class="lb-score">${g.score ?? '—'}</td><td>${pips}</td><td style="color:var(--dim)">${timeLeft}</td><td style="color:var(--danger)">${g.wrongAnswers ?? 0}</td><td style="color:var(--dim);font-size:0.75rem;">${finished}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+    document.getElementById('lb-pw-section').style.display = 'none';
+    document.getElementById('lb-content').style.display = 'block';
+  }
+
+  document.getElementById('lb-open-link').onclick = e => { e.preventDefault(); openLbModal(); };
+  document.getElementById('lb-close-btn').onclick = closeLbModal;
+  document.getElementById('lb-close-btn2').onclick = closeLbModal;
+  document.getElementById('lb-overlay').onclick = e => { if (e.target === document.getElementById('lb-overlay')) closeLbModal(); };
+
+  document.getElementById('lb-pw-btn').onclick = async () => {
+    const pw  = document.getElementById('lb-pw-input').value;
+    const err = document.getElementById('lb-pw-error');
+    err.textContent = '';
+    try {
+      const res = await apiCall('/api/admin/login', 'POST', { password: pw });
+      lbAdminToken = res.token;
+      await fetchAndShowLeaderboard(lbAdminToken);
+    } catch {
+      err.textContent = 'Incorrect password.';
+    }
+  };
+  document.getElementById('lb-pw-input').onkeydown = e => {
+    if (e.key === 'Enter') document.getElementById('lb-pw-btn').click();
+  };
+})();
+
 // ────────────────────────────────────────────────
 // ITEMS
 // ────────────────────────────────────────────────
@@ -886,7 +1023,7 @@ const ITEMS = {
   },
   stopper_spec: {
     emoji: '📦', name: 'ISO 15378 Packaging Specification',
-    desc: 'Rubber Stopper Specification — ISO 15378:2017 Primary Packaging Materials for Medicinal Products. Supplier: Kautschuk GmbH. Material: Bromobutyl rubber compound. This standard combines ISO 9001:2015 requirements with GMP for primary packaging suppliers.',
+    desc: 'Rubber Stopper Specification — ISO 15378:2017 Primary Packaging Materials for Medicinal Products. Supplier: Kautschuk GmbH. Material: Bromobutyl rubber compound. This standard combines ISO 9001:2015 + GMP for primary packaging suppliers. Key clause reference: ISO 9001:2015 Clause 8.7 — Control of Nonconforming Outputs (defective materials must be identified, segregated, and dispositioned).',
   },
   iso9001_cert: {
     emoji: '🏅', name: 'ISO 9001:2015 Certificate',
@@ -1405,7 +1542,7 @@ function handleAction(action) {
       if (!S.found.stopper_spec) {
         S.found.stopper_spec = true;
         addItem('stopper_spec');
-        addNote('ISO 15378:2017 Packaging Spec: Rubber stoppers from Kautschuk GmbH. Standard combines <strong>ISO 9001:2015 + GMP</strong> for primary packaging.', true);
+        addNote('ISO 15378:2017 Packaging Spec: Rubber stoppers from Kautschuk GmbH. Standard combines <strong>ISO 9001:2015 + GMP</strong> for primary packaging. Key ref: <strong>Clause 8.7</strong> — Control of Nonconforming Outputs.', true);
       }
       openModal({
         tag: 'ISO 15378:2017 — PRIMARY PACKAGING COMPLIANCE',
@@ -1424,7 +1561,7 @@ function handleAction(action) {
               openModal({
                 tag: 'ISO 15378:2017 — STEP 2 OF 2',
                 title: 'ISO 15378:2017 — Supplier Audit Clause',
-                body: 'ISO 15378:2017 follows the same clause structure as ISO 9001:2015 with added GMP requirements. It is essential for qualifying packaging material suppliers like Kautschuk GmbH.<br><br>Under ISO 15378:2017, the clause covering <strong>control of nonconforming outputs</strong> (such as defective rubber stoppers that must be rejected and quarantined) follows ISO 9001:2015 clause numbering.<br><br>Enter the <strong>ISO 9001:2015 clause number</strong> for "Control of nonconforming outputs":',
+                body: 'ISO 15378:2017 follows the same clause structure as ISO 9001:2015 with added GMP requirements. It is essential for qualifying packaging material suppliers like Kautschuk GmbH.<br><br>Under ISO 15378:2017, the clause covering <strong>control of nonconforming outputs</strong> (such as defective rubber stoppers that must be rejected and quarantined) follows ISO 9001:2015 clause numbering.<br><br><em>Hint: Check the ISO 15378 Packaging Specification in your inventory — the clause number is noted there.</em><br><br>Enter the <strong>ISO 9001:2015 clause number</strong> for "Control of nonconforming outputs":',
                 placeholder: 'e.g. 8.7',
                 submitLabel: 'Submit Clause',
                 onSubmit: val => {
