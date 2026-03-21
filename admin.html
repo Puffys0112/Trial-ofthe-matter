@@ -239,10 +239,10 @@
         Scoring Formula
       </summary>
       <div style="background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:14px 18px;line-height:2;margin-top:8px;">
-        Each puzzle completed: <strong style="color:var(--text);">× 200 pts</strong> (max 8 × 200 = 1,600 pts)<br>
+        Each puzzle completed: <strong style="color:var(--text);">× 200 pts</strong> (max 9 × 200 = 1,800 pts)<br>
         Time remaining bonus (win only): <strong style="color:var(--text);">× 2 pts per second</strong> (max ~3,000 pts)<br>
         Wrong answer penalty: <strong style="color:var(--danger);">−10 pts each</strong><br>
-        <em>Maximum possible score: 4,600 pts (all 8 puzzles, no wrong answers, instant completion)</em>
+        <em>Maximum possible score: 4,800 pts (all 9 puzzles, no wrong answers, instant completion)</em>
       </div>
     </details>
 
@@ -350,7 +350,7 @@ async function loadLeaderboard() {
         <td class="rank-cell">${rankEmoji(i)}</td>
         <td class="name-cell">${g.name}</td>
         <td class="score-cell ${i === 0 ? 'top' : ''}">${g.score.toLocaleString()}</td>
-        <td class="puzzles-cell">${puzzlePips(g.puzzlesDone)} ${g.puzzlesDone}/6</td>
+        <td class="puzzles-cell">${puzzlePips(g.puzzlesDone)} ${g.puzzlesDone}/9</td>
         <td class="time-cell">${g.won ? '⏱ ' + fmtTime(g.secondsRemaining) : '⏰ DNF'}</td>
         <td class="wrong-cell">${g.wrongAnswers > 0 ? '✗ ' + g.wrongAnswers : '✓ 0'}</td>
         <td>${g.won ? '<span class="status-badge badge-completed">PASSED</span>' : '<span class="status-badge badge-pending">TIME UP</span>'}</td>
@@ -362,7 +362,7 @@ async function loadLeaderboard() {
 
 function puzzlePips(done) {
   let h = '';
-  for (let i = 0; i < 6; i++) {
+  for (let i = 0; i < 9; i++) {
     h += `<span class="pip ${i < done ? 'done' : 'missing'}"></span>`;
   }
   return h;
@@ -380,7 +380,7 @@ async function loadAdminGroups() {
         <td class="pin-cell">${g.pin}</td>
         <td>${statusBadge(g.status)}</td>
         <td>${g.score !== null ? g.score.toLocaleString() + ' pts' : '—'}</td>
-        <td>${g.puzzlesDone}/6</td>
+        <td>${g.puzzlesDone}/9</td>
         <td style="color:var(--danger)">${g.wrongAnswers || 0}</td>
         <td style="font-size:0.72rem;color:var(--dim)">${fmtDt(g.startedAt)}</td>
         <td style="font-size:0.72rem;color:var(--dim)">${fmtDt(g.completedAt)}</td>
