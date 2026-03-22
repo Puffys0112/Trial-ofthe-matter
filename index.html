@@ -106,6 +106,7 @@
     .header-left span { font-size: 0.7rem; color: var(--dim); letter-spacing: 1px; }
     #timer { font-size: 1.5rem; color: var(--warn); font-weight: bold; letter-spacing: 3px; }
     #timer.urgent { color: var(--danger); animation: blink 0.7s infinite; }
+    #timer.overtime { color: #ff7b00; animation: blink 1.2s infinite; font-size: 1.1rem; }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
     /* ── Layout ── */
@@ -184,6 +185,9 @@
       transition: all 0.18s;
     }
     .hotspot-btn:hover { border-color: var(--accent); color: var(--accent); box-shadow: var(--glow); }
+    .hotspot-btn.hint-btn { border-color: #4a4a1a; color: #b0a040; margin-top: 6px; font-style: italic; }
+    .hotspot-btn.hint-btn:hover:not(:disabled) { border-color: #ffd700; color: #ffd700; }
+    .hotspot-btn.hint-btn.used { opacity: 0.4; cursor: default; }
 
     /* ── Activity Log ── */
     #log {
@@ -261,12 +265,30 @@
     }
     .nav-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); box-shadow: var(--glow); }
     .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
-    .nav-btn.locked::before { content: '🔒 '; }
-    .nav-btn.open::before   { content: '▶ '; color: var(--accent); }
+    .nav-btn.prev::before { content: '← '; color: var(--accent2); }
+    .nav-btn.next-open::before { content: '→ '; color: var(--accent); }
+    .nav-btn.next-locked::before { content: '🔒 '; }
     #current-location {
       font-size: 0.68rem; color: var(--accent2); margin-top: 8px;
       border-top: 1px solid var(--border); padding-top: 8px;
     }
+    /* ── Room Path ── */
+    #room-path {
+      display: flex; align-items: center; gap: 2px;
+      margin-bottom: 8px; flex-wrap: nowrap; overflow-x: auto;
+    }
+    .rp-room {
+      font-size: 1.05rem; padding: 3px 5px; border-radius: 4px;
+      cursor: default; transition: all 0.15s;
+    }
+    .rp-room.current {
+      background: rgba(0,153,230,0.15);
+      border: 1px solid var(--accent);
+      box-shadow: 0 0 8px rgba(0,153,230,0.2);
+    }
+    .rp-room.visited { opacity: 0.85; }
+    .rp-room.future  { opacity: 0.28; }
+    .rp-sep { color: var(--border); font-size: 0.6rem; padding: 0 1px; }
 
     /* ── Modal ── */
     #modal-overlay {
@@ -584,7 +606,7 @@
       <div>🔑 <strong style="color:var(--text);">Confirm codes together</strong> — key milestones require all members to enter the code</div>
     </div>
     <div style="margin-top:10px;padding:8px 12px;background:rgba(0,153,230,0.07);border-left:3px solid var(--accent);border-radius:2px;font-size:0.77rem;color:var(--dim);line-height:1.7;">
-      There are <strong style="color:var(--text);">5 areas</strong> and <strong style="color:var(--text);">8 puzzles</strong> to complete in <strong style="color:var(--text);">25 minutes</strong>.
+      There are <strong style="color:var(--text);">5 areas</strong> and <strong style="color:var(--text);">11 puzzles</strong> to complete in <strong style="color:var(--text);">25 minutes</strong>.
       Areas unlock as you progress — you cannot skip ahead.
     </div>
   </div>
@@ -612,6 +634,10 @@
         <td style="padding:7px 8px 7px 0;font-size:1rem;">❌</td>
         <td style="padding:7px 0;color:var(--dim);"><strong style="color:var(--text);">Wrong answers:</strong> Each incorrect answer deducts <strong style="color:var(--danger);">10 points</strong> from your final score — think before you submit.</td>
       </tr>
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:7px 8px 7px 0;font-size:1rem;">💡</td>
+        <td style="padding:7px 0;color:var(--dim);"><strong style="color:var(--text);">Hints:</strong> Each area has one hint available. Using a hint costs <strong style="color:var(--danger);">−60 seconds</strong> and <strong style="color:var(--danger);">−50 points</strong>. Hints are subtle — they do not give you the answer.</td>
+      </tr>
       <tr>
         <td style="padding:7px 8px 7px 0;font-size:1rem;">🏁</td>
         <td style="padding:7px 0;color:var(--dim);"><strong style="color:var(--text);">One attempt:</strong> Each group plays once. Results are final and posted to the leaderboard.</td>
@@ -637,17 +663,21 @@
           <td style="padding:8px 0;color:var(--dim);">⏱️ Every second remaining on the clock <em>(win only)</em></td>
           <td style="padding:8px 0;text-align:right;color:var(--accent2);font-weight:bold;">+2 pts / sec</td>
         </tr>
-        <tr>
+        <tr style="border-bottom:1px solid #14162a;">
           <td style="padding:8px 0;color:var(--dim);">❌ Each wrong answer</td>
           <td style="padding:8px 0;text-align:right;color:var(--danger);font-weight:bold;">−10 pts</td>
+        </tr>
+        <tr>
+          <td style="padding:8px 0;color:var(--dim);">💡 Using a hint</td>
+          <td style="padding:8px 0;text-align:right;color:var(--danger);font-weight:bold;">−50 pts &amp; −60s</td>
         </tr>
       </tbody>
     </table>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
       <div style="background:#0a0c18;border:1px solid var(--border);border-radius:6px;padding:10px 14px;text-align:center;">
         <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--dim);margin-bottom:4px;">Max puzzle pts</div>
-        <div style="font-size:1.2rem;font-weight:bold;color:var(--accent2);">1,600</div>
-        <div style="font-size:0.68rem;color:var(--dim);">8 × 200</div>
+        <div style="font-size:1.2rem;font-weight:bold;color:var(--accent2);">2,200</div>
+        <div style="font-size:0.68rem;color:var(--dim);">11 × 200</div>
       </div>
       <div style="background:#0a0c18;border:1px solid var(--border);border-radius:6px;padding:10px 14px;text-align:center;">
         <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--dim);margin-bottom:4px;">Max time bonus</div>
@@ -656,7 +686,7 @@
       </div>
     </div>
     <div style="margin-top:8px;padding:8px 12px;background:rgba(255,215,0,0.06);border:1px solid rgba(255,215,0,0.25);border-radius:4px;text-align:center;font-size:0.78rem;color:#ffd700;">
-      🏆 Maximum possible score: <strong>4,600 pts</strong> — all puzzles solved, no wrong answers, instant finish
+      🏆 Maximum possible score: <strong>5,200 pts</strong> — all puzzles solved, no wrong answers, no hints, instant finish
     </div>
   </div>
 
@@ -794,6 +824,8 @@ const S = {
   timerInt:     null,
   over:         false,
   wrongAnswers: 0,
+  hintsUsed:    {},
+  hintPenalty:  0,
   authToken:    null,
   groupName:    null,
   demoMode:     false,
@@ -824,7 +856,8 @@ function calcScore(won) {
   return Math.max(0,
     (S.puzzlesDone * 200) +
     (won ? S.timerSec * 2 : 0) -
-    (S.wrongAnswers * 10)
+    (S.wrongAnswers * 10) -
+    (S.hintPenalty)
   );
 }
 
@@ -957,7 +990,7 @@ document.getElementById('demo-pw-input').onkeydown = e => {
         const finished = g.completedAt
           ? new Date(g.completedAt).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})
           : '—';
-        const pips = Array.from({length:8}, (_,j) => `<span style="display:inline-block;width:10px;height:10px;border-radius:2px;margin:1px;background:${j < (g.puzzlesDone||0) ? 'var(--accent2)' : 'var(--border)'};"></span>`).join('');
+        const pips = Array.from({length:9}, (_,j) => `<span style="display:inline-block;width:10px;height:10px;border-radius:2px;margin:1px;background:${j < (g.puzzlesDone||0) ? 'var(--accent2)' : 'var(--border)'};"></span>`).join('');
         const tr = document.createElement('tr');
         tr.innerHTML = `<td class="lb-rank">${rank}</td><td class="lb-group">${g.name}</td><td class="lb-score">${g.score ?? '—'}</td><td>${pips}</td><td style="color:var(--dim)">${timeLeft}</td><td style="color:var(--danger)">${g.wrongAnswers ?? 0}</td><td style="color:var(--dim);font-size:0.75rem;">${finished}</td>`;
         tbody.appendChild(tr);
@@ -1032,6 +1065,37 @@ const ITEMS = {
 };
 
 // ────────────────────────────────────────────────
+// HINTS  (one per room — subtle, no answers)
+// ────────────────────────────────────────────────
+const ROOM_HINTS = {
+  receiving:  'The AQL chart and the CoA you receive both describe the same material — compare their numbers before making a decision.',
+  production: 'The maintenance log records what was scheduled and what actually happened. A single line difference tells the whole story.',
+  qclab:      'The micrometer reads a current value. The calibration reference gives a target. The gap between them is what matters.',
+  qaoffice:   'The NCR and the CAPA are linked documents — one names the problem, the other names the solution. Trace the chain.',
+  dispatch:   'The Quality Week motto appears on every wall for a reason. Think about which ISO 9001:2015 principle drives improvement at every step.',
+};
+
+function useHint() {
+  const room = S.room;
+  if (S.hintsUsed[room]) {
+    log('Hint already used in this area.', 'warn');
+    return;
+  }
+  if (S.over) return;
+  const hint = ROOM_HINTS[room];
+  if (!hint) return;
+  S.hintsUsed[room] = true;
+  // Deduct time
+  const timeCost = 60;
+  const ptsCost  = 50;
+  S.timerSec = Math.max(0, S.timerSec - timeCost);
+  S.hintPenalty += ptsCost;
+  if (S.socket) S.socket.emit('hint_used', { room, timeCost, ptsCost });
+  log(`💡 HINT — ${ROOMS[room].name}: ${hint}`, 'hint');
+  log(`⚠️ Hint penalty applied: −${timeCost}s and −${ptsCost} pts.`, 'warn');
+}
+
+// ────────────────────────────────────────────────
 // ROOMS
 // ────────────────────────────────────────────────
 const ROOMS = {
@@ -1039,7 +1103,7 @@ const ROOMS = {
     id: 'receiving', badge: 'AREA 01 — RECEIVING DOCK',
     name: 'Receiving Dock',
     emoji: '📦',
-    desc: 'Raw materials arrive here for incoming quality control. Under GMP, every incoming batch must have a Certificate of Analysis (CoA) reviewed and verified before the material can be released to production. A red HOLD light flashes above the pallet of rubber compound. The GMP terminal on the wall reads: "MATERIAL ON HOLD — VERIFICATION REQUIRED."',
+    desc: 'Raw materials arrive here for incoming quality control. Under GMP, every incoming batch must have a Certificate of Analysis (CoA) reviewed and verified before the material can be released to production. A red HOLD light flashes above the pallet of rubber compound. The GMP terminal on the wall reads: "MATERIAL ON HOLD — VERIFICATION REQUIRED." A Quality Week banner on the wall displays the site motto: "Progress in every step · Quality in every detail."',
     hotspots: [
       { label: 'Inspect Pallet (Rubber Compound)', action: 'inspect_pallet'    },
       { label: 'Check Clipboard',                  action: 'check_clipboard'   },
@@ -1051,19 +1115,21 @@ const ROOMS = {
     id: 'production', badge: 'AREA 02 — PRODUCTION LINE',
     name: 'Production Line — Plunger Assembly',
     emoji: '🏭',
-    desc: 'The main moulding and assembly line for rubber plungers used in insulin vials and prefilled syringes. The line is halted at Station 3 — an amber light pulses above it. A visual inspection light-box station is set up as part of Quality Week. The AQL sampling chart is pinned beside it. The door to the QC Laboratory has a sign: "ENTRY REQUIRES NCR FILING."',
+    desc: 'The main moulding and assembly line for rubber plungers used in insulin vials and prefilled syringes. The line is halted at Station 3 — an amber light pulses above it. A visual inspection light-box station is set up as part of Quality Week. The AQL sampling chart is pinned beside it. The door to the QC Laboratory has a sign: "ENTRY REQUIRES NCR FILING." Above the line, a permanent poster reads: "Progress in every step · Quality in every detail — Quality is everyone\'s responsibility."',
     hotspots: [
-      { label: 'AQL Sampling Chart (Wall)',  action: 'read_aql_chart'    },
-      { label: 'Visual Inspection Light Box', action: 'use_lightbox'    },
-      { label: 'Examine Station 3 Mould',    action: 'examine_mould'   },
-      { label: 'NCR Filing Station',         action: 'file_ncr'        },
+      { label: 'AQL Sampling Chart (Wall)',       action: 'read_aql_chart'      },
+      { label: 'Visual Inspection Light Box',     action: 'use_lightbox'        },
+      { label: 'Examine Station 3 Mould',         action: 'examine_mould'       },
+      { label: 'Station 3 Instrument Log',        action: 'check_station3_log'  },
+      { label: 'NCR Filing Station',              action: 'file_ncr'            },
+      { label: 'Quality Improvement Poster',      action: 'read_quality_poster' },
     ],
   },
   qclab: {
     id: 'qclab', badge: 'AREA 03 — QC LABORATORY',
     name: 'Quality Control Laboratory',
     emoji: '🔬',
-    desc: 'The QC lab smells of IPA and calibration fluid. Dimensional gauges, particle counters, and sterility test equipment line the benches. A micrometer station in the corner carries a yellow "OUT OF CALIBRATION — DO NOT USE" sticker. The calibration reference cabinet is mounted on the wall. A sign on the QA Office door: "CALIBRATION SIGN-OFF REQUIRED FOR ENTRY."',
+    desc: 'The QC lab smells of IPA and calibration fluid. Dimensional gauges, particle counters, and sterility test equipment line the benches. A micrometer station in the corner carries a yellow "OUT OF CALIBRATION — DO NOT USE" sticker. The calibration reference cabinet is mounted on the wall. A sign on the QA Office door: "CALIBRATION SIGN-OFF REQUIRED FOR ENTRY." The ISO 15378 packaging compliance file sits on the far bench. Above the bench, the site motto is printed in bold: "Progress in every step · Quality in every detail."',
     hotspots: [
       { label: 'Calibration Reference Cabinet',      action: 'open_cal_cabinet'    },
       { label: 'Micrometer Station',                 action: 'use_micrometer'      },
@@ -1076,20 +1142,21 @@ const ROOMS = {
     id: 'qaoffice', badge: 'AREA 04 — QA / COMPLIANCE',
     name: 'QA & Compliance Office',
     emoji: '🗂️',
-    desc: 'The hub of quality operations. ISO 13485 clause labels run across the filing cabinets. The CAPA workstation shows: "NON-CONFORMANCE #NCR-0892 — AWAITING ROOT CAUSE ANALYSIS." A maintenance log has been left open on the side table — someone was in a hurry. An ISO 9001 management review board shows last quarter\'s KPIs. The batch record safe on the wall requires CAPA + ISO 9001 verification to unlock.',
+    desc: 'The hub of quality operations. ISO 13485 clause labels run across the filing cabinets. The CAPA workstation shows: "NON-CONFORMANCE #NCR-0892 — AWAITING ROOT CAUSE ANALYSIS." A maintenance log has been left open on the side table — someone was in a hurry. An ISO 9001 management review board shows last quarter\'s KPIs. The batch record safe on the wall requires CAPA + ISO 9001 + ISO 15378 verification to unlock. A framed quality pledge on the wall reads: "Progress in every step · Quality in every detail — We own our processes."',
     hotspots: [
-      { label: 'Maintenance Log (Side Table)', action: 'read_maint_log'    },
-      { label: 'CAPA Workstation',             action: 'use_capa_station'  },
-      { label: 'ISO 13485 Filing Cabinet',     action: 'check_iso_files'   },
-      { label: 'ISO 9001 Management Review',   action: 'check_iso9001'     },
-      { label: 'Batch Record Safe',            action: 'open_batch_safe'   },
+      { label: 'Maintenance Log (Side Table)', action: 'read_maint_log'       },
+      { label: 'CAPA Workstation',             action: 'use_capa_station'     },
+      { label: 'ISO 13485 Filing Cabinet',     action: 'check_iso_files'      },
+      { label: 'ISO 9001 Management Review',   action: 'check_iso9001'        },
+      { label: 'Batch Record Safe',            action: 'open_batch_safe'      },
+      { label: 'Quality Pledge (Wall Frame)',  action: 'read_quality_pledge'  },
     ],
   },
   dispatch: {
     id: 'dispatch', badge: 'AREA 05 — DISPATCH / RELEASE',
     name: 'Dispatch & Release Bay',
     emoji: '🚚',
-    desc: 'The final checkpoint before product leaves the facility. A quarantine cage holds batch BN-2024-3200 — padlocked pending QA sign-off. The batch release terminal glows amber. Under ISO 13485 §8.3, no nonconforming product may leave the site without documented disposition. A Quality Week banner reads: "ZERO DEFECTS SAVES LIVES."',
+    desc: 'The final checkpoint before product leaves the facility. A quarantine cage holds batch BN-2024-3200 — padlocked pending QA sign-off. The batch release terminal glows amber. Under ISO 13485 §8.3, no nonconforming product may leave the site without documented disposition. A Quality Week banner reads: "ZERO DEFECTS SAVES LIVES — Progress in every step · Quality in every detail."',
     hotspots: [
       { label: 'Batch Release Terminal', action: 'use_release_terminal' },
       { label: 'Quarantine Cage',        action: 'inspect_quarantine'   },
@@ -1114,7 +1181,7 @@ const EXITS = {
 function canEnter(roomId) {
   if (roomId === 'production') return !!S.solved.coa_verified;
   if (roomId === 'qclab')      return !!S.solved.ncr_filed;
-  if (roomId === 'qaoffice')   return !!S.solved.calibration_done && !!S.solved.iso15378_done;
+  if (roomId === 'qaoffice')   return !!S.solved.calibration_done;
   if (roomId === 'dispatch')   return !!S.solved.capa_done;
   return true;
 }
@@ -1122,7 +1189,7 @@ function canEnter(roomId) {
 function lockReason(roomId) {
   if (roomId === 'production') return 'Raw material verification required first (GMP Receiving Terminal).';
   if (roomId === 'qclab')      return 'File the NCR at the NCR Filing Station on the production line first.';
-  if (roomId === 'qaoffice')   return 'Complete instrument calibration AND the ISO 15378 packaging compliance check in the QC Lab first.';
+  if (roomId === 'qaoffice')   return 'Complete instrument calibration in the QC Lab first (Micrometer Station).';
   if (roomId === 'dispatch')   return 'Complete and authorise the CAPA report in the QA Office first.';
   return 'Blocked.';
 }
@@ -1225,7 +1292,7 @@ function handleAction(action) {
       openModal({
         tag: 'QUALITY WEEK',
         title: 'Quality Week Noticeboard',
-        body: '<strong>QUALITY WEEK — MediSeal Manufacturing</strong><br><br>This week we celebrate our commitment to excellence. Every rubber plunger we manufacture ends up in an insulin vial or a diabetic injection device — used by real patients every single day.<br><br><strong>Key reminders:</strong><br>• Follow your SOP — every time, without exception<br>• Any deviation must have a raised deviation record<br>• AQL is not optional: it protects patients and our licence to operate<br>• If you\'re unsure, ASK before acting<br><br><em>"Quality is not an act, it is a habit." — Aristotle</em>',
+        body: '<strong>QUALITY WEEK — MediSeal Manufacturing</strong><br><br>This week we celebrate our commitment to excellence. Every rubber plunger we manufacture ends up in an insulin vial or a diabetic injection device — used by real patients every single day.<br><br><strong>Key reminders:</strong><br>• Follow your SOP — every time, without exception<br>• Any deviation must have a raised deviation record<br>• AQL is not optional: it protects patients and our licence to operate<br>• If you\'re unsure, ASK before acting<br><br><div style="background:rgba(0,153,230,0.07);border-left:3px solid var(--accent);padding:10px 14px;border-radius:2px;margin-top:10px;"><strong style="color:var(--accent);">Our Quality Week Motto:</strong><br><em>"Progress in every step · Quality in every detail"</em><br><br>This motto embodies the ISO 9001:2015 Quality Management Principle of <strong style="color:var(--accent2);">CONTINUAL IMPROVEMENT</strong> — the commitment to enhance processes, products, and systems at every opportunity, one step at a time.</div><br><em>"Quality is not an act, it is a habit." — Aristotle</em>',
         noInput: true,
       });
       return null;
@@ -1302,6 +1369,14 @@ function handleAction(action) {
       }
       return { msg: 'The wrong lubricant is clearly visible on the mould. This needs a proper root cause investigation in the QA office.', cls: 'warn' };
 
+    case 'check_station3_log':
+      if (!S.found.station3_log) {
+        S.found.station3_log = true;
+        addNote('Station 3 Instrument Log: Micrometer SN-7734 recorded systematic deviation of <strong>+0.03 mm</strong> on batch BN-2024-3200. Reference plug = 12.50 mm; instrument read 12.53 mm.', true);
+        return { msg: 'Station 3 Instrument Log: Micrometer SN-7734 consistently read 12.53 mm on the 12.50 mm reference plug during batch BN-2024-3200 production — a systematic +0.03 mm deviation. The instrument was used despite its overdue calibration sticker. Take this finding to the QC Lab to apply the correction and complete calibration.', cls: 'warn' };
+      }
+      return { msg: 'Station 3 log reviewed. Micrometer SN-7734 showed a +0.03 mm deviation (12.53 mm read vs 12.50 mm reference). Head to QC Lab to apply the correction factor and calibrate the instrument.', cls: 'info' };
+
     case 'file_ncr':
       if (!S.solved.inspection_done) {
         return { msg: 'You cannot raise an NCR until the AQL inspection is complete and a rejection decision has been made.', cls: 'warn' };
@@ -1356,8 +1431,8 @@ function handleAction(action) {
       openModal({
         tag: 'INSTRUMENT CALIBRATION',
         title: 'Micrometer Station — SN-7734',
-        body: 'Calibration is essential for measurement accuracy in a medical device facility. An uncalibrated instrument can pass defective product or reject conforming product — both are costly.<br><br>You place the <strong>certified 12.50 mm gauge block</strong> in the micrometer. The display reads: <strong style="color:#f5a623;">12.53 mm</strong><br><br>Calculate and enter the <strong>correction factor</strong> (certified value − instrument reading).<br><small style="color:#5a6480;">Include the sign: e.g. +0.05 or -0.03</small>',
-        placeholder: 'e.g. -0.03',
+        body: 'Calibration is essential for measurement accuracy in a medical device facility. An uncalibrated instrument can pass defective product or reject conforming product — both are costly.<br><br>You place the <strong>certified 12.50 mm gauge block</strong> in the micrometer. The display reads: <strong style="color:#f5a623;">12.53 mm</strong><br><br>Calculate and enter the <strong>correction factor</strong>: what you must ADD to the instrument reading to get the true certified value.<br><small style="color:#5a6480;">Include the sign — positive if instrument reads low, negative if instrument reads high.</small>',
+        placeholder: 'Your calculated correction (include sign)',
         submitLabel: 'Apply Correction',
         onSubmit: val => {
           const v = val.trim().replace(/\s/g, '');
@@ -1390,9 +1465,10 @@ function handleAction(action) {
     case 'check_equip_log':
       if (!S.found.equip_log) {
         S.found.equip_log = true;
-        return { msg: 'Equipment Logbook for Micrometer SN-7734: Last calibration 180 days ago. Calibration interval: 90 days. Status: OVERDUE. This explains the dimensional issues found during inspection.', cls: 'warn' };
+        addNote('Equipment Log — Micrometer SN-7734: OVERDUE 90 days. Historical deviation data on <strong>Station 3 Instrument Log</strong> (Production area).', true);
+        return { msg: 'Equipment Logbook for Micrometer SN-7734: Last calibration 180 days ago. Calibration interval: 90 days. Status: OVERDUE. Historical measurement deviation data is archived on the Station 3 Instrument Log back on the Production floor — check it before calibrating here.', cls: 'warn' };
       }
-      return { msg: 'Micrometer SN-7734 was 90 days overdue for calibration.', cls: 'info' };
+      return { msg: 'Micrometer SN-7734 was 90 days overdue for calibration. Check the Station 3 Instrument Log in Production for the deviation data, then use the micrometer here.', cls: 'info' };
 
     // ── QA OFFICE ──────────────────────────────────────────
     case 'read_maint_log':
@@ -1426,30 +1502,33 @@ function handleAction(action) {
           if (correct) {
             setFeedback('✓ Correct root cause identified.', 'ok');
             setTimeout(() => {
-              // Step 2 — ISO 13485 clause
+              // Step 2 — Preventive action reasoning (NO clause number question)
               openModal({
-                tag: 'CAPA — ISO 13485 COMPLIANCE CHECK',
-                title: 'CAPA Step 2 of 2 — ISO 13485 Reference',
-                body: 'Root cause confirmed: <strong>Wrong lubricant grade on mould tooling.</strong><br><br>Under <strong>ISO 13485</strong> — the international Quality Management System standard for medical device manufacturers — all organisations must establish and maintain documented procedures for CAPA.<br><br>Enter the <strong>ISO 13485 clause number</strong> that mandates CAPA procedures:<br><small style="color:#5a6480;">(Hint: it\'s in the section covering "Improvement" — check the ISO 13485 filing cabinet if needed)</small>',
-                placeholder: 'e.g. 7.1 or 8.5',
-                submitLabel: 'Submit Clause',
-                onSubmit: val => {
-                  const v = val.trim().replace(/\s/g, '');
-                  if (v === '8.5' || v === '8.5.2' || v === '8.5.3' || v === '85') {
+                tag: 'CAPA — PREVENTIVE ACTION',
+                title: 'CAPA Step 2 of 2 — Preventing Recurrence',
+                body: 'Root cause confirmed: <strong>Wrong lubricant grade used on mould tooling (B-7 instead of A-3), with no deviation raised.</strong><br><br>ISO 13485 §8.5.2 states: <em>"The organisation shall take action to eliminate the causes of nonconformities in order to prevent recurrence. Corrective actions shall be appropriate to the effects of the nonconformities encountered."</em><br><br>Review the Maintenance Log and SOP-MAINT-009 findings from your investigation. Based on these, which of the following is the MOST effective preventive action to stop this lubricant error from ever happening again?',
+                choices: [
+                  { label: 'A)  Order Grade B-7 lubricant as an official approved alternative to reduce risk of error', correct: false },
+                  { label: 'B)  Update SOP-MAINT-009 with lubricant grade verification step AND retrain all maintenance staff on the SOP', correct: true },
+                  { label: 'C)  Increase the AQL sample size for future batches to catch any future lubricant-related defects earlier', correct: false },
+                  { label: 'D)  Attach a warning label to the lubricant storage cupboard and rely on operator awareness', correct: false },
+                ],
+                onChoice: (correct2) => {
+                  if (correct2) {
                     S.solved.capa_done = true;
                     S.found.capa_report = true;
                     addItem('capa_report');
                     puzzleDone();
                     if (S.socket) S.socket.emit('puzzle_solved', { key: 'capa_done', puzzlesDone: S.puzzlesDone });
                     closeModal();
-                    log('✓ CAPA-0112 completed — ISO 13485 §8.5 referenced. Batch record safe is now unlocked.', 'success');
-                    log('📚 Quality Fact: ISO 13485 §8.5.2 (Corrective Action) requires investigating causes of nonconformities and taking action to prevent recurrence. §8.5.3 covers preventive actions.', 'fact');
+                    log('✓ CAPA-0112 completed — SOP update + retraining confirmed as the correct preventive action.', 'success');
+                    log('📚 Quality Fact: Effective CAPA addresses root cause systemically. Retraining + SOP update removes the condition that allowed the error — a label alone relies on human memory and is not sufficient.', 'fact');
                     renderRoom();
                     renderNav();
                   } else {
                     S.wrongAnswers++;
                     if (S.socket) S.socket.emit('wrong_answer');
-                  setFeedback('Incorrect clause. CAPA sits in the "Improvement" section of ISO 13485. Think about section 8.', 'bad');
+                    setFeedback('Not the best option. Think about what would permanently prevent the wrong lubricant from being used again — what system-level change removes the opportunity for error?', 'bad');
                   }
                 },
               });
@@ -1472,8 +1551,12 @@ function handleAction(action) {
       return { msg: 'ISO 13485 §8.5 covers CAPA. That\'s what you need for the CAPA workstation.', cls: 'info' };
 
     case 'open_batch_safe':
-      if (!S.solved.capa_done || !S.solved.iso9001_done) {
-        return { msg: 'The batch record safe displays: "CAPA + ISO 9001 VERIFICATION REQUIRED." Complete both the CAPA workstation and ISO 9001 Management Review first.', cls: 'warn' };
+      if (!S.solved.capa_done || !S.solved.iso9001_done || !S.solved.iso15378_done) {
+        const missing = [];
+        if (!S.solved.capa_done)     missing.push('CAPA (CAPA Workstation)');
+        if (!S.solved.iso9001_done)  missing.push('ISO 9001 Management Review');
+        if (!S.solved.iso15378_done) missing.push('ISO 15378 Compliance Check (QC Lab)');
+        return { msg: `The batch record safe displays: "CAPA + ISO 9001 + ISO 15378 VERIFICATION REQUIRED." Still needed: ${missing.join(', ')}.`, cls: 'warn' };
       }
       if (S.solved.batch_retrieved) {
         return { msg: 'You already have the Batch Release Certificate.', cls: 'info' };
@@ -1492,6 +1575,17 @@ function handleAction(action) {
       }
       if (!S.inventory.includes('batch_cert')) {
         return { msg: 'The release terminal requires a Batch Release Certificate with an authorisation PIN. Obtain this from the QA Office.', cls: 'warn' };
+      }
+      // Gate: all 10 prior puzzles must be answered before final PIN is accepted
+      {
+        const required = ['coa_verified','inspection_done','ncr_filed','calibration_done',
+                          'capa_done','iso15378_done','iso9001_done','motto_challenge',
+                          'motto_production','motto_qaoffice'];
+        const missing = required.filter(k => !S.solved[k]);
+        if (missing.length > 0) {
+          const labels = missing.map(k => PUZZLE_LABELS[k] || k).join(', ');
+          return { msg: `PIN accepted — but the audit is not yet complete. Outstanding quality checks: ${labels}. Complete all checks before final authorisation.`, cls: 'warn' };
+        }
       }
       openModal({
         tag: 'BATCH RELEASE TERMINAL — ISO 13485 §8.3',
@@ -1522,15 +1616,101 @@ function handleAction(action) {
       });
       return null;
 
+    // ── MOTTO PUZZLE 2 — Production Line Poster ───────────────────────────
+    case 'read_quality_poster':
+      if (S.solved.motto_production) {
+        return { msg: 'Production poster: "Progress in every step · Quality in every detail." Already completed this challenge.', cls: 'info' };
+      }
+      openModal({
+        tag: 'QUALITY IMPROVEMENT — PRODUCTION POSTER',
+        title: '"Progress in every step · Quality in every detail"',
+        body: '<strong>Production Line — Quality Week Poster</strong><br><br>This poster has been on the production floor since the site\'s first Quality Week. It sits directly above the AQL inspection station, reminding every operator that quality is embedded in each manufacturing action — not just at the end of the line.<br><br><div style="border:1px solid var(--accent);border-radius:4px;padding:10px 14px;margin:10px 0;text-align:center;font-size:0.88rem;"><strong style="color:var(--accent);">"Progress in every step · Quality in every detail"</strong></div><br>AQL inspection is a key part of our quality system. When a batch is found to have defects, what does this motto suggest we should do — beyond simply rejecting the batch?',
+        choices: [
+          { label: 'A)  Reject, quarantine, and move on — the rejection itself is the corrective action', correct: false },
+          { label: 'B)  Reject, raise an NCR, investigate root cause, and raise a CAPA to prevent recurrence', correct: true },
+          { label: 'C)  Reject and increase the sample size for future batches only', correct: false },
+          { label: 'D)  Accept the batch under concession to maintain production schedule', correct: false },
+        ],
+        onChoice: (correct) => {
+          if (correct) {
+            S.solved.motto_production = true;
+            puzzleDone();
+            if (S.socket) S.socket.emit('puzzle_solved', { key: 'motto_production', puzzlesDone: S.puzzlesDone });
+            closeModal();
+            log('✓ Correct! "Progress in every step" means we close the loop — reject, investigate, and prevent. That is continual improvement in action.', 'success');
+            log('📚 Quality Principle: Rejection without root cause analysis is reactive, not proactive. The motto calls us to improve at every step — not just document the failure.', 'fact');
+          } else {
+            S.wrongAnswers++;
+            if (S.socket) S.socket.emit('wrong_answer');
+            setFeedback('Think about what "progress" means in practice. Rejection alone stops the problem this time — but what prevents it next time?', 'bad');
+          }
+        },
+      });
+      return null;
+
+    // ── MOTTO PUZZLE 3 — QA Office Pledge ─────────────────────────────────
+    case 'read_quality_pledge':
+      if (S.solved.motto_qaoffice) {
+        return { msg: 'Quality pledge: "Progress in every step · Quality in every detail." Already completed this challenge.', cls: 'info' };
+      }
+      openModal({
+        tag: 'QUALITY PLEDGE — QA OFFICE',
+        title: '"Progress in every step · Quality in every detail"',
+        body: '<strong>QA Office — Quality Pledge Frame</strong><br><br>This framed pledge is signed by every QA team member on joining. It states that quality is not someone else\'s responsibility — it belongs to everyone who touches the process.<br><br><div style="border:1px solid var(--accent);border-radius:4px;padding:10px 14px;margin:10px 0;text-align:center;font-size:0.88rem;"><strong style="color:var(--accent);">"Progress in every step · Quality in every detail — We own our processes."</strong></div><br>NCR-0892 was triggered because a maintenance technician used the wrong lubricant grade without raising a deviation. Under GMP\'s principle of "quality ownership," who was responsible for raising a deviation record when the lubricant was changed?',
+        choices: [
+          { label: 'A)  Only the QA department — they own all deviation records', correct: false },
+          { label: 'B)  Only the maintenance manager — it was their department\'s change', correct: false },
+          { label: 'C)  The technician who performed the action — anyone who deviates from an SOP must raise a deviation', correct: true },
+          { label: 'D)  Nobody — the process still ran, so no deviation existed at that point', correct: false },
+        ],
+        onChoice: (correct) => {
+          if (correct) {
+            S.solved.motto_qaoffice = true;
+            puzzleDone();
+            if (S.socket) S.socket.emit('puzzle_solved', { key: 'motto_qaoffice', puzzlesDone: S.puzzlesDone });
+            closeModal();
+            log('✓ Correct! Under GMP, the person who performs the action owns the record. "Quality in every detail" means every deviation, no matter how small, must be documented at the point it occurs.', 'success');
+            log('📚 GMP Principle: GDP (Good Documentation Practice) requires that any departure from a written procedure is recorded immediately by the person who made it. Waiting until a problem appears is too late.', 'fact');
+          } else {
+            S.wrongAnswers++;
+            if (S.socket) S.socket.emit('wrong_answer');
+            setFeedback('Think about who actually performed the action. GMP assigns documentation ownership to the individual who carries out the step.', 'bad');
+          }
+        },
+      });
+      return null;
+
     case 'inspect_quarantine':
       return { msg: 'The quarantine cage holds pallet Q-2024-0892 — batch BN-2024-3200, tagged with NCR-0892. Label reads: "HOLD — DO NOT SHIP. Awaiting QA disposition." 3,200 plungers destined for diabetic patients are waiting for your final call.', cls: 'warn' };
 
     case 'read_qw_banner':
+      if (S.solved.motto_challenge) {
+        return { msg: 'Quality Week Banner: "Zero Defects Saves Lives." Motto challenge already completed — Continual Improvement confirmed.', cls: 'info' };
+      }
       openModal({
-        tag: 'QUALITY WEEK MESSAGE',
-        title: '"Zero Defects Saves Lives"',
-        body: '<strong>QUALITY WEEK — MediSeal Manufacturing</strong><br><br>Our plungers are used in:<br>• Insulin vials for Type 1 and Type 2 diabetics<br>• Prefilled syringes for insulin pens<br>• Lyophilised drug vials for critical medications<br><br>A single defective plunger that reaches a patient could mean:<br>• Incorrect insulin dose delivery<br>• Sterility breach → patient infection<br>• Loss of dose → life-threatening hypoglycaemia<br><br><strong>This is why AQL, CAPA, calibration, and GMP are not bureaucracy — they are patient safety.</strong><br><br><em>Every check you make protects a real person.</em>',
-        noInput: true,
+        tag: 'QUALITY WEEK — MOTTO CHALLENGE',
+        title: '"Progress in every step · Quality in every detail"',
+        body: '<strong>QUALITY WEEK — MediSeal Manufacturing</strong><br><br>This banner displays MediSeal\'s Quality Week motto alongside the message <em>"Zero Defects Saves Lives."</em><br><br>Our plungers end up in insulin vials and prefilled syringes for real patients. Every AQL check, every CAPA, every calibration record protects a life.<br><br><div style="border:1px solid var(--accent);border-radius:4px;padding:10px 14px;margin:10px 0;text-align:center;font-size:0.88rem;"><strong style="color:var(--accent);">"Progress in every step · Quality in every detail"</strong></div><br><strong>Which ISO 9001:2015 Quality Management Principle does this motto BEST reflect?</strong><br><small style="color:var(--dim);">(Hint: Check the Quality Week Noticeboard in the Receiving Dock if needed.)</small>',
+        choices: [
+          { label: 'A)  Leadership — management sets the direction and culture for quality', correct: false },
+          { label: 'B)  Customer Focus — understanding and meeting patient and customer requirements', correct: false },
+          { label: 'C)  Continual Improvement — enhancing all processes and outputs, step by step', correct: true },
+          { label: 'D)  Evidence-Based Decision Making — using data and facts to guide decisions', correct: false },
+        ],
+        onChoice: (correct) => {
+          if (correct) {
+            S.solved.motto_challenge = true;
+            puzzleDone();
+            if (S.socket) S.socket.emit('puzzle_solved', { key: 'motto_challenge', puzzlesDone: S.puzzlesDone });
+            closeModal();
+            log('✓ Correct! "Progress in every step · Quality in every detail" reflects CONTINUAL IMPROVEMENT — the heart of ISO 9001:2015.', 'success');
+            log('📚 Quality Fact: ISO 9001:2015 Clause 10 (Improvement) requires organisations to continually improve the suitability, adequacy, and effectiveness of the QMS. Every step forward is quality in action.', 'fact');
+          } else {
+            S.wrongAnswers++;
+            if (S.socket) S.socket.emit('wrong_answer');
+            setFeedback('Not quite. Think about what "progress in every step" and "quality in every detail" implies about how we treat our processes over time.', 'bad');
+          }
+        },
       });
       return null;
 
@@ -1547,37 +1727,40 @@ function handleAction(action) {
       openModal({
         tag: 'ISO 15378:2017 — PRIMARY PACKAGING COMPLIANCE',
         title: 'ISO 15378:2017 Compliance Check — Packaging Materials',
-        body: 'ISO 15378:2017 is the international standard for <strong>primary packaging materials for medicinal products</strong>. It is mandatory for any supplier providing rubber stoppers, closures, and containers that come into direct contact with drugs.<br><br>The rubber stoppers in batch BN-2024-3200 were supplied under an ISO 15378:2017 certified QMS. This standard requires compliance with two core frameworks.<br><br><strong>Which two frameworks does ISO 15378:2017 combine?</strong>',
+        body: 'ISO 15378:2017 is the international standard for <strong>primary packaging materials for medicinal products</strong> — rubber stoppers, closures, and containers that directly contact drugs.<br><br>Read the <strong>ISO 15378 Packaging Specification</strong> in your inventory carefully.<br><br>The rubber stoppers from Kautschuk GmbH that contributed to batch BN-2024-3200\'s dimensional non-conformances must now be formally dispositioned. Under GMP and the ISO 15378 standard, when incoming packaging materials are found to be nonconforming, what is the <strong>mandatory first action</strong>?',
         choices: [
-          { label: 'A)  ISO 13485 + FDA 21 CFR Part 820', correct: false },
-          { label: 'B)  ISO 9001:2015 + GMP (Good Manufacturing Practice)', correct: true },
-          { label: 'C)  ISO 14971 + ISO 9001:2015', correct: false },
-          { label: 'D)  ISO 2859-1 + ISO 13485', correct: false },
+          { label: 'A)  Use them for non-patient-contact production to avoid waste', correct: false },
+          { label: 'B)  Physically segregate, apply a REJECT/HOLD label, and raise a supplier NCR before any disposition decision', correct: true },
+          { label: 'C)  Return them to the supplier immediately without raising any internal documentation', correct: false },
+          { label: 'D)  Blend them with conforming stock from another supplier lot to dilute the defect rate', correct: false },
         ],
         onChoice: (correct) => {
           if (correct) {
-            setFeedback('✓ Correct! ISO 15378 = ISO 9001:2015 QMS requirements + GMP requirements.', 'ok');
+            setFeedback('✓ Correct! Segregation and documentation must come first — no uncontrolled disposition.', 'ok');
             setTimeout(() => {
               openModal({
                 tag: 'ISO 15378:2017 — STEP 2 OF 2',
-                title: 'ISO 15378:2017 — Supplier Audit Clause',
-                body: 'ISO 15378:2017 follows the same clause structure as ISO 9001:2015 with added GMP requirements. It is essential for qualifying packaging material suppliers like Kautschuk GmbH.<br><br>Under ISO 15378:2017, the clause covering <strong>control of nonconforming outputs</strong> (such as defective rubber stoppers that must be rejected and quarantined) follows ISO 9001:2015 clause numbering.<br><br><em>Hint: Check the ISO 15378 Packaging Specification in your inventory — the clause number is noted there.</em><br><br>Enter the <strong>ISO 9001:2015 clause number</strong> for "Control of nonconforming outputs":',
-                placeholder: 'e.g. 8.7',
-                submitLabel: 'Submit Clause',
-                onSubmit: val => {
-                  const v = val.trim().replace(/\s/g, '');
-                  if (v === '8.7' || v === '87') {
+                title: 'GDP in Action — Documenting the Supplier Deviation',
+                body: 'The rubber stoppers are now quarantined and labelled. A supplier NCR must be raised.<br><br>Your colleague Leon filled in the supplier deviation form — but you notice he crossed out the wrong batch number using <strong>correction fluid (Tipp-Ex)</strong> and wrote the correct one on top. The original entry is now completely obscured.<br><br>Under <strong>Good Documentation Practice (GDP)</strong>, which is a core GMP requirement at MediSeal, is Leon\'s correction method acceptable?',
+                choices: [
+                  { label: 'A)  Yes — as long as the correct information is visible, the method does not matter', correct: false },
+                  { label: 'B)  No — GDP requires a single line through the error leaving it legible, then the correct value, with date and initials', correct: true },
+                  { label: 'C)  Yes — correction fluid is standard practice in most pharmaceutical facilities', correct: false },
+                  { label: 'D)  No — the entire form must be destroyed and restarted to maintain data integrity', correct: false },
+                ],
+                onChoice: (correct2) => {
+                  if (correct2) {
                     S.solved.iso15378_done = true;
                     puzzleDone();
                     if (S.socket) S.socket.emit('puzzle_solved', { key: 'iso15378_done', puzzlesDone: S.puzzlesDone });
                     closeModal();
-                    log('✓ ISO 15378:2017 compliance verified — Clause 8.7 (Control of Nonconforming Outputs) confirmed. QA Office now accessible.', 'success');
-                    log('📚 Quality Fact: ISO 15378:2017 requires primary packaging suppliers to maintain a QMS aligned with ISO 9001:2015 AND comply with GMP. Clause 8.7 mirrors ISO 9001 — any nonconforming material must be identified, segregated, and dispositioned.', 'fact');
+                    log('✓ ISO 15378:2017 compliance check complete. Supplier stoppers quarantined, GDP documentation corrected.', 'success');
+                    log('📚 GDP Rule: Never use correction fluid. A single line through the error, the correction, your initials, the date, and a reason — this keeps the original entry readable and traceable, which is a legal requirement in GMP environments.', 'fact');
                     renderNav();
                   } else {
                     S.wrongAnswers++;
                     if (S.socket) S.socket.emit('wrong_answer');
-                    setFeedback('Incorrect. Nonconforming outputs are covered in ISO 9001:2015 section 8 (Operations). Think 8.something.', 'bad');
+                    setFeedback('Incorrect. Think about GDP — good documentation must always remain traceable. The original entry must still be readable.', 'bad');
                   }
                 },
               });
@@ -1599,42 +1782,45 @@ function handleAction(action) {
       if (!S.found.iso9001_cert) {
         S.found.iso9001_cert = true;
         addItem('iso9001_cert');
-        addNote('ISO 9001:2015 Certificate — MediSeal. Risk-based thinking: <strong>Clause 6.1</strong>. Management Review: <strong>Clause 9.3</strong>.', true);
+        addNote('ISO 9001:2015 Certificate — MediSeal. Quality Management System. Certified scope covers design, manufacture, and distribution of pharmaceutical packaging materials. Review the certificate details carefully.', true);
       }
       openModal({
         tag: 'ISO 9001:2015 — QUALITY MANAGEMENT SYSTEM',
-        title: 'Management Review Board — ISO 9001:2015 Compliance',
-        body: 'MediSeal is certified to <strong>ISO 9001:2015</strong>, the world\'s most widely adopted QMS standard. ISO 13485 and ISO 15378:2017 both build upon ISO 9001:2015 as their foundation.<br><br>One of the major innovations in ISO 9001:2015 was <strong>risk-based thinking</strong> — requiring organisations to identify and address risks before they become nonconformances.<br><br>Under ISO 9001:2015, which clause specifically requires organisations to determine risks and opportunities and plan actions to address them?',
+        title: 'Management Review Board — Risk Assessment',
+        body: 'MediSeal\'s CAPA team is reviewing the lubricant incident (NCR-0892). The maintenance team had been using an unapproved lubricant grade for 3 months — and <strong>no process flagged it until a packaging defect appeared</strong>.<br><br>ISO 9001:2015 introduced <strong>risk-based thinking</strong> — the idea that organisations must proactively identify what <em>could</em> go wrong before it becomes a nonconformance.<br><br>According to this principle, which process failure BEST explains why this incident went undetected for 3 months?',
         choices: [
-          { label: 'A)  Clause 4.1 — Understanding the organisation and its context', correct: false },
-          { label: 'B)  Clause 6.1 — Actions to address risks and opportunities', correct: true },
-          { label: 'C)  Clause 8.1 — Operational planning and control', correct: false },
-          { label: 'D)  Clause 9.1 — Monitoring, measurement, analysis and evaluation', correct: false },
+          { label: 'A)  The monthly audit schedule was too infrequent to catch daily errors', correct: false },
+          { label: 'B)  There was no risk assessment on the lubricant change-over procedure — the risk was never identified', correct: true },
+          { label: 'C)  The maintenance log was not stored in the correct folder', correct: false },
+          { label: 'D)  The AQL sampling plan did not include visual inspection', correct: false },
         ],
         onChoice: (correct) => {
           if (correct) {
-            setFeedback('✓ Correct! Clause 6.1 — risk-based thinking is at the heart of ISO 9001:2015.', 'ok');
+            setFeedback('✓ Correct! Risk-based thinking means assessing change-over procedures BEFORE they are implemented. No risk assessment = no control.', 'ok');
             setTimeout(() => {
               openModal({
                 tag: 'ISO 9001:2015 — STEP 2 OF 2',
-                title: 'Management Review — ISO 9001:2015 Clause',
-                body: 'Excellent. Risk-based thinking (Clause 6.1) means we proactively identify that things like using the wrong lubricant are a <em>risk</em>, not just a mistake.<br><br>The Management Review is a formal, documented meeting where top management reviews the QMS performance against objectives — reviewing audit results, NCR trends, customer feedback, and CAPA effectiveness.<br><br>Enter the <strong>ISO 9001:2015 clause number</strong> for "Management Review":',
-                placeholder: 'e.g. 9.3',
-                submitLabel: 'Submit Clause',
-                onSubmit: val => {
-                  const v = val.trim().replace(/\s/g, '');
-                  if (v === '9.3' || v === '93') {
+                title: 'Management Review Agenda — What Belongs?',
+                body: 'Management Review is a formal, documented meeting where top management evaluates how well the Quality Management System is performing.<br><br>Given the events this week — NCR-0892 (lubricant nonconformance), CAPA-0112 (corrective action plan), and calibration deviation at Station 3 — the Quality Director must prepare the Management Review agenda.<br><br>Which combination of inputs BEST reflects what belongs on a Management Review agenda?',
+                choices: [
+                  { label: 'A)  Customer delivery schedules and production throughput targets only', correct: false },
+                  { label: 'B)  NCR trends, CAPA status, audit results, and process performance data', correct: true },
+                  { label: 'C)  Equipment purchase requests and IT infrastructure upgrades', correct: false },
+                  { label: 'D)  Individual employee performance reviews and salary discussions', correct: false },
+                ],
+                onChoice: (correct2) => {
+                  if (correct2) {
                     S.solved.iso9001_done = true;
                     puzzleDone();
                     if (S.socket) S.socket.emit('puzzle_solved', { key: 'iso9001_done', puzzlesDone: S.puzzlesDone });
                     closeModal();
-                    log('✓ ISO 9001:2015 Management Review verified — Clause 9.3 confirmed. Batch Record Safe now fully unlocked (requires CAPA completion too).', 'success');
-                    log('📚 Quality Fact: ISO 9001:2015 Clause 9.3 requires top management to review the QMS at planned intervals. Inputs include audit results, NCR trends, CAPA status, and process performance. This drives continual improvement.', 'fact');
+                    log('✓ ISO 9001:2015 Management Review verified. NCR trends, CAPA status, audit results, and process performance are core inputs. Batch Record Safe now fully unlocked (requires CAPA completion too).', 'success');
+                    log('📚 Quality Principle: Management Review drives continual improvement — "Progress in every step · Quality in every detail" is not just a motto, it is the operational mandate that Management Review enforces.', 'fact');
                     renderRoom();
                   } else {
                     S.wrongAnswers++;
                     if (S.socket) S.socket.emit('wrong_answer');
-                    setFeedback('Incorrect. Management Review is in section 9 (Performance Evaluation). Think 9.something.', 'bad');
+                    setFeedback('Incorrect. Think about what a QMS review needs to evaluate — it should cover quality events, corrective actions, and system performance.', 'bad');
                   }
                 },
               });
@@ -1642,7 +1828,7 @@ function handleAction(action) {
           } else {
             S.wrongAnswers++;
             if (S.socket) S.socket.emit('wrong_answer');
-            setFeedback('Incorrect. Risk-based thinking is about PLANNING for risks — which section of ISO 9001 covers planning?', 'bad');
+            setFeedback('Incorrect. The problem was not frequency of audits or log filing. What process should have prevented an unapproved material from being used in the first place?', 'bad');
           }
         },
       });
@@ -1676,7 +1862,7 @@ function puzzleDone() {
 }
 
 function updateProgress() {
-  const total = 8;
+  const total = 11;
   const pct = (S.puzzlesDone / total) * 100;
   document.getElementById('progress-bar').style.width = pct + '%';
   document.getElementById('progress-label').textContent =
@@ -1714,6 +1900,15 @@ function renderRoom() {
     };
     hs.appendChild(b);
   });
+
+  // Hint button
+  const hintBtn = document.createElement('button');
+  const hintUsed = S.hintsUsed[S.room];
+  hintBtn.className = 'hotspot-btn hint-btn' + (hintUsed ? ' used' : '');
+  hintBtn.textContent = hintUsed ? '💡 Hint used' : '💡 Use Hint (−60s / −50 pts)';
+  hintBtn.disabled = !!hintUsed;
+  hintBtn.onclick = () => useHint();
+  hs.appendChild(hintBtn);
 }
 
 function renderInventory() {
@@ -1760,20 +1955,55 @@ function renderNotes() {
 function renderNav() {
   const nav = document.getElementById('room-nav');
   nav.innerHTML = '';
+  const currentIdx = ROOM_ORDER.indexOf(S.room);
+
+  // ── Room path breadcrumb ──────────────────────────────────────
+  const pathEl = document.createElement('div');
+  pathEl.id = 'room-path';
+  ROOM_ORDER.forEach((rid, i) => {
+    const r = ROOMS[rid];
+    const isCurrent = rid === S.room;
+    const isVisited  = i < currentIdx;
+    const span = document.createElement('span');
+    span.className = 'rp-room ' + (isCurrent ? 'current' : isVisited ? 'visited' : 'future');
+    span.textContent = r.emoji;
+    span.title = r.name + (isCurrent ? ' — YOU ARE HERE' : isVisited ? ' — visited' : canEnter(rid) ? ' — unlocked' : ' — locked');
+    pathEl.appendChild(span);
+    if (i < ROOM_ORDER.length - 1) {
+      const sep = document.createElement('span');
+      sep.className = 'rp-sep';
+      sep.textContent = '→';
+      pathEl.appendChild(sep);
+    }
+  });
+  nav.appendChild(pathEl);
+
+  // ── Current room indicator ────────────────────────────────────
+  const cur = document.createElement('div');
+  cur.id = 'current-location';
+  cur.innerHTML = `📍 <strong>${ROOMS[S.room].name}</strong>`;
+  nav.appendChild(cur);
+
+  // ── Navigation buttons with direction icons ───────────────────
   const adj = EXITS[S.room] || [];
   adj.forEach(roomId => {
     const r = ROOMS[roomId];
     const unlocked = canEnter(roomId);
+    const roomIdx  = ROOM_ORDER.indexOf(roomId);
+    const isNext   = roomIdx > currentIdx;
     const btn = document.createElement('button');
-    btn.className = 'nav-btn ' + (unlocked ? 'open' : 'locked');
+    if (!isNext) {
+      btn.className = 'nav-btn prev';
+    } else if (unlocked) {
+      btn.className = 'nav-btn next-open';
+    } else {
+      btn.className = 'nav-btn next-locked';
+    }
     btn.textContent = r.name;
+    if (!unlocked) btn.title = lockReason(roomId);
     btn.onclick = () => goTo(roomId);
     nav.appendChild(btn);
   });
-  const loc = document.createElement('div');
-  loc.id = 'current-location';
-  loc.innerHTML = `📍 ${ROOMS[S.room].name}`;
-  nav.appendChild(loc);
 }
 
 // ────────────────────────────────────────────────
@@ -1844,16 +2074,40 @@ document.getElementById('modal-cancel').onclick = closeModal;
 // ────────────────────────────────────────────────
 // TIMER
 // ────────────────────────────────────────────────
+// REG_SECS = 25*60 = 1500, MAX_SECS = 60*60 = 3600, OT_THRESH = 2100
+const REG_SECS_CLIENT = 25 * 60;
+const MAX_SECS_CLIENT = 60 * 60;
+const OT_THRESH_CLIENT = MAX_SECS_CLIENT - REG_SECS_CLIENT; // 2100
+
 function startTimer() {
   S.timerInt = setInterval(() => {
     if (S.over) return;
     S.timerSec--;
-    const m = Math.floor(S.timerSec / 60);
-    const s = S.timerSec % 60;
     const el = document.getElementById('timer');
-    el.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-    if (S.timerSec <= 120) el.classList.add('urgent');
-    if (S.timerSec <= 0) { clearInterval(S.timerInt); triggerLose(); }
+
+    if (S.timerSec >= OT_THRESH_CLIENT) {
+      // Regulation time: count down from 25:00
+      const regLeft = S.timerSec - OT_THRESH_CLIENT;
+      const m = Math.floor(regLeft / 60);
+      const s = regLeft % 60;
+      el.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+      el.classList.remove('overtime', 'urgent');
+      if (regLeft <= 120) el.classList.add('urgent');
+    } else if (S.timerSec > 0) {
+      // Overtime: show how far past regulation
+      const otSec = OT_THRESH_CLIENT - S.timerSec;
+      const m = Math.floor(otSec / 60);
+      const s = otSec % 60;
+      el.textContent = `OT +${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+      el.classList.remove('urgent');
+      el.classList.add('overtime');
+      if (otSec === 60) log('⚠️ OVERTIME — Puzzle points now reduced to 180 pts each. −30 pts deducted per minute.', 'warn');
+    } else {
+      // Hard stop at 60 min
+      clearInterval(S.timerInt);
+      if (S.socket) S.socket.emit('overtime_hardstop');
+      triggerLose();
+    }
   }, 1000);
 }
 
@@ -1881,12 +2135,18 @@ function showEndScreen(won, data) {
   const score            = data.score            || 0;
   const puzzlesDone      = data.puzzlesDone      || 0;
   const wrongAnswers     = data.wrongAnswers      || 0;
+  const hintPenalty      = S.hintPenalty         || 0;
   const secondsRemaining = data.secondsRemaining  || 0;
-  const timeBonusPts     = won ? secondsRemaining * 2 : 0;
+  const isOvertime       = secondsRemaining < OT_THRESH_CLIENT;
+  const ptPerPuzzle      = isOvertime ? 180 : 200;
+  const regSecsLeft      = isOvertime ? 0 : (secondsRemaining - OT_THRESH_CLIENT);
+  const timeBonusPts     = (won && !isOvertime) ? regSecsLeft * 2 : 0;
   const penaltyPts       = wrongAnswers * 10;
-  const elapsed          = 25 * 60 - secondsRemaining;
-  const em = String(Math.floor(elapsed / 60)).padStart(2,'0');
-  const es = String(elapsed % 60).padStart(2,'0');
+  const overtimeSecs     = isOvertime ? (OT_THRESH_CLIENT - secondsRemaining) : 0;
+  const overtimePenalty  = Math.ceil(overtimeSecs / 60) * 30;
+  const timeSpentSec     = data.timeSpentSec || (MAX_SECS_CLIENT - secondsRemaining);
+  const em = String(Math.floor(timeSpentSec / 60)).padStart(2,'0');
+  const es = String(timeSpentSec % 60).padStart(2,'0');
 
   const end = document.getElementById('endscreen');
   end.className = 'show ' + (won ? 'win' : 'lose');
@@ -1895,14 +2155,27 @@ function showEndScreen(won, data) {
   document.getElementById('end-msg').textContent   = won
     ? "Excellent work! Your group completed all quality checks, identified the root cause, and correctly dispositioned the nonconforming batch — protecting patients and MediSeal's GMP licence."
     : "Time expired. The FDA auditor arrived before your group completed all quality checks. Batch BN-2024-3200 remains unresolved.";
-  document.getElementById('end-stats').innerHTML =
+
+  let statsHtml =
     '<strong style="color:' + (won ? 'var(--accent)' : 'var(--danger)') + '">Score Breakdown — ' + (S.demoMode ? 'DEMO' : escHtml(S.groupName || '')) + '</strong><br>' +
-    'Puzzles completed (' + puzzlesDone + ' × 200): <span>+' + (puzzlesDone * 200).toLocaleString() + ' pts</span><br>' +
-    'Time bonus' + (won ? ' (' + secondsRemaining + 's × 2)' : ' (not completed)') + ': <span>' + (won ? '+' + timeBonusPts.toLocaleString() : '0') + ' pts</span><br>' +
+    'Puzzles completed (' + puzzlesDone + ' × ' + ptPerPuzzle + '): <span>+' + (puzzlesDone * ptPerPuzzle).toLocaleString() + ' pts</span><br>';
+
+  if (won && !isOvertime) {
+    statsHtml += 'Time bonus (' + regSecsLeft + 's × 2): <span>+' + timeBonusPts.toLocaleString() + ' pts</span><br>';
+  } else {
+    statsHtml += 'Time bonus (overtime — no bonus): <span>0 pts</span><br>';
+  }
+  if (isOvertime) {
+    statsHtml += 'Overtime penalty (' + Math.ceil(overtimeSecs/60) + ' min × −30): <span style="color:var(--danger);">−' + overtimePenalty.toLocaleString() + ' pts</span><br>';
+  }
+  statsHtml +=
     'Wrong answer penalty (' + wrongAnswers + ' × −10): <span style="color:var(--danger);">−' + penaltyPts.toLocaleString() + ' pts</span><br>' +
+    (hintPenalty ? 'Hint penalty: <span style="color:var(--danger);">−' + hintPenalty.toLocaleString() + ' pts</span><br>' : '') +
     '<strong>TOTAL SCORE: <span style="font-size:1.2rem;color:' + (won ? 'var(--accent2)' : 'var(--danger)') + ';">' + score.toLocaleString() + '</span> pts</strong><br><br>' +
     'Time taken: <span>' + em + ':' + es + '</span><br>' +
     (S.demoMode ? '<em style="color:var(--dim);">Demo — score not saved</em>' : '<a href="/admin.html" target="_blank" style="color:var(--accent);">📊 View Leaderboard</a>');
+
+  document.getElementById('end-stats').innerHTML = statsHtml;
 }
 
 // ────────────────────────────────────────────────
@@ -1910,6 +2183,7 @@ function showEndScreen(won, data) {
 // ────────────────────────────────────────────────
 function doStartGame(timerSec) {
   if (timerSec !== undefined) S.timerSec = timerSec;
+  else S.timerSec = MAX_SECS_CLIENT;
   document.getElementById('startscreen').style.display = 'none';
   renderRoom();
   renderInventory();
@@ -1944,15 +2218,18 @@ initLogin();
 // SOCKET.IO — REAL-TIME GROUP SYNC
 // ────────────────────────────────────────────────
 const PUZZLE_LABELS = {
-  coa_verified:     'GMP Material Verification',
-  inspection_done:  'AQL Visual Inspection',
-  ncr_filed:        'Non-Conformance Report',
-  calibration_done: 'Instrument Calibration',
-  capa_done:        'CAPA Root Cause Analysis',
-  batch_retrieved:  'Batch Record Retrieved',
-  game_won:         'Final Batch Release',
-  iso15378_done:    'ISO 15378:2017 Compliance Check',
-  iso9001_done:     'ISO 9001:2015 Management Review',
+  coa_verified:      'GMP Material Verification',
+  inspection_done:   'AQL Visual Inspection',
+  ncr_filed:         'Non-Conformance Report',
+  calibration_done:  'Instrument Calibration',
+  capa_done:         'CAPA Root Cause Analysis',
+  batch_retrieved:   'Batch Record Retrieved',
+  game_won:          'Final Batch Release',
+  iso15378_done:     'ISO 15378:2017 Compliance Check',
+  iso9001_done:      'ISO 9001:2015 Management Review',
+  motto_challenge:   'Quality Week Motto Challenge (Dispatch)',
+  motto_production:  'Quality Improvement Motto (Production)',
+  motto_qaoffice:    'Quality Ownership Motto (QA Office)',
 };
 
 function connectSocket() {
@@ -1998,6 +2275,17 @@ function connectSocket() {
 
   sock.on('chat', msg => {
     appendChat(msg.from, msg.text, msg.ts, msg.from === S.memberName);
+  });
+
+  sock.on('hint_broadcast', ({ room, timeCost, ptsCost, fromName }) => {
+    // Sync hint state and penalties to other group members
+    if (!S.hintsUsed[room]) {
+      S.hintsUsed[room] = true;
+      S.hintPenalty += (ptsCost || 50);
+      S.timerSec = Math.max(0, S.timerSec - (timeCost || 60));
+      renderRoom();
+      log(`💡 ${fromName} used the hint for ${ROOMS[room] ? ROOMS[room].name : room}. −${timeCost}s / −${ptsCost} pts applied to your team.`, 'warn');
+    }
   });
 
   sock.on('member_join', ({ memberName, members }) => {
@@ -2155,8 +2443,17 @@ function applyServerState(state) {
   if (state.puzzlesDone !== undefined)   S.puzzlesDone = Math.max(S.puzzlesDone, state.puzzlesDone);
   if (state.timerSec   !== undefined)    S.timerSec    = state.timerSec;
   renderInventory(); renderNotes(); renderNav(); updateProgress();
-  const m = Math.floor(S.timerSec / 60), s = S.timerSec % 60;
-  document.getElementById('timer').textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+  // Update timer display accounting for overtime
+  const el = document.getElementById('timer');
+  if (S.timerSec >= OT_THRESH_CLIENT) {
+    const regLeft = S.timerSec - OT_THRESH_CLIENT;
+    el.textContent = String(Math.floor(regLeft/60)).padStart(2,'0') + ':' + String(regLeft%60).padStart(2,'0');
+    el.classList.remove('overtime');
+  } else {
+    const otSec = OT_THRESH_CLIENT - S.timerSec;
+    el.textContent = 'OT +' + String(Math.floor(otSec/60)).padStart(2,'0') + ':' + String(otSec%60).padStart(2,'0');
+    el.classList.add('overtime');
+  }
 }
 
 function updateMembersOnline(members) {
