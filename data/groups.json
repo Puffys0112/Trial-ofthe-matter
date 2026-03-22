@@ -1300,6 +1300,71 @@
       "secondsRemaining": 0,
       "completedAt": null,
       "startedAt": null
+    },
+    {
+      "id": "g101",
+      "name": "Group 101",
+      "pin": "1101",
+      "status": "pending",
+      "score": null,
+      "puzzlesDone": 0,
+      "wrongAnswers": 0,
+      "won": false,
+      "secondsRemaining": 0,
+      "completedAt": null,
+      "startedAt": null
+    },
+    {
+      "id": "g102",
+      "name": "Group 102",
+      "pin": "1102",
+      "status": "pending",
+      "score": null,
+      "puzzlesDone": 0,
+      "wrongAnswers": 0,
+      "won": false,
+      "secondsRemaining": 0,
+      "completedAt": null,
+      "startedAt": null
+    },
+    {
+      "id": "g103",
+      "name": "Group 103",
+      "pin": "1103",
+      "status": "pending",
+      "score": null,
+      "puzzlesDone": 0,
+      "wrongAnswers": 0,
+      "won": false,
+      "secondsRemaining": 0,
+      "completedAt": null,
+      "startedAt": null
+    },
+    {
+      "id": "g104",
+      "name": "Group 104",
+      "pin": "1104",
+      "status": "pending",
+      "score": null,
+      "puzzlesDone": 0,
+      "wrongAnswers": 0,
+      "won": false,
+      "secondsRemaining": 0,
+      "completedAt": null,
+      "startedAt": null
+    },
+    {
+      "id": "g105",
+      "name": "Group 105",
+      "pin": "1105",
+      "status": "pending",
+      "score": null,
+      "puzzlesDone": 0,
+      "wrongAnswers": 0,
+      "won": false,
+      "secondsRemaining": 0,
+      "completedAt": null,
+      "startedAt": null
     }
   ]
 }
