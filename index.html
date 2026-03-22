@@ -76,8 +76,8 @@
       --accent2:  #00c97a;
       --warn:     #f5a623;
       --danger:   #e63946;
-      --text:     #c4cee0;
-      --dim:      #5a6480;
+      --text:     #e8edf8;
+      --dim:      #9aaac8;
       --glow:     0 0 14px rgba(0,153,230,0.35);
       --glow2:    0 0 14px rgba(0,201,122,0.35);
     }
@@ -108,6 +108,48 @@
     #timer.urgent { color: var(--danger); animation: blink 0.7s infinite; }
     #timer.overtime { color: #ff7b00; animation: blink 1.2s infinite; font-size: 1.1rem; }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    @keyframes alarmPulse { 0%,100%{box-shadow:0 0 0 0 rgba(230,57,70,0.9),0 0 40px rgba(230,57,70,0.6)} 50%{box-shadow:0 0 0 18px rgba(230,57,70,0),0 0 80px rgba(230,57,70,0.2)} }
+    @keyframes alarmBorder { 0%,100%{border-color:#e63946} 50%{border-color:#ff7b00} }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 15%{transform:translateX(-8px)} 30%{transform:translateX(8px)} 45%{transform:translateX(-6px)} 60%{transform:translateX(6px)} 75%{transform:translateX(-3px)} 90%{transform:translateX(3px)} }
+
+    /* ── ALARM OVERLAY ── */
+    #alarm-overlay {
+      display: none;
+      position: fixed; inset: 0; z-index: 9999;
+      background: rgba(0,0,0,0.88);
+      align-items: center; justify-content: center;
+    }
+    #alarm-overlay.show { display: flex; }
+    #alarm-box {
+      background: #14080a;
+      border: 4px solid #e63946;
+      border-radius: 12px;
+      padding: 32px 36px;
+      max-width: 560px; width: 94%;
+      text-align: center;
+      animation: alarmPulse 1s ease-in-out infinite, alarmBorder 1s ease-in-out infinite;
+    }
+    #alarm-box.shake { animation: shake 0.5s ease, alarmPulse 1s ease-in-out 0.5s infinite, alarmBorder 1s ease-in-out 0.5s infinite; }
+    .alarm-icon { font-size: 3.5rem; margin-bottom: 8px; animation: blink 0.6s infinite; }
+    .alarm-title { font-size: 1.7rem; font-weight: bold; color: #ff4455; letter-spacing: 2px; margin-bottom: 6px; }
+    .alarm-sub   { font-size: 1.05rem; color: #ffc040; margin-bottom: 20px; font-weight: bold; }
+    .alarm-rooms { text-align: left; margin-bottom: 22px; display: flex; flex-direction: column; gap: 10px; }
+    .alarm-room-item {
+      background: #1e0a0d;
+      border: 2px solid #e63946;
+      border-radius: 8px;
+      padding: 12px 16px;
+    }
+    .alarm-room-name { font-size: 1.1rem; font-weight: bold; color: #ffffff; margin-bottom: 4px; }
+    .alarm-room-btn  { font-size: 1rem; color: #ffd700; }
+    .alarm-room-btn strong { background: #2a2000; border: 1px solid #ffd700; border-radius: 4px; padding: 1px 8px; }
+    #alarm-ok {
+      background: #e63946; color: #fff; border: none;
+      padding: 13px 32px; font-size: 1.15rem; font-weight: bold;
+      border-radius: 6px; cursor: pointer; width: 100%;
+      letter-spacing: 1px;
+    }
+    #alarm-ok:hover { background: #ff5566; }
 
     /* ── Layout ── */
     #game-layout {
@@ -154,8 +196,8 @@
       font-family: 'Courier New', monospace;
     }
 
-    #room-title { padding: 14px 18px 4px; font-size: 1.05rem; color: var(--accent); letter-spacing: 1px; }
-    #room-desc  { padding: 0 18px 12px; color: var(--dim); font-size: 0.82rem; line-height: 1.65; }
+    #room-title { padding: 14px 18px 4px; font-size: 1.2rem; color: var(--accent); letter-spacing: 1px; font-weight: bold; }
+    #room-desc  { padding: 0 18px 12px; color: var(--text); font-size: 0.97rem; line-height: 1.75; }
 
     /* ── Progress Bar ── */
     #progress-bar-wrap {
@@ -166,7 +208,7 @@
       overflow: hidden;
     }
     #progress-bar { height: 100%; background: var(--accent2); width: 0%; transition: width 0.5s; }
-    #progress-label { padding: 0 18px 6px; font-size: 0.68rem; color: var(--dim); }
+    #progress-label { padding: 0 18px 6px; font-size: 0.88rem; color: var(--text); }
 
     /* ── Hotspots ── */
     #hotspots {
@@ -178,10 +220,10 @@
       background: transparent;
       border: 1px solid var(--border);
       color: var(--text);
-      padding: 6px 13px;
+      padding: 9px 16px;
       border-radius: 4px;
       cursor: pointer;
-      font-family: inherit; font-size: 0.78rem;
+      font-family: inherit; font-size: 0.95rem;
       transition: all 0.18s;
     }
     .hotspot-btn:hover { border-color: var(--accent); color: var(--accent); box-shadow: var(--glow); }
@@ -192,19 +234,19 @@
     /* ── Activity Log ── */
     #log {
       flex: 1;
-      padding: 10px 18px;
+      padding: 12px 18px;
       overflow-y: auto;
       border-top: 1px solid var(--border);
-      max-height: 175px;
-      font-size: 0.78rem; line-height: 1.75;
+      max-height: 260px;
+      font-size: 1rem; line-height: 1.85;
     }
-    #log p { margin-bottom: 2px; }
+    #log p { margin-bottom: 4px; }
     #log p.info    { color: var(--text); }
-    #log p.success { color: var(--accent2); }
-    #log p.fail    { color: var(--danger); }
-    #log p.warn    { color: var(--warn); }
-    #log p.hint    { color: var(--accent); }
-    #log p.fact    { color: #aa88ff; font-style: italic; }
+    #log p.success { color: #00e68a; font-weight: bold; }
+    #log p.fail    { color: #ff5566; font-weight: bold; }
+    #log p.warn    { color: #ffc040; font-weight: bold; }
+    #log p.hint    { color: #40c8ff; }
+    #log p.fact    { color: #c4aaff; font-style: italic; }
 
     /* ── Side Panel ── */
     #side-panel { display: flex; flex-direction: column; gap: 10px; }
@@ -216,8 +258,8 @@
       padding: 13px;
     }
     .panel-box h3 {
-      font-size: 0.68rem; text-transform: uppercase; letter-spacing: 2px;
-      color: var(--dim); margin-bottom: 9px;
+      font-size: 0.82rem; text-transform: uppercase; letter-spacing: 2px;
+      color: var(--text); margin-bottom: 9px;
       border-bottom: 1px solid var(--border); padding-bottom: 6px;
     }
 
@@ -249,18 +291,18 @@
 
     /* ── Notes ── */
     #notes-content {
-      font-size: 0.75rem; color: var(--dim); line-height: 1.7;
-      max-height: 160px; overflow-y: auto;
+      font-size: 0.9rem; color: var(--text); line-height: 1.8;
+      max-height: 200px; overflow-y: auto;
     }
-    #notes-content p { margin-bottom: 3px; padding-left: 8px; border-left: 2px solid var(--border); }
-    #notes-content p.important { border-left-color: var(--accent2); color: var(--text); }
+    #notes-content p { margin-bottom: 4px; padding-left: 8px; border-left: 2px solid var(--border); }
+    #notes-content p.important { border-left-color: var(--accent2); color: #ffffff; font-weight: bold; }
 
     /* ── Room Nav ── */
     #room-nav { display: flex; flex-direction: column; gap: 6px; }
     .nav-btn {
       background: transparent; border: 1px solid var(--border); color: var(--text);
-      padding: 7px 10px; border-radius: 4px; cursor: pointer;
-      font-family: inherit; font-size: 0.78rem; text-align: left;
+      padding: 9px 12px; border-radius: 4px; cursor: pointer;
+      font-family: inherit; font-size: 0.92rem; text-align: left;
       transition: all 0.18s;
     }
     .nav-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); box-shadow: var(--glow); }
@@ -762,6 +804,17 @@
 </div>
 
 <!-- ═══════════════ MODAL ═══════════════ -->
+<!-- ALARM OVERLAY -->
+<div id="alarm-overlay">
+  <div id="alarm-box">
+    <div class="alarm-icon">🚨</div>
+    <div class="alarm-title">⚠ STOP — GO BACK!</div>
+    <div class="alarm-sub">PIN is correct — but you have unfinished checks!</div>
+    <div class="alarm-rooms" id="alarm-rooms"></div>
+    <button id="alarm-ok" onclick="closeAlarm()">✓ UNDERSTOOD — I WILL GO BACK NOW</button>
+  </div>
+</div>
+
 <div id="modal-overlay">
   <div id="modal-box">
     <div id="modal-tag">QUALITY CONTROL</div>
@@ -1597,9 +1650,8 @@ function handleAction(action) {
                             'motto_production','motto_qaoffice'];
           const missing = required.filter(k => !S.solved[k]);
           if (missing.length > 0) {
-            const labels = missing.map(k => PUZZLE_LABELS[k] || k).join(', ');
             closeModal();
-            log(`✓ PIN correct — but the audit is not yet complete. Go back and answer all quality checks before final authorisation. Outstanding: ${labels}.`, 'warn');
+            showAlarm(missing);
             return;
           }
           // PIN correct + all puzzles done → win
@@ -2232,6 +2284,64 @@ const PUZZLE_LABELS = {
   motto_production:  'Quality Improvement Motto (Production)',
   motto_qaoffice:    'Quality Ownership Motto (QA Office)',
 };
+
+// Maps each puzzle key → where to go and exactly which button to press
+const PUZZLE_ROOM = {
+  coa_verified:    { room: 'receiving',   emoji: '📦', name: 'Receiving Dock',                  btn: 'GMP Receiving Terminal' },
+  inspection_done: { room: 'production',  emoji: '🏭', name: 'Production Line',                 btn: 'Visual Inspection Light Box' },
+  ncr_filed:       { room: 'production',  emoji: '🏭', name: 'Production Line',                 btn: 'NCR Filing Station' },
+  calibration_done:{ room: 'qclab',       emoji: '🔬', name: 'Quality Control Laboratory',      btn: 'Micrometer Station' },
+  capa_done:       { room: 'qaoffice',    emoji: '🗂️', name: 'QA & Compliance Office',          btn: 'CAPA Workstation' },
+  iso15378_done:   { room: 'qclab',       emoji: '🔬', name: 'Quality Control Laboratory',      btn: 'ISO 15378 Packaging Compliance File' },
+  iso9001_done:    { room: 'qaoffice',    emoji: '🗂️', name: 'QA & Compliance Office',          btn: 'ISO 9001 Management Review' },
+  motto_challenge: { room: 'dispatch',    emoji: '🚚', name: 'Dispatch & Release Bay',          btn: 'Quality Week Banner' },
+  motto_production:{ room: 'production',  emoji: '🏭', name: 'Production Line',                 btn: 'Quality Improvement Poster' },
+  motto_qaoffice:  { room: 'qaoffice',    emoji: '🗂️', name: 'QA & Compliance Office',          btn: 'Quality Pledge (Wall Frame)' },
+};
+
+function showAlarm(missingKeys) {
+  const roomsEl = document.getElementById('alarm-rooms');
+  roomsEl.innerHTML = '';
+  // Group by room so we don't repeat the same room heading
+  const seen = {};
+  missingKeys.forEach(k => {
+    const info = PUZZLE_ROOM[k];
+    if (!info) return;
+    const roomKey = info.room;
+    if (!seen[roomKey]) {
+      seen[roomKey] = { info, btns: [] };
+    }
+    seen[roomKey].btns.push({ label: PUZZLE_LABELS[k] || k, btn: info.btn });
+  });
+  Object.values(seen).forEach(({ info, btns }) => {
+    const div = document.createElement('div');
+    div.className = 'alarm-room-item';
+    div.innerHTML = `<div class="alarm-room-name">${info.emoji} Go to: <span style="color:#40c8ff;">${info.name}</span></div>` +
+      btns.map(b => `<div class="alarm-room-btn">→ Press button: <strong>${b.btn}</strong></div>`).join('');
+    roomsEl.appendChild(div);
+  });
+  const overlay = document.getElementById('alarm-overlay');
+  overlay.classList.add('show');
+  // Play alarm sound via oscillator if audio available
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    [880, 660, 880, 660].forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.frequency.value = freq;
+      osc.type = 'square';
+      gain.gain.setValueAtTime(0.18, ctx.currentTime + i * 0.22);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.22 + 0.2);
+      osc.start(ctx.currentTime + i * 0.22);
+      osc.stop(ctx.currentTime + i * 0.22 + 0.2);
+    });
+  } catch(e) {}
+}
+
+function closeAlarm() {
+  document.getElementById('alarm-overlay').classList.remove('show');
+}
 
 function connectSocket() {
   if (!S.authToken || S.demoMode || S.socket) return;
