@@ -1576,17 +1576,7 @@ function handleAction(action) {
       if (!S.inventory.includes('batch_cert')) {
         return { msg: 'The release terminal requires a Batch Release Certificate with an authorisation PIN. Obtain this from the QA Office.', cls: 'warn' };
       }
-      // Gate: all 10 prior puzzles must be answered before final PIN is accepted
-      {
-        const required = ['coa_verified','inspection_done','ncr_filed','calibration_done',
-                          'capa_done','iso15378_done','iso9001_done','motto_challenge',
-                          'motto_production','motto_qaoffice'];
-        const missing = required.filter(k => !S.solved[k]);
-        if (missing.length > 0) {
-          const labels = missing.map(k => PUZZLE_LABELS[k] || k).join(', ');
-          return { msg: `PIN accepted — but the audit is not yet complete. Outstanding quality checks: ${labels}. Complete all checks before final authorisation.`, cls: 'warn' };
-        }
-      }
+      // Always ask for PIN first, then gate on completion
       openModal({
         tag: 'BATCH RELEASE TERMINAL — ISO 13485 §8.3',
         title: 'Batch Disposition Authorisation',
@@ -1594,23 +1584,34 @@ function handleAction(action) {
         placeholder: '4-digit PIN',
         submitLabel: 'Authorise Disposition',
         onSubmit: val => {
-          if (val.trim() === '4471') {
-            if (S.demoMode || !S.socket) {
-              // Demo / no socket — win immediately
-              S.solved.game_won = true;
-              puzzleDone();
-              closeModal();
-              triggerWin();
-            } else {
-              // Collaborative — all members must enter the PIN
-              setFeedback('✓ Correct PIN! All team members must confirm to authorise batch disposition…', 'ok');
-              document.getElementById('modal-submit').disabled = true;
-              S.socket.emit('code_found', { puzzleKey: 'game_won', code: '4471', label: 'Final Batch Disposition (PIN 4471)' });
-            }
-          } else {
+          if (val.trim() !== '4471') {
+            // Wrong PIN → penalty
             S.wrongAnswers++;
             if (S.socket) S.socket.emit('wrong_answer');
-            setFeedback('Incorrect PIN. Check the Batch Release Certificate in your inventory.', 'bad');
+            setFeedback('❌ PIN is wrong. Check the Batch Release Certificate in your inventory.', 'bad');
+            return;
+          }
+          // Correct PIN — now check all puzzles complete
+          const required = ['coa_verified','inspection_done','ncr_filed','calibration_done',
+                            'capa_done','iso15378_done','iso9001_done','motto_challenge',
+                            'motto_production','motto_qaoffice'];
+          const missing = required.filter(k => !S.solved[k]);
+          if (missing.length > 0) {
+            const labels = missing.map(k => PUZZLE_LABELS[k] || k).join(', ');
+            closeModal();
+            log(`✓ PIN correct — but the audit is not yet complete. Go back and answer all quality checks before final authorisation. Outstanding: ${labels}.`, 'warn');
+            return;
+          }
+          // PIN correct + all puzzles done → win
+          if (S.demoMode || !S.socket) {
+            S.solved.game_won = true;
+            puzzleDone();
+            closeModal();
+            triggerWin();
+          } else {
+            setFeedback('✓ Correct PIN! All team members must confirm to authorise batch disposition…', 'ok');
+            document.getElementById('modal-submit').disabled = true;
+            S.socket.emit('code_found', { puzzleKey: 'game_won', code: '4471', label: 'Final Batch Disposition (PIN 4471)' });
           }
         },
       });
