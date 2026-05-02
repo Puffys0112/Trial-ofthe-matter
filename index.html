@@ -502,6 +502,7 @@
     #tc-feedback.bad { color: var(--danger); }
   </style>
   <script src="/socket.io/socket.io.js"></script>
+  <script src="/translations.js"></script>
 </head>
 <body>
 
@@ -515,31 +516,49 @@
     <div class="login-theme">Progress in every step · Quality in every detail</div>
     <div id="login-error"></div>
     <div class="lf">
-      <label>Select Your Group</label>
+      <label data-t="login.lang">Language</label>
+      <select id="lang-select" style="width:100%;padding:9px 12px;background:var(--panel);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:0.9rem;">
+        <option value="en">🇬🇧 English</option>
+        <option value="de">🇩🇪 Deutsch</option>
+        <option value="fr">🇫🇷 Français</option>
+        <option value="es">🇪🇸 Español</option>
+        <option value="pt-BR">🇧🇷 Português (Brasil)</option>
+        <option value="ko">🇰🇷 한국어</option>
+        <option value="da">🇩🇰 Dansk</option>
+        <option value="zh-Hans">🇨🇳 中文（简体）</option>
+        <option value="zh-Hant">🇹🇼 中文（繁體）</option>
+        <option value="ms">🇸🇬 Bahasa Melayu</option>
+        <option value="ta">🇸🇬 தமிழ்</option>
+        <option value="hi">🇮🇳 हिंदी</option>
+        <option value="he">🇮🇱 עברית</option>
+      </select>
+    </div>
+    <div class="lf">
+      <label data-t="login.select_group">Select Your Group</label>
       <select id="group-select"><option value="">Loading groups…</option></select>
     </div>
     <div class="lf">
-      <label>Group PIN</label>
-      <input type="password" id="group-pin" placeholder="Enter your group PIN" maxlength="10" />
+      <label data-t="login.group_pin">Group PIN</label>
+      <input type="password" id="group-pin" data-t-ph="login.enter_pin" placeholder="Enter your group PIN" maxlength="10" />
     </div>
     <div class="lf">
-      <label>Your Name</label>
-      <input type="text" id="member-name" placeholder="e.g. Alice" maxlength="24" autocomplete="off" />
+      <label data-t="login.your_name">Your Name</label>
+      <input type="text" id="member-name" data-t-ph="login.enter_name" placeholder="e.g. Alice" maxlength="24" autocomplete="off" />
     </div>
-    <button class="btn primary login-submit" id="login-btn">LOGIN &amp; ENTER FACILITY</button>
+    <button class="btn primary login-submit" id="login-btn" data-t="login.btn">LOGIN &amp; ENTER FACILITY</button>
     <div class="login-links">
-      <a href="#" id="demo-link">▶ Demo / Admin Mode</a>
+      <a href="#" id="demo-link" data-t="login.demo">▶ Demo / Admin Mode</a>
       &nbsp;·&nbsp;
-      <a href="#" id="lb-open-link">📊 Leaderboard</a>
+      <a href="#" id="lb-open-link" data-t="login.leaderboard">📊 Leaderboard</a>
     </div>
     <!-- Admin demo password prompt (hidden by default) -->
     <div id="demo-pw-box" style="display:none;margin-top:12px;text-align:left;">
       <div class="lf" style="margin-bottom:8px;">
-        <label>Admin Password (required for Demo)</label>
-        <input type="password" id="demo-pw-input" placeholder="Enter admin password" maxlength="60" />
+        <label data-t="login.admin_pw_label">Admin Password (required for Demo)</label>
+        <input type="password" id="demo-pw-input" data-t-ph="login.admin_pw_ph" placeholder="Enter admin password" maxlength="60" />
       </div>
       <div id="demo-pw-error" style="color:var(--danger);font-size:0.75rem;min-height:16px;margin-bottom:6px;"></div>
-      <button class="btn primary" id="demo-pw-btn" style="width:100%;">Enter Demo Mode</button>
+      <button class="btn primary" id="demo-pw-btn" data-t="login.demo_btn" style="width:100%;">Enter Demo Mode</button>
     </div>
   </div>
 </div>
@@ -604,24 +623,24 @@
 <div id="startscreen">
   <div class="start-logo">🏭</div>
   <div class="start-company">MediSeal Manufacturing Ltd.</div>
-  <div class="start-title">QUALITY WEEK</div>
-  <div class="start-sub">ESCAPE ROOM — INTERNAL AUDIT SIMULATION</div>
+  <div class="start-title" data-t="start.title">QUALITY WEEK</div>
+  <div class="start-sub" data-t="start.sub">ESCAPE ROOM — INTERNAL AUDIT SIMULATION</div>
   <div style="font-size:0.65rem;color:var(--dim);letter-spacing:2px;text-transform:uppercase;margin-top:-14px;margin-bottom:18px;opacity:0.7;">Progress in every step · Quality in every detail</div>
   <div id="group-greeting" style="font-size:0.82rem;color:var(--accent2);margin-bottom:10px;letter-spacing:1px;"></div>
 
   <div class="start-card">
-    <h3>Situation Briefing</h3>
-    A <strong>critical non-conformance alarm</strong> has triggered a facility lockdown at MediSeal's
+    <h3 data-t="start.briefing_h">Situation Briefing</h3>
+    <span data-t-html="start.briefing">A <strong>critical non-conformance alarm</strong> has triggered a facility lockdown at MediSeal's
     plunger production plant. The batch <strong>BN-2024-3200</strong> — rubber plungers destined for
     insulin vials and diabetic injection devices — is on hold pending investigation.<br><br>
     As the on-call <strong>Quality Inspector</strong>, you must work through every station:
     verify incoming materials, complete an AQL inspection, calibrate instruments, raise a CAPA,
     and authorise the final batch disposition — all before the <strong>external FDA auditor
-    arrives in 25 minutes</strong>.
+    arrives in 25 minutes</strong>.</span>
   </div>
 
   <div class="start-card">
-    <h3>Quality Topics Covered</h3>
+    <h3 data-t="start.topics_h">Quality Topics Covered</h3>
     <span class="tag">GMP</span>
     <span class="tag">AQL / ISO 2859-1</span>
     <span class="tag">CAPA</span>
@@ -638,7 +657,7 @@
   </div>
 
   <div class="start-card" style="font-size:0.82rem;">
-    <h3>How to Play</h3>
+    <h3 data-t="start.how_h">How to Play</h3>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 20px;line-height:1.9;">
       <div>🔍 <strong style="color:var(--text);">Examine hotspots</strong> in each area to find clues and collect items</div>
       <div>🎒 <strong style="color:var(--text);">Select an item</strong> from your inventory, then click a hotspot to use it</div>
@@ -654,7 +673,7 @@
   </div>
 
   <div class="start-card" style="font-size:0.81rem;">
-    <h3>Rules</h3>
+    <h3 data-t="start.rules_h">Rules</h3>
     <table style="width:100%;border-collapse:collapse;">
       <tr style="border-bottom:1px solid var(--border);">
         <td style="padding:7px 8px 7px 0;width:28px;font-size:1rem;">👥</td>
@@ -688,7 +707,7 @@
   </div>
 
   <div class="start-card" style="font-size:0.81rem;">
-    <h3>Scoring</h3>
+    <h3 data-t="start.scoring_h">Scoring</h3>
     <table style="width:100%;border-collapse:collapse;margin-bottom:10px;">
       <thead>
         <tr style="border-bottom:1px solid var(--border);">
@@ -734,7 +753,7 @@
 
   <!-- Lobby status (shown after login, hidden in demo mode) -->
   <div id="lobby-status" style="display:none;background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:16px 20px;margin-top:10px;max-width:460px;width:100%;text-align:left;">
-    <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:2px;color:var(--accent);margin-bottom:10px;">👥 TEAM LOBBY</div>
+    <div data-t="start.lobby_h" style="font-size:0.68rem;text-transform:uppercase;letter-spacing:2px;color:var(--accent);margin-bottom:10px;">👥 TEAM LOBBY</div>
     <div id="lobby-members" style="font-size:0.82rem;color:var(--dim);margin-bottom:8px;">Connecting…</div>
     <div id="lobby-ready-bar" style="font-size:0.8rem;color:var(--accent2);margin-bottom:8px;min-height:18px;"></div>
     <div id="lobby-error-msg" style="font-size:0.78rem;color:var(--danger);min-height:16px;"></div>
@@ -744,10 +763,10 @@
     </p>
   </div>
 
-  <button class="btn primary" id="start-btn" style="font-size:0.95rem;padding:11px 36px;margin-top:10px;">
+  <button class="btn primary" id="start-btn" data-t="start.ready_btn" style="font-size:0.95rem;padding:11px 36px;margin-top:10px;">
     I'M READY — BEGIN
   </button>
-  <div id="start-waiting" style="display:none;font-size:0.8rem;color:var(--dim);margin-top:8px;letter-spacing:1px;">
+  <div id="start-waiting" data-t="start.waiting" style="display:none;font-size:0.8rem;color:var(--dim);margin-top:8px;letter-spacing:1px;">
     ⏳ Waiting for teammates to confirm…
   </div>
 </div>
@@ -808,8 +827,8 @@
 <div id="alarm-overlay">
   <div id="alarm-box">
     <div class="alarm-icon">🚨</div>
-    <div class="alarm-title">⚠ STOP — GO BACK!</div>
-    <div class="alarm-sub">PIN is correct — but you have unfinished checks!</div>
+    <div class="alarm-title" id="alarm-title">⚠ STOP — GO BACK!</div>
+    <div class="alarm-sub" id="alarm-sub">PIN is correct — but you have unfinished checks!</div>
     <div class="alarm-rooms" id="alarm-rooms"></div>
     <button id="alarm-ok" onclick="closeAlarm()">✓ UNDERSTOOD — I WILL GO BACK NOW</button>
   </div>
@@ -883,9 +902,29 @@ const S = {
   groupName:    null,
   demoMode:     false,
   finalScore:   null,
-  memberName:  null,
-  socket:      null,
+  memberName:   null,
+  socket:       null,
+  lang:         localStorage.getItem('qw_lang') || 'en',
 };
+
+// Language selector — run once DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+  const sel = document.getElementById('lang-select');
+  if (sel) {
+    sel.value = S.lang;
+    sel.addEventListener('change', () => {
+      S.lang = sel.value;
+      localStorage.setItem('qw_lang', S.lang);
+      applyTranslations();
+      // re-render nav/room if game already started
+      if (document.getElementById('game-layout') &&
+          document.getElementById('game-layout').style.display !== 'none') {
+        renderRoom(); renderNav(); updateProgress();
+      }
+    });
+  }
+  applyTranslations();
+});
 
 // ────────────────────────────────────────────────
 // API HELPERS
@@ -1043,7 +1082,7 @@ document.getElementById('demo-pw-input').onkeydown = e => {
         const finished = g.completedAt
           ? new Date(g.completedAt).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})
           : '—';
-        const pips = Array.from({length:9}, (_,j) => `<span style="display:inline-block;width:10px;height:10px;border-radius:2px;margin:1px;background:${j < (g.puzzlesDone||0) ? 'var(--accent2)' : 'var(--border)'};"></span>`).join('');
+        const pips = Array.from({length:11}, (_,j) => `<span style="display:inline-block;width:10px;height:10px;border-radius:2px;margin:1px;background:${j < (g.puzzlesDone||0) ? 'var(--accent2)' : 'var(--border)'};"></span>`).join('');
         const tr = document.createElement('tr');
         tr.innerHTML = `<td class="lb-rank">${rank}</td><td class="lb-group">${g.name}</td><td class="lb-score">${g.score ?? '—'}</td><td>${pips}</td><td style="color:var(--dim)">${timeLeft}</td><td style="color:var(--danger)">${g.wrongAnswers ?? 0}</td><td style="color:var(--dim);font-size:0.75rem;">${finished}</td>`;
         tbody.appendChild(tr);
@@ -1138,13 +1177,13 @@ function useHint() {
   const hint = ROOM_HINTS[room];
   if (!hint) return;
   S.hintsUsed[room] = true;
-  // Deduct time
   const timeCost = 60;
   const ptsCost  = 50;
   S.timerSec = Math.max(0, S.timerSec - timeCost);
   S.hintPenalty += ptsCost;
   if (S.socket) S.socket.emit('hint_used', { room, timeCost, ptsCost });
-  log(`💡 HINT — ${ROOMS[room].name}: ${hint}`, 'hint');
+  const tHint = t('hint.' + room);
+  log(`💡 HINT — ${t('room.' + room) || ROOMS[room].name}: ${tHint !== 'hint.' + room ? tHint : hint}`, 'hint');
   log(`⚠️ Hint penalty applied: −${timeCost}s and −${ptsCost} pts.`, 'warn');
 }
 
@@ -1240,15 +1279,32 @@ function canEnter(roomId) {
 }
 
 function lockReason(roomId) {
-  if (roomId === 'production') return 'Raw material verification required first (GMP Receiving Terminal).';
-  if (roomId === 'qclab')      return 'File the NCR at the NCR Filing Station on the production line first.';
-  if (roomId === 'qaoffice')   return 'Complete instrument calibration in the QC Lab first (Micrometer Station).';
-  if (roomId === 'dispatch')   return 'Complete and authorise the CAPA report in the QA Office first.';
-  return 'Blocked.';
+  const key = `nav.lock.${roomId}`;
+  const tx = t(key);
+  return tx !== key ? tx : 'Blocked.';
+}
+
+// Puzzles that must be solved before leaving each room
+const ROOM_PUZZLES = {
+  receiving:  ['coa_verified'],
+  production: ['inspection_done', 'ncr_filed', 'motto_production'],
+  qclab:      ['calibration_done', 'iso15378_done'],
+  qaoffice:   ['capa_done', 'iso9001_done', 'motto_qaoffice'],
+  dispatch:   ['motto_challenge'],
+};
+
+function getMissingInRoom(roomId) {
+  return (ROOM_PUZZLES[roomId] || []).filter(k => !S.solved[k]);
 }
 
 function goTo(roomId) {
   if (!canEnter(roomId)) { log(lockReason(roomId), 'fail'); return; }
+  // Check if current room has unsolved puzzles before departing
+  const missing = getMissingInRoom(S.room);
+  if (missing.length > 0) {
+    showAlarm(missing, 'depart');
+    return;
+  }
   S.room = roomId;
   renderRoom(); renderNav();
 }
@@ -1313,7 +1369,8 @@ function handleAction(action) {
         tag: 'GMP — INCOMING MATERIAL VERIFICATION',
         title: 'GMP Receiving Terminal',
         body: 'Under Good Manufacturing Practice (GMP), all incoming raw materials must be verified against their Certificate of Analysis before use in production.<br><br>The terminal is requesting the <strong>material lot number</strong> from the CoA. Enter it below to release the material from HOLD:',
-        placeholder: 'e.g. RM-XXXX',
+        questionKey: 'q.gmp',
+        placeholder: t('q.gmp.ph'),
         submitLabel: 'Verify & Release',
         onSubmit: val => {
           const v = val.trim().toUpperCase().replace(/\s/g,'');
@@ -1372,6 +1429,7 @@ function handleAction(action) {
         tag: 'VISUAL INSPECTION — AQL SAMPLING',
         title: 'Inspection Light Box — Sample from Batch BN-2024-3200',
         body: 'You have pulled a sample of <strong>125 plungers</strong> per your AQL chart (ISO 2859-1, Level II, AQL 1.0).<br><br>Using the light box and magnification stand, you inspect each plunger for: flash on sealing lip, dimensional deviation, surface contamination, and incomplete fill.<br>' + buildInspectionGrid() + 'How many <strong>defective plungers</strong> did you find in the tray above?',
+        questionKey: 'q.inspection',
         placeholder: 'Enter defect count (number only)',
         submitLabel: 'Record Count',
         onSubmit: val => {
@@ -1383,6 +1441,7 @@ function handleAction(action) {
                 tag: 'AQL BATCH DECISION',
                 title: 'AQL Disposition — Step 2 of 2',
                 body: 'You found <strong>4 defects</strong> in your sample of 125.<br><br>According to your AQL chart for this batch:<br><br><div style="background:#0a0c18;padding:10px 14px;border-radius:4px;font-size:0.8rem;border:1px solid #1e2236;margin:10px 0;">Sample size: 125 &nbsp;|&nbsp; AQL 1.0<br>Accept (Ac): ≤ <strong>3</strong> defects<br>Reject (Re): ≥ <strong>4</strong> defects<br><br>Defects found: <strong style="color:#e63946">4</strong></div>What is your batch disposition? Type <strong>ACCEPT</strong> or <strong>REJECT</strong>:',
+                questionKey: 'q.aql',
                 placeholder: 'ACCEPT or REJECT',
                 submitLabel: 'Record Disposition',
                 onSubmit: val2 => {
@@ -1441,6 +1500,7 @@ function handleAction(action) {
         tag: 'NON-CONFORMANCE REPORT (NCR)',
         title: 'NCR Filing Station',
         body: 'Under ISO 13485, any product failing to meet specified requirements must have a Non-Conformance Report raised immediately. This creates the quality record and triggers the CAPA process.<br><br>Enter the <strong>batch number</strong> this NCR applies to:',
+        questionKey: 'q.ncr',
         placeholder: 'e.g. BN-2024-XXXX',
         submitLabel: 'Raise NCR',
         onSubmit: val => {
@@ -1485,6 +1545,7 @@ function handleAction(action) {
         tag: 'INSTRUMENT CALIBRATION',
         title: 'Micrometer Station — SN-7734',
         body: 'Calibration is essential for measurement accuracy in a medical device facility. An uncalibrated instrument can pass defective product or reject conforming product — both are costly.<br><br>You place the <strong>certified 12.50 mm gauge block</strong> in the micrometer. The display reads: <strong style="color:#f5a623;">12.53 mm</strong><br><br>Calculate and enter the <strong>correction factor</strong>: what you must ADD to the instrument reading to get the true certified value.<br><small style="color:#5a6480;">Include the sign — positive if instrument reads low, negative if instrument reads high.</small>',
+        questionKey: 'q.calibration',
         placeholder: 'Your calculated correction (include sign)',
         submitLabel: 'Apply Correction',
         onSubmit: val => {
@@ -1545,12 +1606,13 @@ function handleAction(action) {
         tag: 'CAPA — CORRECTIVE & PREVENTIVE ACTION',
         title: 'CAPA Workstation — NCR-0892 Root Cause Analysis',
         body: 'A Corrective Action and Preventive Action (CAPA) must identify the <strong>true root cause</strong> of a non-conformance — not just the symptom — so that it can be permanently eliminated.<br><br>Based on your investigation findings, select the <strong>root cause</strong> of the dimensional non-conformances in batch BN-2024-3200:',
-        choices: [
+        questionKey: 'q.capa_root',
+        choices: tChoices('capa_root', [
           { label: 'A)  Operator fatigue during the night shift', correct: false },
           { label: 'B)  Wrong lubricant grade used on mould tooling (Grade B-7 instead of Grade A-3)', correct: true },
           { label: 'C)  Incoming rubber compound out of specification', correct: false },
           { label: 'D)  Autoclave temperature excursion during sterilisation', correct: false },
-        ],
+        ]),
         onChoice: (correct, label) => {
           if (correct) {
             setFeedback('✓ Correct root cause identified.', 'ok');
@@ -1560,12 +1622,13 @@ function handleAction(action) {
                 tag: 'CAPA — PREVENTIVE ACTION',
                 title: 'CAPA Step 2 of 2 — Preventing Recurrence',
                 body: 'Root cause confirmed: <strong>Wrong lubricant grade used on mould tooling (B-7 instead of A-3), with no deviation raised.</strong><br><br>ISO 13485 §8.5.2 states: <em>"The organisation shall take action to eliminate the causes of nonconformities in order to prevent recurrence. Corrective actions shall be appropriate to the effects of the nonconformities encountered."</em><br><br>Review the Maintenance Log and SOP-MAINT-009 findings from your investigation. Based on these, which of the following is the MOST effective preventive action to stop this lubricant error from ever happening again?',
-                choices: [
+                questionKey: 'q.capa_prev',
+                choices: tChoices('capa_prev', [
                   { label: 'A)  Order Grade B-7 lubricant as an official approved alternative to reduce risk of error', correct: false },
                   { label: 'B)  Update SOP-MAINT-009 with lubricant grade verification step AND retrain all maintenance staff on the SOP', correct: true },
                   { label: 'C)  Increase the AQL sample size for future batches to catch any future lubricant-related defects earlier', correct: false },
                   { label: 'D)  Attach a warning label to the lubricant storage cupboard and rely on operator awareness', correct: false },
-                ],
+                ]),
                 onChoice: (correct2) => {
                   if (correct2) {
                     S.solved.capa_done = true;
@@ -1634,6 +1697,7 @@ function handleAction(action) {
         tag: 'BATCH RELEASE TERMINAL — ISO 13485 §8.3',
         title: 'Batch Disposition Authorisation',
         body: 'Under <strong>ISO 13485 §8.3</strong>, all nonconforming product must be formally dispositioned. You have the Batch Release Certificate for <strong>BN-2024-3200</strong> which contains the QA authorisation PIN.<br><br>Enter the <strong>4-digit QA Auth PIN</strong> to complete the batch disposition:',
+        questionKey: 'q.pin',
         placeholder: '4-digit PIN',
         submitLabel: 'Authorise Disposition',
         onSubmit: val => {
@@ -1678,12 +1742,13 @@ function handleAction(action) {
         tag: 'QUALITY IMPROVEMENT — PRODUCTION POSTER',
         title: '"Progress in every step · Quality in every detail"',
         body: '<strong>Production Line — Quality Week Poster</strong><br><br>This poster has been on the production floor since the site\'s first Quality Week. It sits directly above the AQL inspection station, reminding every operator that quality is embedded in each manufacturing action — not just at the end of the line.<br><br><div style="border:1px solid var(--accent);border-radius:4px;padding:10px 14px;margin:10px 0;text-align:center;font-size:0.88rem;"><strong style="color:var(--accent);">"Progress in every step · Quality in every detail"</strong></div><br>AQL inspection is a key part of our quality system. When a batch is found to have defects, what does this motto suggest we should do — beyond simply rejecting the batch?',
-        choices: [
+        questionKey: 'q.motto_prod',
+        choices: tChoices('motto_prod', [
           { label: 'A)  Reject, quarantine, and move on — the rejection itself is the corrective action', correct: false },
           { label: 'B)  Reject, raise an NCR, investigate root cause, and raise a CAPA to prevent recurrence', correct: true },
           { label: 'C)  Reject and increase the sample size for future batches only', correct: false },
           { label: 'D)  Accept the batch under concession to maintain production schedule', correct: false },
-        ],
+        ]),
         onChoice: (correct) => {
           if (correct) {
             S.solved.motto_production = true;
@@ -1710,12 +1775,13 @@ function handleAction(action) {
         tag: 'QUALITY PLEDGE — QA OFFICE',
         title: '"Progress in every step · Quality in every detail"',
         body: '<strong>QA Office — Quality Pledge Frame</strong><br><br>This framed pledge is signed by every QA team member on joining. It states that quality is not someone else\'s responsibility — it belongs to everyone who touches the process.<br><br><div style="border:1px solid var(--accent);border-radius:4px;padding:10px 14px;margin:10px 0;text-align:center;font-size:0.88rem;"><strong style="color:var(--accent);">"Progress in every step · Quality in every detail — We own our processes."</strong></div><br>NCR-0892 was triggered because a maintenance technician used the wrong lubricant grade without raising a deviation. Under GMP\'s principle of "quality ownership," who was responsible for raising a deviation record when the lubricant was changed?',
-        choices: [
+        questionKey: 'q.motto_qa',
+        choices: tChoices('motto_qa', [
           { label: 'A)  Only the QA department — they own all deviation records', correct: false },
           { label: 'B)  Only the maintenance manager — it was their department\'s change', correct: false },
           { label: 'C)  The technician who performed the action — anyone who deviates from an SOP must raise a deviation', correct: true },
           { label: 'D)  Nobody — the process still ran, so no deviation existed at that point', correct: false },
-        ],
+        ]),
         onChoice: (correct) => {
           if (correct) {
             S.solved.motto_qaoffice = true;
@@ -1744,12 +1810,13 @@ function handleAction(action) {
         tag: 'QUALITY WEEK — MOTTO CHALLENGE',
         title: '"Progress in every step · Quality in every detail"',
         body: '<strong>QUALITY WEEK — MediSeal Manufacturing</strong><br><br>This banner displays MediSeal\'s Quality Week motto alongside the message <em>"Zero Defects Saves Lives."</em><br><br>Our plungers end up in insulin vials and prefilled syringes for real patients. Every AQL check, every CAPA, every calibration record protects a life.<br><br><div style="border:1px solid var(--accent);border-radius:4px;padding:10px 14px;margin:10px 0;text-align:center;font-size:0.88rem;"><strong style="color:var(--accent);">"Progress in every step · Quality in every detail"</strong></div><br><strong>Which ISO 9001:2015 Quality Management Principle does this motto BEST reflect?</strong><br><small style="color:var(--dim);">(Hint: Check the Quality Week Noticeboard in the Receiving Dock if needed.)</small>',
-        choices: [
+        questionKey: 'q.motto_dis',
+        choices: tChoices('motto_dis', [
           { label: 'A)  Leadership — management sets the direction and culture for quality', correct: false },
           { label: 'B)  Customer Focus — understanding and meeting patient and customer requirements', correct: false },
           { label: 'C)  Continual Improvement — enhancing all processes and outputs, step by step', correct: true },
           { label: 'D)  Evidence-Based Decision Making — using data and facts to guide decisions', correct: false },
-        ],
+        ]),
         onChoice: (correct) => {
           if (correct) {
             S.solved.motto_challenge = true;
@@ -1781,12 +1848,13 @@ function handleAction(action) {
         tag: 'ISO 15378:2017 — PRIMARY PACKAGING COMPLIANCE',
         title: 'ISO 15378:2017 Compliance Check — Packaging Materials',
         body: 'ISO 15378:2017 is the international standard for <strong>primary packaging materials for medicinal products</strong> — rubber stoppers, closures, and containers that directly contact drugs.<br><br>Read the <strong>ISO 15378 Packaging Specification</strong> in your inventory carefully.<br><br>The rubber stoppers from Kautschuk GmbH that contributed to batch BN-2024-3200\'s dimensional non-conformances must now be formally dispositioned. Under GMP and the ISO 15378 standard, when incoming packaging materials are found to be nonconforming, what is the <strong>mandatory first action</strong>?',
-        choices: [
+        questionKey: 'q.iso15378_1',
+        choices: tChoices('iso15378_1', [
           { label: 'A)  Use them for non-patient-contact production to avoid waste', correct: false },
           { label: 'B)  Physically segregate, apply a REJECT/HOLD label, and raise a supplier NCR before any disposition decision', correct: true },
           { label: 'C)  Return them to the supplier immediately without raising any internal documentation', correct: false },
           { label: 'D)  Blend them with conforming stock from another supplier lot to dilute the defect rate', correct: false },
-        ],
+        ]),
         onChoice: (correct) => {
           if (correct) {
             setFeedback('✓ Correct! Segregation and documentation must come first — no uncontrolled disposition.', 'ok');
@@ -1795,12 +1863,13 @@ function handleAction(action) {
                 tag: 'ISO 15378:2017 — STEP 2 OF 2',
                 title: 'GDP in Action — Documenting the Supplier Deviation',
                 body: 'The rubber stoppers are now quarantined and labelled. A supplier NCR must be raised.<br><br>Your colleague Leon filled in the supplier deviation form — but you notice he crossed out the wrong batch number using <strong>correction fluid (Tipp-Ex)</strong> and wrote the correct one on top. The original entry is now completely obscured.<br><br>Under <strong>Good Documentation Practice (GDP)</strong>, which is a core GMP requirement at MediSeal, is Leon\'s correction method acceptable?',
-                choices: [
+                questionKey: 'q.iso15378_2',
+                choices: tChoices('iso15378_2', [
                   { label: 'A)  Yes — as long as the correct information is visible, the method does not matter', correct: false },
                   { label: 'B)  No — GDP requires a single line through the error leaving it legible, then the correct value, with date and initials', correct: true },
                   { label: 'C)  Yes — correction fluid is standard practice in most pharmaceutical facilities', correct: false },
                   { label: 'D)  No — the entire form must be destroyed and restarted to maintain data integrity', correct: false },
-                ],
+                ]),
                 onChoice: (correct2) => {
                   if (correct2) {
                     S.solved.iso15378_done = true;
@@ -1841,12 +1910,13 @@ function handleAction(action) {
         tag: 'ISO 9001:2015 — QUALITY MANAGEMENT SYSTEM',
         title: 'Management Review Board — Risk Assessment',
         body: 'MediSeal\'s CAPA team is reviewing the lubricant incident (NCR-0892). The maintenance team had been using an unapproved lubricant grade for 3 months — and <strong>no process flagged it until a packaging defect appeared</strong>.<br><br>ISO 9001:2015 introduced <strong>risk-based thinking</strong> — the idea that organisations must proactively identify what <em>could</em> go wrong before it becomes a nonconformance.<br><br>According to this principle, which process failure BEST explains why this incident went undetected for 3 months?',
-        choices: [
+        questionKey: 'q.iso9001_1',
+        choices: tChoices('iso9001_1', [
           { label: 'A)  The monthly audit schedule was too infrequent to catch daily errors', correct: false },
           { label: 'B)  There was no risk assessment on the lubricant change-over procedure — the risk was never identified', correct: true },
           { label: 'C)  The maintenance log was not stored in the correct folder', correct: false },
           { label: 'D)  The AQL sampling plan did not include visual inspection', correct: false },
-        ],
+        ]),
         onChoice: (correct) => {
           if (correct) {
             setFeedback('✓ Correct! Risk-based thinking means assessing change-over procedures BEFORE they are implemented. No risk assessment = no control.', 'ok');
@@ -1855,12 +1925,13 @@ function handleAction(action) {
                 tag: 'ISO 9001:2015 — STEP 2 OF 2',
                 title: 'Management Review Agenda — What Belongs?',
                 body: 'Management Review is a formal, documented meeting where top management evaluates how well the Quality Management System is performing.<br><br>Given the events this week — NCR-0892 (lubricant nonconformance), CAPA-0112 (corrective action plan), and calibration deviation at Station 3 — the Quality Director must prepare the Management Review agenda.<br><br>Which combination of inputs BEST reflects what belongs on a Management Review agenda?',
-                choices: [
+                questionKey: 'q.iso9001_2',
+                choices: tChoices('iso9001_2', [
                   { label: 'A)  Customer delivery schedules and production throughput targets only', correct: false },
                   { label: 'B)  NCR trends, CAPA status, audit results, and process performance data', correct: true },
                   { label: 'C)  Equipment purchase requests and IT infrastructure upgrades', correct: false },
                   { label: 'D)  Individual employee performance reviews and salary discussions', correct: false },
-                ],
+                ]),
                 onChoice: (correct2) => {
                   if (correct2) {
                     S.solved.iso9001_done = true;
@@ -1918,8 +1989,9 @@ function updateProgress() {
   const total = 11;
   const pct = (S.puzzlesDone / total) * 100;
   document.getElementById('progress-bar').style.width = pct + '%';
+  const tpl = t('progress');
   document.getElementById('progress-label').textContent =
-    `Quality checks: ${S.puzzlesDone} / ${total} complete`;
+    tpl.replace('{done}', S.puzzlesDone).replace('{total}', total);
 }
 
 function log(msg, cls = 'info') {
@@ -1946,7 +2018,8 @@ function renderRoom() {
   r.hotspots.forEach(h => {
     const b = document.createElement('button');
     b.className = 'hotspot-btn';
-    b.textContent = h.label;
+    const tLabel = t('hs.' + h.action);
+    b.textContent = (tLabel !== 'hs.' + h.action) ? tLabel : h.label;
     b.onclick = () => {
       const result = handleAction(h.action);
       if (result) log(result.msg, result.cls);
@@ -1958,7 +2031,7 @@ function renderRoom() {
   const hintBtn = document.createElement('button');
   const hintUsed = S.hintsUsed[S.room];
   hintBtn.className = 'hotspot-btn hint-btn' + (hintUsed ? ' used' : '');
-  hintBtn.textContent = hintUsed ? '💡 Hint used' : '💡 Use Hint (−60s / −50 pts)';
+  hintBtn.textContent = hintUsed ? `💡 ${t('nav.hint_used')}` : t('nav.hint_btn');
   hintBtn.disabled = !!hintUsed;
   hintBtn.onclick = () => useHint();
   hs.appendChild(hintBtn);
@@ -2034,7 +2107,7 @@ function renderNav() {
   // ── Current room indicator ────────────────────────────────────
   const cur = document.createElement('div');
   cur.id = 'current-location';
-  cur.innerHTML = `📍 <strong>${ROOMS[S.room].name}</strong>`;
+  cur.innerHTML = `📍 ${t('nav.you_are_in')} <strong>${t('room.' + S.room) || ROOMS[S.room].name}</strong>`;
   nav.appendChild(cur);
 
   // ── Navigation buttons with direction icons ───────────────────
@@ -2052,7 +2125,7 @@ function renderNav() {
     } else {
       btn.className = 'nav-btn next-locked';
     }
-    btn.textContent = r.name;
+    btn.textContent = t('room.' + roomId) || r.name;
     if (!unlocked) btn.title = lockReason(roomId);
     btn.onclick = () => goTo(roomId);
     nav.appendChild(btn);
@@ -2064,10 +2137,19 @@ function renderNav() {
 // ────────────────────────────────────────────────
 let _onSubmit  = null;
 
-function openModal({ tag, title, body, placeholder, submitLabel, onSubmit, noInput, choices, onChoice }) {
+function openModal({ tag, title, body, questionKey, placeholder, submitLabel, onSubmit, noInput, choices, onChoice }) {
   document.getElementById('modal-tag').textContent   = tag   || 'QUALITY CONTROL';
   document.getElementById('modal-title').textContent = title || '';
-  document.getElementById('modal-body').innerHTML    = body  || '';
+
+  // Append translated question block for non-English players
+  let finalBody = body || '';
+  if (questionKey && S.lang !== 'en') {
+    const tq = t(questionKey);
+    if (tq && tq !== questionKey) {
+      finalBody += `<div style="margin-top:14px;padding:10px 14px;background:rgba(0,153,230,0.1);border-left:3px solid var(--accent);border-radius:3px;font-size:0.9rem;color:var(--text);font-weight:600;">🌐 ${tq}</div>`;
+    }
+  }
+  document.getElementById('modal-body').innerHTML    = finalBody;
   document.getElementById('modal-feedback').textContent = '';
   document.getElementById('modal-feedback').className   = '';
 
@@ -2077,6 +2159,9 @@ function openModal({ tag, title, body, placeholder, submitLabel, onSubmit, noInp
 
   choicesEl.innerHTML = '';
   choicesEl.style.display = 'none';
+
+  document.getElementById('modal-cancel').textContent = t('modal.close');
+  sub.textContent = submitLabel || t('modal.submit');
 
   if (choices && choices.length) {
     inp.style.display = 'none';
@@ -2097,7 +2182,6 @@ function openModal({ tag, title, body, placeholder, submitLabel, onSubmit, noInp
     inp.placeholder   = placeholder || '';
     inp.value         = '';
     sub.style.display = 'inline-block';
-    sub.textContent   = submitLabel || 'Submit';
     setTimeout(() => inp.focus(), 60);
   }
 
@@ -2204,7 +2288,7 @@ function showEndScreen(won, data) {
   const end = document.getElementById('endscreen');
   end.className = 'show ' + (won ? 'win' : 'lose');
   document.getElementById('end-icon').textContent  = won ? '🏆' : '⏱️';
-  document.getElementById('end-title').textContent = won ? 'Audit Simulation Passed!' : 'LOCKDOWN — AUDIT FAILED';
+  document.getElementById('end-title').textContent = won ? t('end.won') : t('end.lost');
   document.getElementById('end-msg').textContent   = won
     ? "Excellent work! Your group completed all quality checks, identified the root cause, and correctly dispositioned the nonconforming batch — protecting patients and MediSeal's GMP licence."
     : "Time expired. The FDA auditor arrived before your group completed all quality checks. Batch BN-2024-3200 remains unresolved.";
@@ -2299,9 +2383,13 @@ const PUZZLE_ROOM = {
   motto_qaoffice:  { room: 'qaoffice',    emoji: '🗂️', name: 'QA & Compliance Office',          btn: 'Quality Pledge (Wall Frame)' },
 };
 
-function showAlarm(missingKeys) {
+function showAlarm(missingKeys, context) {
   const roomsEl = document.getElementById('alarm-rooms');
   roomsEl.innerHTML = '';
+  document.getElementById('alarm-title').textContent = t('alarm.title');
+  const subEl = document.getElementById('alarm-sub');
+  subEl.textContent = context === 'depart' ? t('alarm.sub.depart') : t('alarm.sub.pin');
+  document.getElementById('alarm-ok').textContent = t('alarm.ok');
   // Group by room so we don't repeat the same room heading
   const seen = {};
   missingKeys.forEach(k => {
@@ -2316,8 +2404,9 @@ function showAlarm(missingKeys) {
   Object.values(seen).forEach(({ info, btns }) => {
     const div = document.createElement('div');
     div.className = 'alarm-room-item';
-    div.innerHTML = `<div class="alarm-room-name">${info.emoji} Go to: <span style="color:#40c8ff;">${info.name}</span></div>` +
-      btns.map(b => `<div class="alarm-room-btn">→ Press button: <strong>${b.btn}</strong></div>`).join('');
+    const tRoomName = t('room.' + info.room) || info.name;
+    div.innerHTML = `<div class="alarm-room-name">${info.emoji} ${t('alarm.go_to')} <span style="color:#40c8ff;">${tRoomName}</span></div>` +
+      btns.map(b => `<div class="alarm-room-btn">${t('alarm.press')} <strong>${b.btn}</strong></div>`).join('');
     roomsEl.appendChild(div);
   });
   const overlay = document.getElementById('alarm-overlay');
