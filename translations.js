@@ -339,9 +339,152 @@ const TRANSLATIONS = {
     'end.demo_note': 'Demo — score not saved',
     'end.lb_link': '📊 View Leaderboard',
     'tc.header': '🔑 TEAM CONFIRMATION REQUIRED',
+    'tc.body_html': '<strong>{name}</strong> found the answer. All {required} members must enter this code to proceed:',
     'tc.instruction': 'Type the code above to confirm you\'ve received it:',
     'tc.input_ph': 'Enter the code…',
     'tc.btn': 'Confirm',
+
+
+
+    /* Modal defaults */
+    'modal.default_tag': 'QUALITY CONTROL',
+    'nav.blocked':       'Blocked.',
+
+    /* Puzzle correct/wrong feedback messages */
+    'fb.gmp_ok':           '✓ Correct lot number! Notifying team — waiting for all members to confirm…',
+    'fb.gmp_bad':          'Lot number not recognised. Check the Certificate of Analysis.',
+    'fb.inspection_ok':    '✓ Correct — 4 defects found.',
+    'fb.inspection_reject_bad': 'Incorrect. With 4 defects and Re=4, the batch must be REJECTED. Re means reject if ≥ 4 defects — 4 equals 4.',
+    'fb.inspection_type_bad': 'Type exactly ACCEPT or REJECT.',
+    'fb.inspection_count_bad': "You counted {n}, but that doesn't match the inspection record. Look at the tray more carefully.",
+    'fb.inspection_nan':   'Please enter a number.',
+    'fb.ncr_bad':          'Batch number not found. Check your notes — the batch number was stated in the scenario briefing.',
+    'fb.cal_bad':          'Incorrect. Correction = standard − reading = 12.50 − 12.53 = ?',
+    'fb.capa_root_ok':     '✓ Correct root cause identified.',
+    'fb.capa_prev_bad':    'Not the best option. Think about what would permanently prevent the wrong lubricant from being used again — what system-level change removes the opportunity for error?',
+    'fb.capa_root_bad':    'Incorrect. Review the maintenance log and SOP rack findings — the physical evidence points to a specific material change.',
+    'fb.pin_bad':          '❌ PIN is wrong. Check the Batch Release Certificate in your inventory.',
+    'fb.pin_ok':           '✓ Correct PIN! All team members must confirm to authorise batch disposition…',
+    'fb.motto_prod_bad':   'Think about what "progress" means in practice. Rejection alone stops the problem this time — but what prevents it next time?',
+    'fb.motto_qa_bad':     'Think about who actually performed the action. GMP assigns documentation ownership to the individual who carries out the step.',
+    'fb.motto_dis_bad':    'Not quite. Think about what "progress in every step" and "quality in every detail" implies about how we treat our processes over time.',
+    'fb.iso15378_1_ok':    '✓ Correct! Segregation and documentation must come first — no uncontrolled disposition.',
+    'fb.iso15378_2_bad':   'Incorrect. Think about GDP — good documentation must always remain traceable. The original entry must still be readable.',
+    'fb.iso15378_1_bad':   'Incorrect. ISO 15378 was designed to add GMP requirements on top of an existing QMS standard — the global quality management benchmark.',
+    'fb.iso9001_1_ok':     '✓ Correct! Risk-based thinking means assessing change-over procedures BEFORE they are implemented. No risk assessment = no control.',
+    'fb.iso9001_2_bad':    'Incorrect. Think about what a QMS review needs to evaluate — it should cover quality events, corrective actions, and system performance.',
+    'fb.iso9001_1_bad':    'Incorrect. The problem was not frequency of audits or log filing. What process should have prevented an unapproved material from being used in the first place?',
+
+    /* Team confirmation messages */
+    'modal.waiting_team':  '✓ Correct! Waiting for team ({done}/{required} confirmed)…',
+    'modal.confirming_team': '✓ Waiting for team ({done}/{required} confirmed)…',
+    'tc.progress':         '✓ {count} / {required} members confirmed',
+    'chat.reconnecting':   'Reconnecting…',
+    'chat.placeholder':    'Message your team…',
+
+    /* Logs for collaborative actions */
+    'log.code_found':      '🔑 You found the code for "{label}" — waiting for {n} more teammate(s).',
+    'log.code_found_other':'🔑 {name} found the answer to "{label}" — enter the code to confirm!',
+
+    /* Group dropdown and server error */
+    'login.select_group_placeholder': '— Select your group —',
+    'login.server_unavailable': 'Server unavailable — use Demo Mode',
+    'login.server_error': 'Could not reach the server. Use Demo Mode to test the game without scoring.',
+
+    /* Team confirm feedback */
+    'tc.confirmed_waiting': '✓ Confirmed! Waiting for remaining teammates…',
+    'tc.incorrect':         'Incorrect — enter the code exactly as shown above.',
+    /* Page title */
+    'page.title':       'MediSeal Quality Week — Escape Room',
+
+    /* Login card statics */
+    'login.card_title': 'QUALITY WEEK',
+    'login.card_sub':   'GROUP LOGIN',
+    'login.card_motto': 'Progress in every step · Quality in every detail',
+    'login.logged_in_as': 'Logged in as: {name}',
+    'login.select_error': 'Please select your group.',
+    'login.pin_error':  'Please enter your PIN.',
+    'login.fail':       'Login failed. Check your PIN and try again.',
+    'login.demo_mode_label': 'Demo Mode (Admin)',
+    'login.demo_start_btn':  'BEGIN AUDIT SIMULATION',
+    'login.admin_pw_wrong':  'Incorrect admin password.',
+    'start.btn_waiting_text': "✓ I'm Ready — waiting…",
+    'start.card_motto': 'Progress in every step · Quality in every detail',
+
+    /* Leaderboard modal */
+    'lb.h2':            '📊 Leaderboard',
+    'lb.admin_pw':      'Admin Password',
+    'lb.admin_pw_ph':   'Enter admin password',
+    'lb.view_btn':      'View Leaderboard',
+    'lb.close_btn':     'Close',
+    'lb.completed_groups': 'COMPLETED GROUPS — RANKED BY SCORE',
+    'lb.close_btn2':    'Close',
+    'lb.empty':         'No groups have completed the game yet.',
+    'lb.col_group':     'Group',
+    'lb.col_score':     'Score',
+    'lb.col_puzzles':   'Puzzles',
+    'lb.col_time_left': 'Time Left',
+    'lb.col_wrong':     'Wrong',
+    'lb.col_finished':  'Finished',
+    'lb.wrong_pw':      'Incorrect password.',
+
+    /* Already played screen */
+    'already.title':    'ALREADY COMPLETED',
+    'already.sub':      'YOUR GROUP HAS PLAYED',
+    'already.body':     'Your group has already completed the Quality Week escape room.<br>Each group can only play once. Check the leaderboard to see your score!',
+    'already.lb_btn':   '📊 View Leaderboard',
+
+    /* End screen extras */
+    'end.lb_btn':       '📊 View Leaderboard',
+
+    /* Hint penalty log */
+    'hint.penalty_log': '⚠️ Hint penalty applied: −{time}s and −{pts} pts.',
+
+    /* Room path tooltips */
+    'nav.here':     ' — YOU ARE HERE',
+    'nav.visited':  ' — visited',
+    'nav.unlocked': ' — unlocked',
+    'nav.locked':   ' — locked',
+
+    /* Notes fallback */
+    'side.no_entries_html': 'No entries yet.',
+
+    /* Room badges */
+    'room.badge.receiving':  'AREA 01 — RECEIVING DOCK',
+    'room.badge.production': 'AREA 02 — PRODUCTION LINE',
+    'room.badge.qclab':      'AREA 03 — QC LABORATORY',
+    'room.badge.qaoffice':   'AREA 04 — QA / COMPLIANCE',
+    'room.badge.dispatch':   'AREA 05 — DISPATCH / RELEASE',
+
+    /* Room descriptions */
+    'room.desc.receiving':  'Raw materials arrive here for incoming quality control. Under GMP, every incoming batch must have a Certificate of Analysis (CoA) reviewed and verified before the material can be released to production. A red HOLD light flashes above the pallet of rubber compound. The GMP terminal on the wall reads: "MATERIAL ON HOLD — VERIFICATION REQUIRED." A Quality Week banner on the wall displays the site motto: "Progress in every step · Quality in every detail."',
+    'room.desc.production': 'The main moulding and assembly line for rubber plungers used in insulin vials and prefilled syringes. The line is halted at Station 3 — an amber light pulses above it. A visual inspection light-box station is set up as part of Quality Week. The AQL sampling chart is pinned beside it. The door to the QC Laboratory has a sign: "ENTRY REQUIRES NCR FILING." Above the line, a permanent poster reads: "Progress in every step · Quality in every detail — Quality is everyone\'s responsibility."',
+    'room.desc.qclab':      'The QC lab smells of IPA and calibration fluid. Dimensional gauges, particle counters, and sterility test equipment line the benches. A micrometer station in the corner carries a yellow "OUT OF CALIBRATION — DO NOT USE" sticker. The calibration reference cabinet is mounted on the wall. A sign on the QA Office door: "CALIBRATION SIGN-OFF REQUIRED FOR ENTRY." The ISO 15378 packaging compliance file sits on the far bench. Above the bench, the site motto is printed in bold: "Progress in every step · Quality in every detail."',
+    'room.desc.qaoffice':   'The hub of quality operations. ISO 13485 clause labels run across the filing cabinets. The CAPA workstation shows: "NON-CONFORMANCE #NCR-0892 — AWAITING ROOT CAUSE ANALYSIS." A maintenance log has been left open on the side table — someone was in a hurry. An ISO 9001 management review board shows last quarter\'s KPIs. The batch record safe on the wall requires CAPA + ISO 9001 + ISO 15378 verification to unlock. A framed quality pledge on the wall reads: "Progress in every step · Quality in every detail — We own our processes."',
+    'room.desc.dispatch':   'The final checkpoint before product leaves the facility. A quarantine cage holds batch BN-2024-3200 — padlocked pending QA sign-off. The batch release terminal glows amber. Under ISO 13485 §8.3, no nonconforming product may leave the site without documented disposition. A Quality Week banner reads: "ZERO DEFECTS SAVES LIVES — Progress in every step · Quality in every detail."',
+
+    /* Inventory item names and descriptions */
+    'item.coa.name':         'Certificate of Analysis',
+    'item.coa.desc':         'CoA — Rubber Compound RC-500 | Lot: RM-4471 | Supplier: Kautschuk GmbH | Status: PENDING GMP VERIFICATION. All incoming materials must be verified per GMP.',
+    'item.aql_table.name':   'AQL Sampling Chart',
+    'item.aql_table.desc':   'ISO 2859-1 AQL Table: Lot size 3,200 | Inspection Level II | AQL 1.0 → Sample code letter K → Sample size: 125 | Accept ≤ 3 | Reject ≥ 4.',
+    'item.ncr_form.name':    'Non-Conformance Report',
+    'item.ncr_form.desc':    'NCR-0892: Batch BN-2024-3200 — 4 defects found in sample of 125. Exceeds Re=4. Batch disposition: REJECTED. Raised per SOP-QC-015.',
+    'item.cal_ref.name':     'Calibration Reference',
+    'item.cal_ref.desc':     'Certified Gauge Block: 12.50 mm (±0.001 mm). Certificate No. CAL-7734. Traceable to national standards per ISO/IEC 17025. Use to verify instrument accuracy.',
+    'item.maint_log.name':   'Maintenance Log',
+    'item.maint_log.desc':   'Log entry 14/03/24 — Station 3 mould tooling: Release lubricant replaced with Grade B-7 (synthetic). CORRECT grade per SOP-MAINT-009 is Grade A-3 (food-grade silicone). No deviation form raised!',
+    'item.capa_report.name': 'Completed CAPA Report',
+    'item.capa_report.desc': 'CAPA-0112: Root cause — Incorrect lubricant grade used on mould tooling (Grade B-7 instead of A-3). Immediate action: production hold. Preventive: SOP update + retraining. Ref: ISO 13485 §8.5.',
+    'item.batch_cert.name':  'Batch Release Certificate',
+    'item.batch_cert.desc':  'Batch BN-2024-3200 | Disposition: REJECT & Quarantine | Reason: NCR-0892 / CAPA-0112. QA Auth PIN: 4471. Signed under ISO 13485 §8.3 — Control of Nonconforming Product.',
+    'item.stopper_spec.name':'ISO 15378 Packaging Specification',
+    'item.stopper_spec.desc':'Rubber Stopper Specification — ISO 15378:2017 Primary Packaging Materials for Medicinal Products. Supplier: Kautschuk GmbH. Material: Bromobutyl rubber compound. Key clause: ISO 9001:2015 Clause 8.7 — Control of Nonconforming Outputs.',
+    'item.iso9001_cert.name':'ISO 9001:2015 Certificate',
+    'item.iso9001_cert.desc':'ISO 9001:2015 Quality Management System Certificate — MediSeal Manufacturing Ltd. Scope: Design, manufacture and supply of rubber plungers and closures for medicinal devices. Key concepts: Risk-based thinking (Clause 6.1), Management Review (Clause 9.3).',
+
+    /* Inventory log messages */
+    'item.selected_prefix':  'Selected: ',
   },
 
   /* ─── GERMAN ────────────────────────────────────────────── */
@@ -3434,6 +3577,338 @@ const TRANSLATIONS = {
 
     'modal.close':  'बंद करें',
     'modal.submit': 'जमा करें',
+
+
+    /* Group dropdown and server error */
+    'login.select_group_placeholder': '— अपना समूह चुनें —',
+    'login.server_unavailable': 'सर्वर उपलब्ध नहीं — डेमो मोड का उपयोग करें',
+    'login.server_error': 'सर्वर तक नहीं पहुँच सकते। बिना स्कोरिंग के गेम परखने के लिए डेमो मोड उपयोग करें।',
+
+    /* Team confirm feedback */
+    'tc.confirmed_waiting': '✓ पुष्टि हो गई! शेष टीम सदस्यों का इंतजार है…',
+    'tc.incorrect':         'गलत — ऊपर दिखाया कोड बिल्कुल वैसे ही दर्ज करें।',
+    /* ── Translations added for full localization ── */
+
+    /* Page title */
+    'page.title':       'MediSeal गुणवत्ता सप्ताह — एस्केप रूम',
+
+    /* Login card statics */
+    'login.card_title': 'गुणवत्ता सप्ताह',
+    'login.card_sub':   'समूह लॉगिन',
+    'login.card_motto': 'हर कदम में प्रगति · हर विवरण में गुणवत्ता',
+    'login.logged_in_as': 'लॉगिन: {name}',
+    'login.select_error': 'कृपया अपना समूह चुनें।',
+    'login.pin_error':  'कृपया अपना PIN दर्ज करें।',
+    'login.fail':       'लॉगिन विफल। अपना PIN जांचें और पुनः प्रयास करें।',
+    'login.demo_mode_label': 'डेमो मोड (एडमिन)',
+    'login.demo_start_btn':  'ऑडिट सिमुलेशन शुरू करें',
+    'login.admin_pw_wrong':  'गलत एडमिन पासवर्ड।',
+    'start.btn_waiting_text': '✓ तैयार हूँ — इंतजार में…',
+    'start.card_motto': 'हर कदम में प्रगति · हर विवरण में गुणवत्ता',
+
+    /* Leaderboard modal */
+    'lb.h2':            '📊 लीडरबोर्ड',
+    'lb.admin_pw':      'एडमिन पासवर्ड',
+    'lb.admin_pw_ph':   'एडमिन पासवर्ड दर्ज करें',
+    'lb.view_btn':      'लीडरबोर्ड देखें',
+    'lb.close_btn':     'बंद करें',
+    'lb.completed_groups': 'पूर्ण समूह — स्कोर के अनुसार क्रमित',
+    'lb.close_btn2':    'बंद करें',
+    'lb.empty':         'अभी तक किसी भी समूह ने गेम पूरा नहीं किया है।',
+    'lb.col_group':     'समूह',
+    'lb.col_score':     'स्कोर',
+    'lb.col_puzzles':   'पहेलियाँ',
+    'lb.col_time_left': 'बचा समय',
+    'lb.col_wrong':     'गलत',
+    'lb.col_finished':  'पूर्ण',
+    'lb.wrong_pw':      'गलत पासवर्ड।',
+
+    /* Already played screen */
+    'already.title':    'पहले ही पूर्ण',
+    'already.sub':      'आपका समूह खेल चुका है',
+    'already.body':     'आपके समूह ने गुणवत्ता सप्ताह एस्केप रूम पहले ही पूरा कर लिया है।<br>हर समूह केवल एक बार खेल सकता है। अपना स्कोर देखने के लिए लीडरबोर्ड देखें!',
+    'already.lb_btn':   '📊 लीडरबोर्ड देखें',
+
+    /* End screen extras */
+    'end.lb_btn':       '📊 लीडरबोर्ड देखें',
+
+    /* Hint penalty log */
+    'hint.penalty_log': '⚠️ संकेत दंड लागू: −{time} सेकंड और −{pts} अंक।',
+
+    /* Room path tooltips */
+    'nav.here':     ' — आप यहाँ हैं',
+    'nav.visited':  ' — देखा गया',
+    'nav.unlocked': ' — खुला',
+    'nav.locked':   ' — बंद',
+
+    /* Notes fallback */
+    'side.no_entries_html': 'अभी तक कोई प्रविष्टि नहीं।',
+
+    /* Room badges */
+    'room.badge.receiving':  'क्षेत्र 01 — प्राप्ति डॉक',
+    'room.badge.production': 'क्षेत्र 02 — उत्पादन लाइन',
+    'room.badge.qclab':      'क्षेत्र 03 — QC प्रयोगशाला',
+    'room.badge.qaoffice':   'क्षेत्र 04 — QA / अनुपालन',
+    'room.badge.dispatch':   'क्षेत्र 05 — प्रेषण / रिलीज',
+
+    /* Room descriptions */
+    'room.desc.receiving':  'कच्चे माल यहाँ आने वाले गुणवत्ता नियंत्रण के लिए आते हैं। GMP के अनुसार उत्पादन में जारी करने से पहले हर आने वाले बैच का विश्लेषण प्रमाण पत्र (CoA) समीक्षित और सत्यापित होना अनिवार्य है। रबर कंपाउंड के पैलेट के ऊपर लाल HOLD लाइट चमक रही है। GMP टर्मिनल पर: "सामग्री HOLD पर — सत्यापन आवश्यक।" दीवार पर गुणवत्ता सप्ताह बैनर पर नारा: "हर कदम में प्रगति · हर विवरण में गुणवत्ता।"',
+    'room.desc.production': 'इंसुलिन वायल और प्रीफिल्ड सिरिंज के लिए रबर प्लंजर की मुख्य ढलाई और असेंबली लाइन। स्टेशन 3 पर लाइन रुकी है — ऊपर एम्बर लाइट चमक रही है। दृश्य निरीक्षण लाइट-बॉक्स स्टेशन गुणवत्ता सप्ताह के हिस्से के रूप में स्थापित है। AQL नमूनाकरण चार्ट बगल में लगा है। QC प्रयोगशाला के दरवाजे पर: "प्रवेश के लिए NCR दाखिल करना आवश्यक।" लाइन के ऊपर पोस्टर: "हर कदम में प्रगति · हर विवरण में गुणवत्ता — गुणवत्ता सबकी जिम्मेदारी है।"',
+    'room.desc.qclab':      'QC लैब में IPA और कैलिब्रेशन फ्लूड की गंध है। बेंच पर आयामी गेज, कण काउंटर और बंध्यता परीक्षण उपकरण हैं। कोने में माइक्रोमीटर स्टेशन पर "कैलिब्रेशन से बाहर — उपयोग न करें" का पीला स्टिकर है। कैलिब्रेशन संदर्भ कैबिनेट दीवार पर है। QA कार्यालय के दरवाजे पर: "प्रवेश के लिए कैलिब्रेशन साइन-ऑफ आवश्यक।" दूर की बेंच पर ISO 15378 पैकेजिंग अनुपालन फ़ाइल है। बेंच के ऊपर: "हर कदम में प्रगति · हर विवरण में गुणवत्ता।"',
+    'room.desc.qaoffice':   'गुणवत्ता संचालन का केंद्र। फाइलिंग कैबिनेट पर ISO 13485 खंड लेबल हैं। CAPA वर्कस्टेशन दिखाता है: "असंगति #NCR-0892 — मूल कारण विश्लेषण प्रतीक्षित।" साइड टेबल पर रखरखाव लॉग खुला है। ISO 9001 प्रबंधन समीक्षा बोर्ड पर पिछली तिमाही के KPI हैं। दीवार पर बैच रिकॉर्ड सेफ के लिए CAPA + ISO 9001 + ISO 15378 सत्यापन आवश्यक है। फ्रेमबद्ध गुणवत्ता प्रतिज्ञा: "हर कदम में प्रगति · हर विवरण में गुणवत्ता — हम अपनी प्रक्रियाओं के मालिक हैं।"',
+    'room.desc.dispatch':   'उत्पाद सुविधा छोड़ने से पहले की अंतिम चौकी। संगरोध पिंजरे में बैच BN-2024-3200 — QA हस्ताक्षर के इंतजार में पैडलॉक। बैच रिलीज टर्मिनल एम्बर रंग में चमक रहा है। ISO 13485 §8.3 के अनुसार बिना दस्तावेज़ीकृत निपटान के कोई असंगत उत्पाद साइट नहीं छोड़ सकता। गुणवत्ता सप्ताह बैनर: "शून्य दोष जीवन बचाता है — हर कदम में प्रगति · हर विवरण में गुणवत्ता।"',
+
+    /* Inventory item names and descriptions */
+    'item.coa.name':         'विश्लेषण प्रमाण पत्र',
+    'item.coa.desc':         'CoA — रबर कंपाउंड RC-500 | लॉट: RM-4471 | आपूर्तिकर्ता: Kautschuk GmbH | स्थिति: GMP सत्यापन प्रतीक्षित। GMP के अनुसार सभी आने वाली सामग्री सत्यापित की जानी चाहिए।',
+    'item.aql_table.name':   'AQL नमूनाकरण चार्ट',
+    'item.aql_table.desc':   'ISO 2859-1 AQL तालिका: लॉट आकार 3,200 | निरीक्षण स्तर II | AQL 1.0 → नमूना कोड K → नमूना आकार: 125 | स्वीकार ≤ 3 | अस्वीकार ≥ 4।',
+    'item.ncr_form.name':    'असंगति रिपोर्ट',
+    'item.ncr_form.desc':    'NCR-0892: बैच BN-2024-3200 — 125 के नमूने में 4 दोष। Re=4 से अधिक। बैच निपटान: अस्वीकृत। SOP-QC-015 के अनुसार दर्ज।',
+    'item.cal_ref.name':     'कैलिब्रेशन संदर्भ',
+    'item.cal_ref.desc':     'प्रमाणित गेज ब्लॉक: 12.50 mm (±0.001 mm)। प्रमाण पत्र सं. CAL-7734। ISO/IEC 17025 के अनुसार राष्ट्रीय मानकों से ट्रेस करने योग्य। उपकरण की सटीकता जांचने के लिए उपयोग करें।',
+    'item.maint_log.name':   'रखरखाव लॉग',
+    'item.maint_log.desc':   'लॉग प्रविष्टि 14/03/24 — स्टेशन 3 मोल्ड टूलिंग: रिलीज स्नेहक को ग्रेड B-7 (सिंथेटिक) से बदला। SOP-MAINT-009 के अनुसार सही ग्रेड A-3 (फूड-ग्रेड सिलिकॉन) है। कोई विचलन फ़ॉर्म नहीं भरा!',
+    'item.capa_report.name': 'पूर्ण CAPA रिपोर्ट',
+    'item.capa_report.desc': 'CAPA-0112: मूल कारण — मोल्ड टूलिंग पर गलत स्नेहक ग्रेड (A-3 के बजाय B-7)। तत्काल कार्रवाई: उत्पादन रोक। निवारक: SOP अपडेट + पुनः प्रशिक्षण। संदर्भ: ISO 13485 §8.5।',
+    'item.batch_cert.name':  'बैच रिलीज प्रमाण पत्र',
+    'item.batch_cert.desc':  'बैच BN-2024-3200 | निपटान: अस्वीकार और संगरोध | कारण: NCR-0892 / CAPA-0112। QA प्राधिकरण PIN: 4471। ISO 13485 §8.3 के तहत हस्ताक्षरित।',
+    'item.stopper_spec.name':'ISO 15378 पैकेजिंग विशिष्टता',
+    'item.stopper_spec.desc':'रबर स्टॉपर विशिष्टता — ISO 15378:2017 औषधीय उत्पादों के लिए प्राथमिक पैकेजिंग सामग्री। आपूर्तिकर्ता: Kautschuk GmbH। मुख्य खंड: ISO 9001:2015 खंड 8.7 — असंगत उत्पादों का नियंत्रण।',
+    'item.iso9001_cert.name':'ISO 9001:2015 प्रमाण पत्र',
+    'item.iso9001_cert.desc':'ISO 9001:2015 गुणवत्ता प्रबंधन प्रणाली प्रमाण पत्र — MediSeal Manufacturing Ltd. दायरा: चिकित्सा उपकरणों के लिए रबर प्लंजर का डिज़ाइन, निर्माण और आपूर्ति। मुख्य अवधारणाएं: जोखिम-आधारित सोच (खंड 6.1), प्रबंधन समीक्षा (खंड 9.3)।',
+
+    /* Inventory log messages */
+    'item.selected_prefix': 'चयनित: ',
+
+    /* Modal tags */
+    'tag.gmp':           'GMP — आने वाले माल का सत्यापन',
+    'tag.noticeboard':   'गुणवत्ता सप्ताह',
+    'tag.inspection':    'दृश्य निरीक्षण — AQL नमूनाकरण',
+    'tag.aql_result':    'AQL बैच निर्णय',
+    'tag.ncr':           'असंगति रिपोर्ट (NCR)',
+    'tag.calibration':   'उपकरण कैलिब्रेशन',
+    'tag.capa_root':     'CAPA — सुधारात्मक और निवारक कार्रवाई',
+    'tag.capa_prev':     'CAPA — निवारक कार्रवाई',
+    'tag.pin':           'बैच रिलीज टर्मिनल — ISO 13485 §8.3',
+    'tag.motto_prod':    'गुणवत्ता सुधार — उत्पादन पोस्टर',
+    'tag.motto_qa':      'गुणवत्ता प्रतिज्ञा — QA कार्यालय',
+    'tag.motto_dis':     'गुणवत्ता सप्ताह — नारा चुनौती',
+    'tag.iso15378_1':    'ISO 15378:2017 — प्राथमिक पैकेजिंग अनुपालन',
+    'tag.iso15378_2':    'ISO 15378:2017 — चरण 2 / 2',
+    'tag.iso9001_1':     'ISO 9001:2015 — गुणवत्ता प्रबंधन प्रणाली',
+    'tag.iso9001_2':     'ISO 9001:2015 — चरण 2 / 2',
+
+    /* Modal titles */
+    'title.gmp':         'GMP प्राप्ति टर्मिनल',
+    'title.noticeboard': 'गुणवत्ता सप्ताह नोटिसबोर्ड',
+    'title.inspection':  'निरीक्षण लाइट बॉक्स — बैच BN-2024-3200 का नमूना',
+    'title.aql_result':  'AQL निपटान — चरण 2 / 2',
+    'title.ncr':         'NCR फाइलिंग स्टेशन',
+    'title.calibration': 'माइक्रोमीटर स्टेशन — SN-7734',
+    'title.capa_root':   'CAPA वर्कस्टेशन — NCR-0892 मूल कारण विश्लेषण',
+    'title.capa_prev':   'CAPA चरण 2 / 2 — पुनरावृत्ति की रोकथाम',
+    'title.pin':         'बैच निपटान प्राधिकरण',
+    'title.motto_prod':  '"हर कदम में प्रगति · हर विवरण में गुणवत्ता"',
+    'title.motto_qa':    '"हर कदम में प्रगति · हर विवरण में गुणवत्ता"',
+    'title.motto_dis':   '"हर कदम में प्रगति · हर विवरण में गुणवत्ता"',
+    'title.iso15378_1':  'ISO 15378:2017 अनुपालन जांच — पैकेजिंग सामग्री',
+    'title.iso15378_2':  'GDP कार्यान्वयन — आपूर्तिकर्ता विचलन का दस्तावेज़ीकरण',
+    'title.iso9001_1':   'प्रबंधन समीक्षा बोर्ड — जोखिम मूल्यांकन',
+    'title.iso9001_2':   'प्रबंधन समीक्षा एजेंडा — क्या शामिल है?',
+
+    /* Buttons */
+    'btn.record_count':       'गिनती दर्ज करें',
+    'btn.record_disposition': 'निपटान दर्ज करें',
+    'btn.raise_ncr':          'NCR दर्ज करें',
+    'btn.apply_correction':   'सुधार लागू करें',
+    'btn.authorise':          'निपटान अधिकृत करें',
+
+    /* Placeholders */
+    'ph.inspection':   'दोषों की संख्या दर्ज करें (केवल अंक)',
+    'ph.calibration':  'आपका गणना किया सुधार (चिह्न सहित)',
+
+    /* Topics */
+    'topic.calibration':      'कैलिब्रेशन',
+    'topic.batch_records':    'बैच रिकॉर्ड',
+    'topic.visual_inspection':'दृश्य निरीक्षण',
+    'topic.defect_class':     'दोष वर्गीकरण',
+    'topic.sop_compliance':   'SOP अनुपालन',
+    'topic.risk_thinking':    'जोखिम-आधारित सोच',
+
+    /* Sidebar */
+    'side.inventory':   'सामग्री सूची',
+    'side.field_notes': 'फील्ड नोट्स',
+    'side.group_chat':  'समूह चैट',
+    'side.areas':       'क्षेत्र',
+    'side.no_entries':  'अभी तक कोई प्रविष्टि नहीं।',
+    'side.chat_ph':     'पहले जुड़ें…',
+
+    /* Start screen extras */
+    'start.connecting': 'जुड़ रहे हैं…',
+    'start.how_content': '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 20px;line-height:1.9;"><div>🔍 <strong style="color:var(--text);">हॉटस्पॉट देखें</strong> — सुराग खोजने और आइटम एकत्र करने के लिए प्रत्येक क्षेत्र में</div><div>🎒 <strong style="color:var(--text);">कोई आइटम चुनें</strong> — सामग्री सूची से, फिर उपयोग के लिए हॉटस्पॉट पर क्लिक करें</div><div>🧩 <strong style="color:var(--text);">पहेलियाँ सुलझाएं</strong> — हर उत्तर वास्तविक गुणवत्ता सिद्धांतों पर आधारित है</div><div>📋 <strong style="color:var(--text);">फील्ड नोट्स देखें</strong> — सुराग और तथ्य स्वचालित रूप से दर्ज होते हैं</div><div>💬 <strong style="color:var(--text);">समूह चैट का उपयोग करें</strong> — अपनी टीम से तुरंत समन्वय करें</div><div>🔑 <strong style="color:var(--text);">साथ में कोड पुष्टि करें</strong> — मुख्य मील के पत्थर पर सभी सदस्यों को कोड दर्ज करना होगा</div></div><div style="margin-top:10px;padding:8px 12px;background:rgba(0,153,230,0.07);border-left:3px solid var(--accent);border-radius:2px;font-size:0.77rem;color:var(--dim);line-height:1.7;"><strong style="color:var(--text);">5 क्षेत्र</strong> और <strong style="color:var(--text);">11 पहेलियाँ</strong> <strong style="color:var(--text);">25 मिनट</strong> में पूरी करनी हैं। क्षेत्र प्रगति के साथ अनलॉक होते हैं — आप आगे नहीं जा सकते।</div>',
+    'start.rules_content': '<table style="width:100%;border-collapse:collapse;"><tr style="border-bottom:1px solid var(--border);"><td style="padding:7px 8px 7px 0;width:28px;font-size:1rem;">👥</td><td style="padding:7px 0;color:var(--dim);"><strong style="color:var(--text);">टीम का आकार:</strong> 3–5 सदस्य। शुरू होने से पहले सभी जुड़े होने चाहिए।</td></tr><tr style="border-bottom:1px solid var(--border);"><td style="padding:7px 8px 7px 0;font-size:1rem;">⏱️</td><td style="padding:7px 0;color:var(--dim);"><strong style="color:var(--text);">एक साथ शुरुआत:</strong> हर खिलाड़ी को <em>"मैं तैयार हूँ"</em> क्लिक करना होगा। सभी के लिए एक ही पल में टाइमर शुरू होता है।</td></tr><tr style="border-bottom:1px solid var(--border);"><td style="padding:7px 8px 7px 0;font-size:1rem;">🔑</td><td style="padding:7px 0;color:var(--dim);"><strong style="color:var(--text);">टीम की पुष्टि:</strong> मुख्य चौकियों पर कोड सभी को दिखाया जाता है — आगे बढ़ने के लिए हर सदस्य को टाइप करना होगा।</td></tr><tr style="border-bottom:1px solid var(--border);"><td style="padding:7px 8px 7px 0;font-size:1rem;">🚪</td><td style="padding:7px 0;color:var(--dim);"><strong style="color:var(--text);">क्षेत्र ताले:</strong> प्रत्येक क्षेत्र तब तक बंद रहता है जब तक पिछला कार्य पूरा न हो — क्रम में पूरे करें।</td></tr><tr style="border-bottom:1px solid var(--border);"><td style="padding:7px 8px 7px 0;font-size:1rem;">❌</td><td style="padding:7px 0;color:var(--dim);"><strong style="color:var(--text);">गलत उत्तर:</strong> हर गलत उत्तर पर अंतिम स्कोर से <strong style="color:var(--danger);">10 अंक</strong> कटते हैं — जमा करने से पहले सोचें।</td></tr><tr style="border-bottom:1px solid var(--border);"><td style="padding:7px 8px 7px 0;font-size:1rem;">💡</td><td style="padding:7px 0;color:var(--dim);"><strong style="color:var(--text);">संकेत:</strong> हर क्षेत्र में एक संकेत। उपयोग पर <strong style="color:var(--danger);">−60 सेकंड</strong> और <strong style="color:var(--danger);">−50 अंक</strong>। संकेत सूक्ष्म होते हैं — उत्तर नहीं देते।</td></tr><tr style=""><td style="padding:7px 8px 7px 0;font-size:1rem;">🏁</td><td style="padding:7px 0;color:var(--dim);"><strong style="color:var(--text);">एक प्रयास:</strong> प्रत्येक समूह एक बार खेलता है। परिणाम अंतिम हैं और लीडरबोर्ड पर दर्ज होते हैं।</td></tr></table>',
+    'start.scoring_content': '<table style="width:100%;border-collapse:collapse;margin-bottom:10px;"><thead><tr style="border-bottom:1px solid var(--border);"><th style="text-align:left;font-size:0.65rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--dim);padding:5px 0;">क्या</th><th style="text-align:right;font-size:0.65rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--dim);padding:5px 0;">अंक</th></tr></thead><tbody><tr style="border-bottom:1px solid #14162a;"><td style="padding:8px 0;color:var(--dim);">✅ प्रत्येक हल की गई पहेली</td><td style="padding:8px 0;text-align:right;color:var(--accent2);font-weight:bold;">+200 अंक</td></tr><tr style="border-bottom:1px solid #14162a;"><td style="padding:8px 0;color:var(--dim);">⏱️ घड़ी पर बचा हर सेकंड <em>(केवल जीत पर)</em></td><td style="padding:8px 0;text-align:right;color:var(--accent2);font-weight:bold;">+2 अंक / सेकंड</td></tr><tr style="border-bottom:1px solid #14162a;"><td style="padding:8px 0;color:var(--dim);">❌ प्रत्येक गलत उत्तर</td><td style="padding:8px 0;text-align:right;color:var(--danger);font-weight:bold;">−10 अंक</td></tr><tr style=""><td style="padding:8px 0;color:var(--dim);">💡 संकेत का उपयोग</td><td style="padding:8px 0;text-align:right;color:var(--danger);font-weight:bold;">−50 अंक और −60 सेकंड</td></tr></tbody></table><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;"><div style="background:#0a0c18;border:1px solid var(--border);border-radius:6px;padding:10px 14px;text-align:center;"><div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--dim);margin-bottom:4px;">अधिकतम पहेली अंक</div><div style="font-size:1.2rem;font-weight:bold;color:var(--accent2);">2,200</div><div style="font-size:0.68rem;color:var(--dim);">11 × 200</div></div><div style="background:#0a0c18;border:1px solid var(--border);border-radius:6px;padding:10px 14px;text-align:center;"><div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--dim);margin-bottom:4px;">अधिकतम समय बोनस</div><div style="font-size:1.2rem;font-weight:bold;color:var(--accent2);">3,000</div><div style="font-size:0.68rem;color:var(--dim);">1,500 सेकंड × 2</div></div></div><div style="margin-top:8px;padding:8px 12px;background:rgba(255,215,0,0.06);border:1px solid rgba(255,215,0,0.25);border-radius:4px;text-align:center;font-size:0.78rem;color:#ffd700;">🏆 अधिकतम संभव स्कोर: <strong>5,200 अंक</strong> — सभी पहेलियाँ हल, कोई गलत उत्तर नहीं, कोई संकेत नहीं, तुरंत समाप्त</div>',
+
+    /* Lobby messages */
+    'lobby.need_3':       'शुरू करने के लिए कम से कम 3 सदस्य आवश्यक हैं।',
+    'lobby.waiting_ready':'सभी सदस्यों के तैयार क्लिक करने का इंतजार है।',
+    'lobby.all_5':        'सभी 5 सदस्य जुड़ गए!',
+
+    /* Header */
+    'header.title': '🏭 MediSeal — गुणवत्ता सप्ताह',
+    'header.motto': 'हर कदम में प्रगति · हर विवरण में गुणवत्ता',
+
+    /* End screen */
+    'end.msg_won':    'शानदार काम! आपके समूह ने सभी गुणवत्ता जांचें पूरी कीं, मूल कारण की पहचान की और असंगत बैच का सही निपटान किया — मरीजों और MediSeal के GMP लाइसेंस की रक्षा की।',
+    'end.msg_lost':   'समय समाप्त। FDA ऑडिटर आपके समूह के सभी जांचें पूरी करने से पहले पहुँच गए। बैच BN-2024-3200 अनसुलझा रहा।',
+    'end.score_title':'अंक विवरण',
+    'end.puzzles_n':  'पूर्ण पहेलियाँ ({n} × {pts} अंक)',
+    'end.time_bonus_n':  'समय बोनस ({secs} सेकंड × 2)',
+    'end.time_bonus_ot': 'समय बोनस (ओवरटाइम — कोई बोनस नहीं)',
+    'end.overtime_n':    'ओवरटाइम दंड ({min} मिनट × −30)',
+    'end.wrong_n':       'गलत उत्तर दंड ({n} × −10)',
+    'end.hint_pen':      'संकेत दंड',
+    'end.total_score':   'कुल अंक:',
+    'end.time_taken':    'लिया गया समय:',
+    'end.demo_note':     'डेमो — स्कोर सहेजा नहीं गया',
+    'end.lb_link':       '📊 लीडरबोर्ड देखें',
+
+    /* Team confirm */
+    'tc.header':      '🔑 टीम की पुष्टि आवश्यक है',
+    'tc.instruction': 'ऊपर दिया कोड टाइप करें — यह पुष्टि करने के लिए कि आपको मिल गया:',
+    'tc.input_ph':    'कोड दर्ज करें…',
+    'tc.btn':         'पुष्टि करें',
+
+    /* Activity log messages */
+    'msg.pallet_hold':       'पैलेट लेबल: रबर कंपाउंड RC-500 | बैच RM-4471 | Kautschuk GmbH। HOLD स्टिकर लगा है — GMP प्रक्रिया के अनुसार CoA समीक्षा प्रतीक्षित।',
+    'msg.pallet_still_hold': 'पैलेट अभी भी HOLD पर है। GMP टर्मिनल पर CoA सत्यापित करें।',
+    'msg.coa_found':         'क्लिपबोर्ड पर विश्लेषण प्रमाण पत्र (CoA) मिला। सामग्री सूची में जोड़ा गया।',
+    'msg.coa_already':       'आपके पास पहले से CoA है।',
+    'msg.gmp_verified':      'GMP टर्मिनल: सामग्री RM-4471 सत्यापित ✓। उत्पादन लाइन का प्रवेश स्वीकृत।',
+    'msg.gmp_needs_coa':     'GMP टर्मिनल के लिए विश्लेषण प्रमाण पत्र आवश्यक है। पहले उसे खोजें।',
+    'msg.gmp_verified_log':  '✓ सामग्री सत्यापित — लॉट RM-4471 HOLD से मुक्त। उत्पादन लाइन अब उपलब्ध।',
+    'msg.gmp_fact':          '📚 गुणवत्ता तथ्य: GMP के अनुसार उत्पादन में उपयोग से पहले हर आने वाली सामग्री के लिए स्वीकृत CoA का रिकॉर्ड अनिवार्य है।',
+    'msg.aql_chart_found':   'AQL नमूनाकरण चार्ट सामग्री सूची में जोड़ा गया और मुख्य आंकड़े नोट किए गए।',
+    'msg.aql_chart_already': 'आपके पास पहले से AQL चार्ट के विवरण नोट हैं।',
+    'msg.aql_fact':          '📚 गुणवत्ता तथ्य: ISO 2859-1 के अनुसार AQL सबसे खराब स्वीकार्य दोष दर को परिभाषित करता है। Ac = इतने या कम दोष पर स्वीकार; Re = इतने या अधिक दोष पर अस्वीकार।',
+    'msg.inspect_check_aql': 'निरीक्षण स्टेशन तैयार है — पहले दीवार पर AQL चार्ट देखें ताकि नमूना आकार और स्वीकृति मानदंड पता चलें।',
+    'msg.inspection_done':   'निरीक्षण पूर्ण। NCR-0892 दर्ज। 4 दोष मिले — बैच अस्वीकृत।',
+    'msg.aql_result_log':    '✓ बैच BN-2024-3200 अस्वीकृत — 4 दोष अस्वीकृति संख्या (Re=4) के बराबर। अब NCR दर्ज करना अनिवार्य।',
+    'msg.aql_result_fact':   '📚 गुणवत्ता तथ्य: "Re" मान का अर्थ है ठीक उतने दोष मिलने पर भी अस्वीकार — स्वीकृति संख्या Re से सख्ती से कम होती है।',
+    'msg.mould_lubricant':   'स्टेशन 3 मोल्ड: सतहों पर ताजा स्नेहक — लेकिन रंग थोड़ा अलग है। बिन में कनस्तर पर "ग्रेड B-7 सिंथेटिक" लिखा है। SOP में "ग्रेड A-3 फूड-ग्रेड सिलिकॉन स्नेहक" निर्दिष्ट है। यह महत्वपूर्ण हो सकता है।',
+    'msg.mould_already':     'मोल्ड पर गलत स्नेहक स्पष्ट है। QA कार्यालय में उचित मूल कारण जांच जरूरी है।',
+    'msg.station3_log':      'स्टेशन 3 उपकरण लॉग: माइक्रोमीटर SN-7734 ने BN-2024-3200 उत्पादन के दौरान 12.50 mm पर 12.53 mm दिखाया — व्यवस्थित +0.03 mm विचलन। कैलिब्रेशन ओवरड्यू होने के बावजूद उपयोग किया गया। QC लैब जाएं।',
+    'msg.station3_log_done': 'स्टेशन 3 लॉग देखा। SN-7734 में +0.03 mm विचलन (12.53 mm पाया, 12.50 mm संदर्भ)। QC लैब में सुधार कारक लागू करें।',
+    'msg.ncr_needs_inspect': 'AQL निरीक्षण और अस्वीकृति निर्णय होने तक NCR दर्ज नहीं किया जा सकता।',
+    'msg.ncr_already':       'NCR-0892 पहले से दर्ज है। QC लैब अब उपलब्ध है।',
+    'msg.ncr_raised_log':    '✓ बैच BN-2024-3200 के लिए NCR-0892 दर्ज। QC प्रयोगशाला का प्रवेश स्वीकृत।',
+    'msg.ncr_fact':          '📚 गुणवत्ता तथ्य: ISO 13485 §8.3 के अनुसार असंगत उत्पाद के लिए दस्तावेज़ीकृत प्रक्रियाएं अनिवार्य हैं। NCR एक ट्रेस करने योग्य गुणवत्ता रिकॉर्ड बनाता है।',
+    'msg.cal_cabinet_opened':'कैलिब्रेशन कैबिनेट खोली। अंदर: प्रमाणित गेज ब्लॉक — ISO/IEC 17025 के अनुसार 12.50 mm। सामग्री सूची में जोड़ा गया।',
+    'msg.cal_already':       'आपके पास पहले से कैलिब्रेशन संदर्भ नोट है।',
+    'msg.cal_done':          'माइक्रोमीटर SN-7734 अब कैलिब्रेट है। QA कार्यालय का प्रवेश स्वीकृत।',
+    'msg.cal_needs_ref':     'माइक्रोमीटर पर "कैलिब्रेशन से बाहर" स्टिकर है। आगे बढ़ने से पहले कैलिब्रेशन कैबिनेट से प्रमाणित संदर्भ मानक लें।',
+    'msg.cal_log':           '✓ सुधार कारक −0.03 mm लागू और दर्ज। कैलिब्रेशन प्रमाण पत्र रिकॉर्ड। QA कार्यालय का प्रवेश स्वीकृत।',
+    'msg.cal_fact':          '📚 गुणवत्ता तथ्य: ISO/IEC 17025 के अनुसार QC लैब के सभी उपकरणों को निर्धारित अंतराल पर ट्रेस करने योग्य संदर्भ मानकों से कैलिब्रेट करना अनिवार्य है।',
+    'msg.sop_rack':          'SOP दस्तावेज़ रैक: SOP-MAINT-009 मिला। खंड 4.2: "केवल ग्रेड A-3 फूड-ग्रेड सिलिकॉन स्नेहक का उपयोग करें। अनुमोदित विकल्प से उत्पाद दूषित और GMP अनुपालन समाप्त।" स्टेशन 3 के निष्कर्ष से मेल खाता है।',
+    'msg.sop_already':       'SOP नोट हो गए। मोल्ड स्नेहक SOP (MAINT-009) यहाँ महत्वपूर्ण है।',
+    'msg.equip_log':         'माइक्रोमीटर SN-7734 का उपकरण लॉगबुक: अंतिम कैलिब्रेशन 180 दिन पहले। अंतराल: 90 दिन। स्थिति: देय। ऐतिहासिक विचलन डेटा उत्पादन में स्टेशन 3 लॉग में है — पहले वहाँ जांचें।',
+    'msg.equip_log_done':    'SN-7734 का कैलिब्रेशन 90 दिन से देय था। विचलन डेटा के लिए उत्पादन में स्टेशन 3 लॉग देखें, फिर यहाँ माइक्रोमीटर उपयोग करें।',
+    'msg.maint_log_found':   'रखरखाव लॉग मिला। स्टेशन 3: SOP-MAINT-009 के अनुसार A-3 के बजाय B-7 स्नेहक उपयोग। कोई विचलन फ़ॉर्म नहीं भरा। यह गंभीर GMP विफलता है। सामग्री सूची में जोड़ा।',
+    'msg.maint_log_already': 'रखरखाव लॉग पहले ही देखा। मुख्य निष्कर्ष: गलत स्नेहक ग्रेड का उपयोग।',
+    'msg.capa_done':         'CAPA-0112 पूर्ण। बैच रिकॉर्ड सेफ अब अनलॉक।',
+    'msg.capa_needs_maint':  'CAPA वर्कस्टेशन खुला है — विश्लेषण से पहले साइड टेबल पर रखरखाव लॉग देखें।',
+    'msg.capa_log':          '✓ CAPA-0112 पूर्ण — SOP अपडेट और पुनः प्रशिक्षण सही निवारक कार्रवाई के रूप में पुष्टि।',
+    'msg.capa_fact':         '📚 गुणवत्ता तथ्य: प्रभावी CAPA मूल कारण को व्यवस्थित रूप से संबोधित करता है। पुनः प्रशिक्षण + SOP अपडेट उस स्थिति को हटाता है जिसने त्रुटि को संभव बनाया।',
+    'msg.iso13485_files':    'ISO 13485 फाइलिंग कैबिनेट: CAPA अनुभाग §8 के अंतर्गत। §8.5.2 सुधारात्मक कार्रवाई और §8.5.3 निवारक कार्रवाई — सामूहिक रूप से "खंड 8.5"।',
+    'msg.iso13485_already':  'ISO 13485 §8.5 CAPA को कवर करता है। CAPA वर्कस्टेशन के लिए यही चाहिए।',
+    'msg.batch_safe_locked': 'बैच रिकॉर्ड सेफ: "CAPA + ISO 9001 + ISO 15378 सत्यापन आवश्यक।" अभी बाकी: {missing}।',
+    'msg.batch_cert_already':'आपके पास पहले से बैच रिलीज प्रमाण पत्र है।',
+    'msg.batch_safe_opened': 'बैच रिकॉर्ड सेफ अनलॉक। अंदर: BN-2024-3200 का बैच रिलीज प्रमाण पत्र — निपटान: अस्वीकार और संगरोध। QA प्राधिकरण PIN: 4471। सामग्री सूची में जोड़ा।',
+    'msg.batch_authorised':  'बैच BN-2024-3200 संगरोध के लिए अधिकृत। सभी गुणवत्ता रिकॉर्ड पूर्ण।',
+    'msg.pin_needs_cert':    'रिलीज टर्मिनल को प्राधिकरण PIN वाला बैच रिलीज प्रमाण पत्र चाहिए। QA कार्यालय से प्राप्त करें।',
+    'msg.motto_prod_done':   'उत्पादन पोस्टर: "हर कदम में प्रगति · हर विवरण में गुणवत्ता।" यह चुनौती पहले ही पूरी की जा चुकी है।',
+    'msg.motto_prod_log':    '✓ सही! "हर कदम में प्रगति" का अर्थ है चक्र पूरा करें — अस्वीकार, जांच करें और रोकें। यह निरंतर सुधार की कार्यप्रणाली है।',
+    'msg.motto_prod_fact':   '📚 गुणवत्ता सिद्धांत: मूल कारण विश्लेषण के बिना अस्वीकृति प्रतिक्रियात्मक है। नारा हर कदम पर सुधार का आह्वान करता है।',
+    'msg.motto_qa_done':     'गुणवत्ता प्रतिज्ञा: "हर कदम में प्रगति · हर विवरण में गुणवत्ता।" यह चुनौती पहले ही पूरी की जा चुकी है।',
+    'msg.motto_qa_log':      '✓ सही! GMP के अनुसार जो कार्य करता है वही रिकॉर्ड का मालिक है। हर विचलन, चाहे कितना भी छोटा हो, उसी समय दर्ज होना चाहिए।',
+    'msg.motto_qa_fact':     '📚 GMP सिद्धांत: GDP के अनुसार लिखित प्रक्रिया से कोई भी विचलन उसी व्यक्ति द्वारा तुरंत दर्ज किया जाना चाहिए जिसने किया।',
+    'msg.quarantine_cage':   'संगरोध पिंजरे में पैलेट Q-2024-0892 — बैच BN-2024-3200, NCR-0892 से टैग। "HOLD — जहाज मत करो। QA निपटान प्रतीक्षित।" मधुमेह रोगियों के लिए 3,200 प्लंजर आपके निर्णय का इंतजार कर रहे हैं।',
+    'msg.motto_dis_done':    'गुणवत्ता सप्ताह बैनर: "शून्य दोष जीवन बचाता है।" नारा चुनौती पहले ही पूरी — निरंतर सुधार की पुष्टि।',
+    'msg.motto_dis_log':     '✓ सही! "हर कदम में प्रगति · हर विवरण में गुणवत्ता" निरंतर सुधार को दर्शाता है — ISO 9001:2015 का मूल तत्व।',
+    'msg.motto_dis_fact':    '📚 गुणवत्ता तथ्य: ISO 9001:2015 खंड 10 के अनुसार संगठनों को QMS की उपयुक्तता, पर्याप्तता और प्रभावशीलता में निरंतर सुधार करना अनिवार्य है।',
+    'msg.iso15378_done':     'ISO 15378:2017 अनुपालन की पुष्टि। कैलिब्रेशन पूरा होने के बाद QA कार्यालय उपलब्ध।',
+    'msg.iso15378_log':      '✓ ISO 15378:2017 अनुपालन जांच पूर्ण। आपूर्तिकर्ता स्टॉपर संगरोध में, GDP दस्तावेज़ीकरण सही किया गया।',
+    'msg.iso15378_fact':     '📚 GDP नियम: सुधार द्रव कभी उपयोग न करें। त्रुटि पर एकल रेखा, सुधार, प्रारंभिक अक्षर, तारीख और कारण — मूल प्रविष्टि पठनीय और ट्रेस करने योग्य रहती है।',
+    'msg.iso9001_done':      'ISO 9001:2015 प्रबंधन समीक्षा पूर्ण। CAPA पूर्ण होने के बाद बैच रिकॉर्ड सेफ अनलॉक।',
+    'msg.iso9001_log':       '✓ ISO 9001:2015 प्रबंधन समीक्षा सत्यापित। NCR रुझान, CAPA स्थिति, ऑडिट परिणाम और प्रक्रिया प्रदर्शन मुख्य इनपुट। बैच रिकॉर्ड सेफ अब पूरी तरह अनलॉक (CAPA पूर्ण होना भी आवश्यक)।',
+    'msg.iso9001_fact':      '📚 गुणवत्ता सिद्धांत: प्रबंधन समीक्षा निरंतर सुधार को प्रेरित करती है — "हर कदम में प्रगति · हर विवरण में गुणवत्ता" वह परिचालन आदेश है जिसे प्रबंधन समीक्षा लागू करती है।',
+    'msg.game_start_1':      'सुविधा लॉकडाउन प्रभावी। प्राप्ति डॉक पर जाएं और जांच शुरू करें।',
+    'msg.game_start_2':      'सुझाव: हर हॉटस्पॉट देखें। आइटम इकट्ठा करें। नोट्स पढ़ें। सभी उत्तर यहीं हैं।',
+    'msg.hint_already':      'इस क्षेत्र में संकेत पहले ही उपयोग किया जा चुका है।',
+    'msg.deselected':        'अचयनित।',
+    'msg.overtime':          '⚠️ ओवरटाइम — पहेली अंक अब प्रत्येक 180 तक घटाए गए। प्रति मिनट −30 अंक कटेंगे।',
+    'msg.member_joined':     '👋 {name} आपके समूह में शामिल हुए!',
+    'msg.all_confirmed_gmp': '✓ सभी सदस्यों ने पुष्टि की — लॉट RM-4471 HOLD से मुक्त। उत्पादन लाइन उपलब्ध।',
+    'msg.all_confirmed_pin': '✓ सभी सदस्यों ने बैच निपटान की पुष्टि की — अंतिम प्राधिकरण पूर्ण!',
+
+    /* Modal body text */
+    'body.gmp':            'गुड मैन्युफैक्चरिंग प्रैक्टिस (GMP) के अनुसार, उत्पादन में उपयोग से पहले सभी आने वाले कच्चे माल को उनके विश्लेषण प्रमाण पत्र (CoA) के विरुद्ध सत्यापित करना अनिवार्य है।<br><br>टर्मिनल CoA से <strong>सामग्री लॉट नंबर</strong> मांग रहा है। सामग्री को HOLD से मुक्त करने के लिए नीचे दर्ज करें:',
+    'body.noticeboard':    '<strong>गुणवत्ता सप्ताह — MediSeal मैन्युफैक्चरिंग</strong><br><br>इस सप्ताह हम उत्कृष्टता के प्रति अपनी प्रतिबद्धता का उत्सव मनाते हैं। हम जो रबर प्लंजर बनाते हैं वे इंसुलिन वायल या मधुमेह इंजेक्शन उपकरणों में जाते हैं — हर दिन असली मरीजों द्वारा उपयोग।<br><br><strong>मुख्य अनुस्मारक:</strong><br>• अपना SOP हमेशा बिना अपवाद के पालन करें<br>• किसी भी विचलन का रिकॉर्ड अनिवार्य है<br>• AQL वैकल्पिक नहीं है: यह मरीजों और हमारे लाइसेंस की रक्षा करता है<br>• संदेह हो तो कार्य करने से पहले पूछें<br><br><div style="background:rgba(0,153,230,0.07);border-left:3px solid var(--accent);padding:10px 14px;border-radius:2px;margin-top:10px;"><strong style="color:var(--accent);">हमारा गुणवत्ता सप्ताह नारा:</strong><br><em>"हर कदम में प्रगति · हर विवरण में गुणवत्ता"</em><br><br>यह नारा ISO 9001:2015 गुणवत्ता प्रबंधन सिद्धांत <strong style="color:var(--accent2);">निरंतर सुधार</strong> को साकार करता है — हर अवसर पर प्रक्रियाओं, उत्पादों और प्रणालियों को बेहतर बनाने की प्रतिबद्धता।</div><br><em>"गुणवत्ता एक कार्य नहीं, एक आदत है।" — अरस्तू</em>',
+    'body.inspection_pre': 'आपने अपने AQL चार्ट (ISO 2859-1, स्तर II, AQL 1.0) के अनुसार <strong>125 प्लंजर</strong> का नमूना लिया है।<br><br>लाइट बॉक्स और मैग्नीफिकेशन स्टैंड से, आप प्रत्येक प्लंजर की जांच करते हैं: सीलिंग लिप पर फ्लैश, आयामी विचलन, सतह दूषण और अधूरा भराव।<br>',
+    'body.inspection_post':'ऊपर दी गई ट्रे में आपको कितने <strong>दोषपूर्ण प्लंजर</strong> मिले?',
+    'body.aql_result':     'आपने 125 के नमूने में <strong>4 दोष</strong> पाए।<br><br>इस बैच के लिए AQL चार्ट के अनुसार:<br><br><div style="background:#0a0c18;padding:10px 14px;border-radius:4px;font-size:0.8rem;border:1px solid #1e2236;margin:10px 0;">नमूना आकार: 125 &nbsp;|&nbsp; AQL 1.0<br>स्वीकार (Ac): ≤ <strong>3</strong> दोष<br>अस्वीकार (Re): ≥ <strong>4</strong> दोष<br><br>पाए गए दोष: <strong style="color:#e63946">4</strong></div>आपका बैच निपटान क्या है? <strong>ACCEPT</strong> या <strong>REJECT</strong> टाइप करें:',
+    'body.ncr':            'ISO 13485 के अनुसार, निर्दिष्ट आवश्यकताओं को पूरा न करने वाले उत्पाद के लिए तुरंत NCR दर्ज करना अनिवार्य है। यह गुणवत्ता रिकॉर्ड बनाता है और CAPA प्रक्रिया शुरू करता है।<br><br>यह NCR किस <strong>बैच नंबर</strong> पर लागू है, दर्ज करें:',
+    'body.calibration':    'चिकित्सा उपकरण सुविधा में माप की सटीकता के लिए कैलिब्रेशन अनिवार्य है। एक अनुपयुक्त उपकरण दोषपूर्ण उत्पाद पास या सही उत्पाद अस्वीकार कर सकता है — दोनों महंगे हैं।<br><br>आप माइक्रोमीटर में <strong>प्रमाणित 12.50 mm गेज ब्लॉक</strong> रखते हैं। डिस्प्ले दिखाता है: <strong style="color:#f5a623;">12.53 mm</strong><br><br><strong>सुधार कारक</strong> की गणना और दर्ज करें: उपकरण के मूल्य में क्या जोड़ने पर सही प्रमाणित मूल्य मिलेगा।<br><small style="color:#5a6480;">चिह्न सहित दर्ज करें — धनात्मक यदि उपकरण कम पढ़ता है, ऋणात्मक यदि अधिक पढ़ता है।</small>',
+    'body.capa_root':      'एक CAPA को असंगति के <strong>वास्तविक मूल कारण</strong> की पहचान करनी चाहिए — लक्षण नहीं — ताकि उसे स्थायी रूप से समाप्त किया जा सके।<br><br>अपनी जांच के आधार पर, बैच BN-2024-3200 में आयामी असंगतियों का <strong>मूल कारण</strong> चुनें:',
+    'body.capa_prev':      'मूल कारण की पुष्टि: <strong>मोल्ड टूलिंग पर गलत स्नेहक ग्रेड (A-3 के बजाय B-7), बिना विचलन दर्ज किए।</strong><br><br>ISO 13485 §8.5.2: <em>"संगठन असंगतियों के कारणों को समाप्त करने के लिए कार्रवाई करेगा ताकि पुनरावृत्ति रोकी जा सके।"</em><br><br>रखरखाव लॉग और SOP-MAINT-009 निष्कर्षों की समीक्षा करें। इस स्नेहक त्रुटि को दोबारा होने से रोकने के लिए सबसे प्रभावी निवारक कार्रवाई कौन सी है?',
+    'body.pin':            '<strong>ISO 13485 §8.3</strong> के अनुसार, सभी असंगत उत्पाद का औपचारिक निपटान अनिवार्य है। आपके पास <strong>BN-2024-3200</strong> का बैच रिलीज प्रमाण पत्र है जिसमें QA प्राधिकरण PIN है।<br><br>बैच निपटान पूरा करने के लिए <strong>4-अंकीय QA प्राधिकरण PIN</strong> दर्ज करें:',
+    'body.motto_prod':     '<strong>उत्पादन लाइन — गुणवत्ता सप्ताह पोस्टर</strong><br><br>यह पोस्टर साइट के पहले गुणवत्ता सप्ताह से AQL निरीक्षण स्टेशन के ऊपर है, जो हर ऑपरेटर को याद दिलाता है कि गुणवत्ता हर उत्पादन कार्य में समाहित है।<br><br><div style="border:1px solid var(--accent);border-radius:4px;padding:10px 14px;margin:10px 0;text-align:center;font-size:0.88rem;"><strong style="color:var(--accent);">"हर कदम में प्रगति · हर विवरण में गुणवत्ता"</strong></div><br>जब बैच में दोष पाए जाते हैं, तो यह नारा केवल बैच अस्वीकार करने से परे क्या करने का सुझाव देता है?',
+    'body.motto_qa':       '<strong>QA कार्यालय — गुणवत्ता प्रतिज्ञा फ्रेम</strong><br><br>यह फ्रेमबद्ध प्रतिज्ञा हर QA टीम सदस्य द्वारा शामिल होने पर हस्ताक्षरित। यह कहती है कि गुणवत्ता किसी और की जिम्मेदारी नहीं — यह हर उस व्यक्ति की है जो प्रक्रिया को छूता है।<br><br><div style="border:1px solid var(--accent);border-radius:4px;padding:10px 14px;margin:10px 0;text-align:center;font-size:0.88rem;"><strong style="color:var(--accent);">"हर कदम में प्रगति · हर विवरण में गुणवत्ता — हम अपनी प्रक्रियाओं के मालिक हैं।"</strong></div><br>NCR-0892 इसलिए उठा क्योंकि एक तकनीशियन ने विचलन दर्ज किए बिना गलत स्नेहक ग्रेड उपयोग किया। GMP के "गुणवत्ता स्वामित्व" सिद्धांत के तहत, विचलन रिकॉर्ड दर्ज करने की जिम्मेदारी किसकी थी?',
+    'body.motto_dis':      '<strong>गुणवत्ता सप्ताह — MediSeal मैन्युफैक्चरिंग</strong><br><br>यह बैनर MediSeal के नारे के साथ <em>"शून्य दोष जीवन बचाता है"</em> संदेश प्रदर्शित करता है।<br><br>हमारे प्लंजर असली मरीजों के लिए इंसुलिन वायल और प्रीफिल्ड सिरिंज में जाते हैं। हर AQL जांच, हर CAPA, हर कैलिब्रेशन रिकॉर्ड एक जीवन की रक्षा करता है।<br><br><div style="border:1px solid var(--accent);border-radius:4px;padding:10px 14px;margin:10px 0;text-align:center;font-size:0.88rem;"><strong style="color:var(--accent);">"हर कदम में प्रगति · हर विवरण में गुणवत्ता"</strong></div><br><strong>यह नारा कौन सा ISO 9001:2015 गुणवत्ता प्रबंधन सिद्धांत सबसे अच्छी तरह दर्शाता है?</strong><br><small style="color:var(--dim);">(संकेत: यदि आवश्यक हो तो प्राप्ति डॉक में गुणवत्ता सप्ताह नोटिसबोर्ड देखें।)</small>',
+    'body.iso15378_1':     'ISO 15378:2017 <strong>औषधीय उत्पादों के लिए प्राथमिक पैकेजिंग सामग्री</strong> का अंतरराष्ट्रीय मानक है।<br><br>अपनी सामग्री सूची में <strong>ISO 15378 पैकेजिंग विशिष्टता</strong> ध्यान से पढ़ें।<br><br>Kautschuk GmbH के रबर स्टॉपर जिन्होंने BN-2024-3200 में आयामी असंगतियों में योगदान दिया, अब औपचारिक रूप से निपटाए जाने चाहिए। GMP और ISO 15378 के अनुसार, असंगत आने वाली पैकेजिंग सामग्री के लिए <strong>अनिवार्य पहला कदम</strong> क्या है?',
+    'body.iso15378_2':     'रबर स्टॉपर अब संगरोध में हैं। एक आपूर्तिकर्ता NCR दर्ज करनी होगी।<br><br>आपके सहकर्मी Leon ने विचलन फ़ॉर्म भरा — लेकिन उन्होंने गलत बैच नंबर को <strong>सुधार द्रव (Tipp-Ex)</strong> से मिटाकर ऊपर सही लिख दिया। मूल प्रविष्टि अब पूरी तरह छिपी है।<br><br><strong>गुड डॉक्यूमेंटेशन प्रैक्टिस (GDP)</strong> के अनुसार, क्या Leon की सुधार विधि स्वीकार्य है?',
+    'body.iso9001_1':      'MediSeal की CAPA टीम स्नेहक घटना (NCR-0892) की समीक्षा कर रही है। रखरखाव टीम 3 महीने से गलत ग्रेड उपयोग कर रही थी — <strong>कोई प्रक्रिया तब तक नहीं पकड़ पाई जब तक पैकेजिंग दोष नहीं आया</strong>।<br><br>ISO 9001:2015 ने <strong>जोखिम-आधारित सोच</strong> पेश की — संगठनों को सक्रिय रूप से पहचानना चाहिए कि क्या गलत हो <em>सकता</em> है।<br><br>कौन सी प्रक्रिया विफलता सबसे अच्छी तरह समझाती है कि यह घटना 3 महीने तक अनजान क्यों रही?',
+    'body.iso9001_2':      'प्रबंधन समीक्षा एक औपचारिक बैठक है जिसमें शीर्ष प्रबंधन QMS के प्रदर्शन का मूल्यांकन करता है।<br><br>इस सप्ताह की घटनाओं को देखते हुए — NCR-0892 (स्नेहक असंगति), CAPA-0112 और स्टेशन 3 पर कैलिब्रेशन विचलन — गुणवत्ता निदेशक को एजेंडा तैयार करना होगा।<br><br>कौन से इनपुट का संयोजन प्रबंधन समीक्षा एजेंडे पर सबसे अधिक उपयुक्त है?',
+
+    /* Modal defaults */
+    'modal.default_tag': 'गुणवत्ता नियंत्रण',
+    'nav.blocked':       'बंद।',
+
+    /* Puzzle feedback messages */
+    'fb.gmp_ok':           '✓ सही लॉट नंबर! टीम को सूचित किया — सभी सदस्यों की पुष्टि का इंतजार…',
+    'fb.gmp_bad':          'लॉट नंबर मान्य नहीं। विश्लेषण प्रमाण पत्र जांचें।',
+    'fb.inspection_ok':    '✓ सही — 4 दोष पाए गए।',
+    'fb.inspection_reject_bad': 'गलत। 4 दोषों के साथ Re=4 होने पर बैच अवश्य अस्वीकार होना चाहिए। Re का अर्थ है ≥ 4 दोष पर अस्वीकार — 4 बराबर 4 है।',
+    'fb.inspection_type_bad': 'बिल्कुल ACCEPT या REJECT टाइप करें।',
+    'fb.inspection_count_bad': 'आपने {n} गिने, लेकिन यह निरीक्षण रिकॉर्ड से मेल नहीं खाता। ट्रे को ध्यान से देखें।',
+    'fb.inspection_nan':   'कृपया एक संख्या दर्ज करें।',
+    'fb.ncr_bad':          'बैच नंबर नहीं मिला। अपने नोट्स जांचें — बैच नंबर परिदृश्य विवरण में बताया गया था।',
+    'fb.cal_bad':          'गलत। सुधार = मानक − पाठ्यांक = 12.50 − 12.53 = ?',
+    'fb.capa_root_ok':     '✓ सही मूल कारण की पहचान।',
+    'fb.capa_prev_bad':    'सबसे अच्छा विकल्प नहीं। सोचें कि गलत स्नेहक के उपयोग को स्थायी रूप से कैसे रोकें — कौन सा प्रणाली-स्तरीय बदलाव त्रुटि की संभावना को हटाता है?',
+    'fb.capa_root_bad':    'गलत। रखरखाव लॉग और SOP रैक के निष्कर्ष देखें — भौतिक साक्ष्य एक विशिष्ट सामग्री परिवर्तन की ओर इशारा करता है।',
+    'fb.pin_bad':          '❌ PIN गलत है। अपनी सामग्री सूची में बैच रिलीज प्रमाण पत्र जांचें।',
+    'fb.pin_ok':           '✓ सही PIN! बैच निपटान अधिकृत करने के लिए सभी टीम सदस्यों को पुष्टि करनी होगी…',
+    'fb.motto_prod_bad':   'सोचें कि व्यवहार में "प्रगति" का अर्थ क्या है। अस्वीकृति अकेले इस बार समस्या रोकती है — लेकिन अगली बार क्या रोकेगा?',
+    'fb.motto_qa_bad':     'सोचें कि किसने वास्तव में कार्य किया। GMP दस्तावेज़ीकरण का स्वामित्व उस व्यक्ति को देता है जो कदम उठाता है।',
+    'fb.motto_dis_bad':    'सही नहीं। सोचें कि "हर कदम में प्रगति" और "हर विवरण में गुणवत्ता" हमारी प्रक्रियाओं के प्रति हमारे दृष्टिकोण के बारे में क्या कहता है।',
+    'fb.iso15378_1_ok':    '✓ सही! अलगाव और दस्तावेज़ीकरण पहले आना चाहिए — कोई अनियंत्रित निपटान नहीं।',
+    'fb.iso15378_2_bad':   'गलत। GDP के बारे में सोचें — अच्छा दस्तावेज़ीकरण हमेशा ट्रेस करने योग्य होना चाहिए। मूल प्रविष्टि अभी भी पठनीय होनी चाहिए।',
+    'fb.iso15378_1_bad':   'गलत। ISO 15378 को एक मौजूदा QMS मानक के ऊपर GMP आवश्यकताएं जोड़ने के लिए बनाया गया था।',
+    'fb.iso9001_1_ok':     '✓ सही! जोखिम-आधारित सोच का अर्थ है परिवर्तन प्रक्रियाओं का मूल्यांकन लागू करने से पहले करना। कोई जोखिम मूल्यांकन नहीं = कोई नियंत्रण नहीं।',
+    'fb.iso9001_2_bad':    'गलत। सोचें कि QMS समीक्षा को क्या मूल्यांकन करना चाहिए — इसे गुणवत्ता घटनाओं, सुधारात्मक कार्रवाइयों और प्रणाली प्रदर्शन को कवर करना चाहिए।',
+    'fb.iso9001_1_bad':    'गलत। समस्या ऑडिट की आवृत्ति या लॉग फाइलिंग नहीं थी। किस प्रक्रिया ने पहले से रोका होना चाहिए था कि अनुमोदित सामग्री का उपयोग हो?',
+
+    /* Team confirmation and collaborative messages */
+    'modal.waiting_team':  '✓ सही! टीम का इंतजार ({done}/{required} ने पुष्टि की)…',
+    'modal.confirming_team': '✓ टीम का इंतजार ({done}/{required} ने पुष्टि की)…',
+    'tc.progress':         '✓ {count} / {required} सदस्यों ने पुष्टि की',
+    'tc.body_html':        '<strong>{name}</strong> ने उत्तर खोजा। सभी {required} सदस्यों को आगे बढ़ने के लिए यह कोड दर्ज करना होगा:',
+    'chat.reconnecting':   'पुनः जुड़ रहे हैं…',
+    'chat.placeholder':    'अपनी टीम को संदेश भेजें…',
+    'log.code_found':      '🔑 आपने "{label}" का कोड खोजा — {n} और सदस्यों का इंतजार है।',
+    'log.code_found_other':'🔑 {name} ने "{label}" का उत्तर खोजा — कोड दर्ज करके पुष्टि करें!',
   },
 
   /* ─── HEBREW ────────────────────────────────────────────── */

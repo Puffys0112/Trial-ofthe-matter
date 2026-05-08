@@ -3,7 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MediSeal Quality Week — Escape Room</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&display=swap" rel="stylesheet">
+  <title data-t="page.title">MediSeal Quality Week — Escape Room</title>
   <style>
     /* ── Login Screen ── */
     #login-screen {
@@ -85,7 +88,7 @@
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: 'Courier New', monospace;
+      font-family: 'Noto Sans Devanagari', 'Mangal', 'Sanskrit Text', 'Courier New', monospace;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -511,9 +514,9 @@
   <div class="login-card">
     <div class="login-logo">🏭</div>
     <div class="login-company">MediSeal Manufacturing Ltd.</div>
-    <div class="login-title">QUALITY WEEK</div>
-    <div class="login-sub">GROUP LOGIN</div>
-    <div class="login-theme">Progress in every step · Quality in every detail</div>
+    <div class="login-title" data-t="login.card_title">QUALITY WEEK</div>
+    <div class="login-sub" data-t="login.card_sub">GROUP LOGIN</div>
+    <div class="login-theme" data-t="login.card_motto">Progress in every step · Quality in every detail</div>
     <div id="login-error"></div>
     <div class="lf">
       <label data-t="login.lang">Language</label>
@@ -566,34 +569,34 @@
 <!-- ═══════════════ LEADERBOARD MODAL ═══════════════ -->
 <div id="lb-overlay">
   <div id="lb-box">
-    <h2>📊 Leaderboard</h2>
+    <h2 data-t="lb.h2">📊 Leaderboard</h2>
     <div id="lb-pw-section">
       <div class="lf" style="margin-bottom:6px;">
-        <label>Admin Password</label>
-        <input type="password" id="lb-pw-input" placeholder="Enter admin password" maxlength="60" autocomplete="off" />
+        <label data-t="lb.admin_pw">Admin Password</label>
+        <input type="password" id="lb-pw-input" data-t-ph="lb.admin_pw_ph" placeholder="Enter admin password" maxlength="60" autocomplete="off" />
       </div>
       <div id="lb-pw-error"></div>
       <div style="display:flex;gap:8px;">
-        <button class="btn primary" id="lb-pw-btn" style="flex:1;">View Leaderboard</button>
-        <button class="btn" id="lb-close-btn">Close</button>
+        <button class="btn primary" id="lb-pw-btn" style="flex:1;" data-t="lb.view_btn">View Leaderboard</button>
+        <button class="btn" id="lb-close-btn" data-t="lb.close_btn">Close</button>
       </div>
     </div>
     <div id="lb-content" style="display:none;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-        <span style="font-size:0.72rem;color:var(--dim);letter-spacing:1px;">COMPLETED GROUPS — RANKED BY SCORE</span>
-        <button class="btn" id="lb-close-btn2" style="font-size:0.75rem;padding:4px 12px;">Close</button>
+        <span data-t="lb.completed_groups" style="font-size:0.72rem;color:var(--dim);letter-spacing:1px;">COMPLETED GROUPS — RANKED BY SCORE</span>
+        <button class="btn" id="lb-close-btn2" data-t="lb.close_btn2" style="font-size:0.75rem;padding:4px 12px;">Close</button>
       </div>
-      <div id="lb-empty" style="display:none;color:var(--dim);font-size:0.85rem;padding:20px 0;text-align:center;">No groups have completed the game yet.</div>
+      <div id="lb-empty" data-t="lb.empty" style="display:none;color:var(--dim);font-size:0.85rem;padding:20px 0;text-align:center;">No groups have completed the game yet.</div>
       <table id="lb-table">
         <thead>
           <tr>
             <th>#</th>
-            <th>Group</th>
-            <th>Score</th>
-            <th>Puzzles</th>
-            <th>Time Left</th>
-            <th>Wrong</th>
-            <th>Finished</th>
+            <th data-t="lb.col_group">Group</th>
+            <th data-t="lb.col_score">Score</th>
+            <th data-t="lb.col_puzzles">Puzzles</th>
+            <th data-t="lb.col_time_left">Time Left</th>
+            <th data-t="lb.col_wrong">Wrong</th>
+            <th data-t="lb.col_finished">Finished</th>
           </tr>
         </thead>
         <tbody id="lb-tbody"></tbody>
@@ -607,13 +610,13 @@
   <div class="login-card">
     <div class="login-logo">✅</div>
     <div class="login-company">MediSeal Manufacturing Ltd.</div>
-    <div class="login-title">ALREADY COMPLETED</div>
-    <div class="login-sub" style="margin-bottom:18px">YOUR GROUP HAS PLAYED</div>
-    <p style="color:var(--dim);font-size:0.85rem;margin-bottom:20px;line-height:1.7;">
+    <div class="login-title" data-t="already.title">ALREADY COMPLETED</div>
+    <div class="login-sub" data-t="already.sub" style="margin-bottom:18px">YOUR GROUP HAS PLAYED</div>
+    <p data-t-html="already.body" style="color:var(--dim);font-size:0.85rem;margin-bottom:20px;line-height:1.7;">
       Your group has already completed the Quality Week escape room.<br>
       Each group can only play once. Check the leaderboard to see your score!
     </p>
-    <a href="/admin.html" target="_blank" class="btn success" style="display:block;text-align:center;padding:10px;text-decoration:none;">
+    <a href="/admin.html" target="_blank" data-t="already.lb_btn" class="btn success" style="display:block;text-align:center;padding:10px;text-decoration:none;">
       📊 View Leaderboard
     </a>
   </div>
@@ -625,7 +628,7 @@
   <div class="start-company">MediSeal Manufacturing Ltd.</div>
   <div class="start-title" data-t="start.title">QUALITY WEEK</div>
   <div class="start-sub" data-t="start.sub">ESCAPE ROOM — INTERNAL AUDIT SIMULATION</div>
-  <div style="font-size:0.65rem;color:var(--dim);letter-spacing:2px;text-transform:uppercase;margin-top:-14px;margin-bottom:18px;opacity:0.7;">Progress in every step · Quality in every detail</div>
+  <div data-t="start.card_motto" style="font-size:0.65rem;color:var(--dim);letter-spacing:2px;text-transform:uppercase;margin-top:-14px;margin-bottom:18px;opacity:0.7;">Progress in every step · Quality in every detail</div>
   <div id="group-greeting" style="font-size:0.82rem;color:var(--accent2);margin-bottom:10px;letter-spacing:1px;"></div>
 
   <div class="start-card">
@@ -861,7 +864,7 @@
   <div id="end-title">Audit Passed!</div>
   <div id="end-msg">You completed all quality checks.</div>
   <div id="end-stats"></div>
-  <a href="/admin.html" target="_blank" class="btn success" style="font-size:0.9rem;padding:10px 28px;text-decoration:none;">
+  <a href="/admin.html" target="_blank" data-t="end.lb_btn" class="btn success" style="font-size:0.9rem;padding:10px 28px;text-decoration:none;">
     📊 View Leaderboard
   </a>
 </div>
@@ -975,11 +978,11 @@ async function initLogin() {
   const err = document.getElementById('login-error');
   try {
     const groups = await apiCall('/api/groups');
-    sel.innerHTML = '<option value="">— Select your group —</option>' +
+    sel.innerHTML = `<option value="">${t('login.select_group_placeholder')}</option>` +
       groups.map(g => `<option value="${g.id}">${g.name}</option>`).join('');
   } catch {
-    sel.innerHTML = '<option value="">Server unavailable — use Demo Mode</option>';
-    err.textContent = 'Could not reach the server. Use Demo Mode to test the game without scoring.';
+    sel.innerHTML = `<option value="">${t('login.server_unavailable')}</option>`;
+    err.textContent = t('login.server_error');
   }
 }
 
@@ -987,7 +990,7 @@ function showStartScreen(groupName) {
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('startscreen').style.display  = 'flex';
   if (groupName) {
-    document.getElementById('group-greeting').textContent = `Logged in as: ${groupName}`;
+    document.getElementById('group-greeting').textContent = t('login.logged_in_as').replace('{name}', groupName);
   }
 }
 
@@ -996,8 +999,8 @@ document.getElementById('login-btn').onclick = async () => {
   const pin     = document.getElementById('group-pin').value.trim();
   const err     = document.getElementById('login-error');
   err.textContent = '';
-  if (!groupId) { err.textContent = 'Please select your group.'; return; }
-  if (!pin)     { err.textContent = 'Please enter your PIN.'; return; }
+  if (!groupId) { err.textContent = t('login.select_error'); return; }
+  if (!pin)     { err.textContent = t('login.pin_error'); return; }
   const name = document.getElementById('member-name').value.trim() || 'Member';
   try {
     const res = await apiCall('/api/login', 'POST', { groupId, pin });
@@ -1014,7 +1017,7 @@ document.getElementById('login-btn').onclick = async () => {
     showStartScreen(res.groupName);
     document.getElementById('lobby-status').style.display = 'block';
   } catch (e) {
-    err.textContent = e.message || 'Login failed. Check your PIN and try again.';
+    err.textContent = e.message || t('login.fail');
   }
 };
 
@@ -1038,10 +1041,10 @@ document.getElementById('demo-pw-btn').onclick = async () => {
     S.demoMode   = true;
     S.groupName  = 'Demo';
     S.memberName = 'Admin Demo';
-    showStartScreen('Demo Mode (Admin)');
-    document.getElementById('start-btn').textContent = 'BEGIN AUDIT SIMULATION';
+    showStartScreen(t('login.demo_mode_label'));
+    document.getElementById('start-btn').textContent = t('login.demo_start_btn');
   } catch {
-    err.textContent = 'Incorrect admin password.';
+    err.textContent = t('login.admin_pw_wrong');
   }
 };
 
@@ -1112,7 +1115,7 @@ document.getElementById('demo-pw-input').onkeydown = e => {
       lbAdminToken = res.token;
       await fetchAndShowLeaderboard(lbAdminToken);
     } catch {
-      err.textContent = 'Incorrect password.';
+      err.textContent = t('lb.wrong_pw');
     }
   };
   document.getElementById('lb-pw-input').onkeydown = e => {
@@ -1190,7 +1193,7 @@ function useHint() {
   if (S.socket) S.socket.emit('hint_used', { room, timeCost, ptsCost });
   const tHint = t('hint.' + room);
   log(`💡 HINT — ${t('room.' + room) || ROOMS[room].name}: ${tHint !== 'hint.' + room ? tHint : hint}`, 'hint');
-  log(`⚠️ Hint penalty applied: −${timeCost}s and −${ptsCost} pts.`, 'warn');
+  log(t('hint.penalty_log').replace('{time}', timeCost).replace('{pts}', ptsCost), 'warn');
 }
 
 // ────────────────────────────────────────────────
@@ -1287,7 +1290,7 @@ function canEnter(roomId) {
 function lockReason(roomId) {
   const key = `nav.lock.${roomId}`;
   const tx = t(key);
-  return tx !== key ? tx : 'Blocked.';
+  return tx !== key ? tx : t('nav.blocked');
 }
 
 // Puzzles that must be solved before leaving each room
@@ -1391,14 +1394,14 @@ function handleAction(action) {
               renderNav();
             } else {
               // Collaborative — notify team, wait for all to confirm
-              setFeedback('✓ Correct lot number! Notifying team — waiting for all members to confirm…', 'ok');
+              setFeedback(t('fb.gmp_ok'), 'ok');
               document.getElementById('modal-submit').disabled = true;
               S.socket.emit('code_found', { puzzleKey: 'coa_verified', code: 'RM-4471', label: 'GMP Material Verification (Lot RM-4471)' });
             }
           } else {
             S.wrongAnswers++;
             if (S.socket) S.socket.emit('wrong_answer');
-            setFeedback('Lot number not recognised. Check the Certificate of Analysis.', 'bad');
+            setFeedback(t('fb.gmp_bad'), 'bad');
           }
         },
       });
@@ -1441,7 +1444,7 @@ function handleAction(action) {
         onSubmit: val => {
           const n = parseInt(val.trim(), 10);
           if (n === 4) {
-            setFeedback('✓ Correct — 4 defects found.', 'ok');
+            setFeedback(t('fb.inspection_ok'), 'ok');
             setTimeout(() => {
               openModal({
                 tag: t('tag.aql_result'),
@@ -1462,9 +1465,9 @@ function handleAction(action) {
                   } else if (val2.trim().toUpperCase() === 'ACCEPT') {
                     S.wrongAnswers++;
                     if (S.socket) S.socket.emit('wrong_answer');
-                    setFeedback('Incorrect. With 4 defects and Re=4, the batch must be REJECTED. Re means reject if ≥ 4 defects — 4 equals 4.', 'bad');
+                    setFeedback(t('fb.inspection_reject_bad'), 'bad');
                   } else {
-                    setFeedback('Type exactly ACCEPT or REJECT.', 'bad');
+                    setFeedback(t('fb.inspection_type_bad'), 'bad');
                   }
                 },
               });
@@ -1472,9 +1475,9 @@ function handleAction(action) {
           } else if (!isNaN(n)) {
             S.wrongAnswers++;
             if (S.socket) S.socket.emit('wrong_answer');
-            setFeedback(`You counted ${n}, but that doesn't match the inspection record. Look at the tray more carefully.`, 'bad');
+            setFeedback(t('fb.inspection_count_bad').replace('{n}', n), 'bad');
           } else {
-            setFeedback('Please enter a number.', 'bad');
+            setFeedback(t('fb.inspection_nan'), 'bad');
           }
         },
       });
@@ -1524,7 +1527,7 @@ function handleAction(action) {
           } else {
             S.wrongAnswers++;
             if (S.socket) S.socket.emit('wrong_answer');
-            setFeedback('Batch number not found. Check your notes — the batch number was stated in the scenario briefing.', 'bad');
+            setFeedback(t('fb.ncr_bad'), 'bad');
           }
         },
       });
@@ -1568,7 +1571,7 @@ function handleAction(action) {
           } else {
             S.wrongAnswers++;
             if (S.socket) S.socket.emit('wrong_answer');
-            setFeedback('Incorrect. Correction = standard − reading = 12.50 − 12.53 = ?', 'bad');
+            setFeedback(t('fb.cal_bad'), 'bad');
           }
         },
       });
@@ -1621,7 +1624,7 @@ function handleAction(action) {
         ]),
         onChoice: (correct, label) => {
           if (correct) {
-            setFeedback('✓ Correct root cause identified.', 'ok');
+            setFeedback(t('fb.capa_root_ok'), 'ok');
             setTimeout(() => {
               // Step 2 — Preventive action reasoning (NO clause number question)
               openModal({
@@ -1650,7 +1653,7 @@ function handleAction(action) {
                   } else {
                     S.wrongAnswers++;
                     if (S.socket) S.socket.emit('wrong_answer');
-                    setFeedback('Not the best option. Think about what would permanently prevent the wrong lubricant from being used again — what system-level change removes the opportunity for error?', 'bad');
+                    setFeedback(t('fb.capa_prev_bad'), 'bad');
                   }
                 },
               });
@@ -1658,7 +1661,7 @@ function handleAction(action) {
           } else {
             S.wrongAnswers++;
             if (S.socket) S.socket.emit('wrong_answer');
-            setFeedback('Incorrect. Review the maintenance log and SOP rack findings — the physical evidence points to a specific material change.', 'bad');
+            setFeedback(t('fb.capa_root_bad'), 'bad');
           }
         },
       });
@@ -1711,7 +1714,7 @@ function handleAction(action) {
             // Wrong PIN → penalty
             S.wrongAnswers++;
             if (S.socket) S.socket.emit('wrong_answer');
-            setFeedback('❌ PIN is wrong. Check the Batch Release Certificate in your inventory.', 'bad');
+            setFeedback(t('fb.pin_bad'), 'bad');
             return;
           }
           // Correct PIN — now check all puzzles complete
@@ -1731,7 +1734,7 @@ function handleAction(action) {
             closeModal();
             triggerWin();
           } else {
-            setFeedback('✓ Correct PIN! All team members must confirm to authorise batch disposition…', 'ok');
+            setFeedback(t('fb.pin_ok'), 'ok');
             document.getElementById('modal-submit').disabled = true;
             S.socket.emit('code_found', { puzzleKey: 'game_won', code: '4471', label: 'Final Batch Disposition (PIN 4471)' });
           }
@@ -1766,7 +1769,7 @@ function handleAction(action) {
           } else {
             S.wrongAnswers++;
             if (S.socket) S.socket.emit('wrong_answer');
-            setFeedback('Think about what "progress" means in practice. Rejection alone stops the problem this time — but what prevents it next time?', 'bad');
+            setFeedback(t('fb.motto_prod_bad'), 'bad');
           }
         },
       });
@@ -1799,7 +1802,7 @@ function handleAction(action) {
           } else {
             S.wrongAnswers++;
             if (S.socket) S.socket.emit('wrong_answer');
-            setFeedback('Think about who actually performed the action. GMP assigns documentation ownership to the individual who carries out the step.', 'bad');
+            setFeedback(t('fb.motto_qa_bad'), 'bad');
           }
         },
       });
@@ -1834,7 +1837,7 @@ function handleAction(action) {
           } else {
             S.wrongAnswers++;
             if (S.socket) S.socket.emit('wrong_answer');
-            setFeedback('Not quite. Think about what "progress in every step" and "quality in every detail" implies about how we treat our processes over time.', 'bad');
+            setFeedback(t('fb.motto_dis_bad'), 'bad');
           }
         },
       });
@@ -1863,7 +1866,7 @@ function handleAction(action) {
         ]),
         onChoice: (correct) => {
           if (correct) {
-            setFeedback('✓ Correct! Segregation and documentation must come first — no uncontrolled disposition.', 'ok');
+            setFeedback(t('fb.iso15378_1_ok'), 'ok');
             setTimeout(() => {
               openModal({
                 tag: t('tag.iso15378_2'),
@@ -1888,7 +1891,7 @@ function handleAction(action) {
                   } else {
                     S.wrongAnswers++;
                     if (S.socket) S.socket.emit('wrong_answer');
-                    setFeedback('Incorrect. Think about GDP — good documentation must always remain traceable. The original entry must still be readable.', 'bad');
+                    setFeedback(t('fb.iso15378_2_bad'), 'bad');
                   }
                 },
               });
@@ -1896,7 +1899,7 @@ function handleAction(action) {
           } else {
             S.wrongAnswers++;
             if (S.socket) S.socket.emit('wrong_answer');
-            setFeedback('Incorrect. ISO 15378 was designed to add GMP requirements on top of an existing QMS standard — the global quality management benchmark.', 'bad');
+            setFeedback(t('fb.iso15378_1_bad'), 'bad');
           }
         },
       });
@@ -1925,7 +1928,7 @@ function handleAction(action) {
         ]),
         onChoice: (correct) => {
           if (correct) {
-            setFeedback('✓ Correct! Risk-based thinking means assessing change-over procedures BEFORE they are implemented. No risk assessment = no control.', 'ok');
+            setFeedback(t('fb.iso9001_1_ok'), 'ok');
             setTimeout(() => {
               openModal({
                 tag: t('tag.iso9001_2'),
@@ -1950,7 +1953,7 @@ function handleAction(action) {
                   } else {
                     S.wrongAnswers++;
                     if (S.socket) S.socket.emit('wrong_answer');
-                    setFeedback('Incorrect. Think about what a QMS review needs to evaluate — it should cover quality events, corrective actions, and system performance.', 'bad');
+                    setFeedback(t('fb.iso9001_2_bad'), 'bad');
                   }
                 },
               });
@@ -1958,7 +1961,7 @@ function handleAction(action) {
           } else {
             S.wrongAnswers++;
             if (S.socket) S.socket.emit('wrong_answer');
-            setFeedback('Incorrect. The problem was not frequency of audits or log filing. What process should have prevented an unapproved material from being used in the first place?', 'bad');
+            setFeedback(t('fb.iso9001_1_bad'), 'bad');
           }
         },
       });
@@ -2015,9 +2018,9 @@ function log(msg, cls = 'info') {
 function renderRoom() {
   const r = ROOMS[S.room];
   document.getElementById('room-emoji').textContent = r.emoji;
-  document.getElementById('room-badge').textContent = r.badge;
-  document.getElementById('room-title').textContent = r.name;
-  document.getElementById('room-desc').textContent = r.desc;
+  document.getElementById('room-badge').textContent = t('room.badge.' + r.id) || r.badge;
+  document.getElementById('room-title').textContent = t('room.' + r.id) || r.name;
+  document.getElementById('room-desc').textContent = t('room.desc.' + r.id) || r.desc;
 
   const hs = document.getElementById('hotspots');
   hs.innerHTML = '';
@@ -2055,7 +2058,7 @@ function renderInventory() {
       const item = ITEMS[id];
       slot.classList.add('filled');
       slot.textContent = item.emoji;
-      slot.dataset.tip = item.name;
+      slot.dataset.tip = t('item.' + id + '.name') || item.name;
       if (S.selectedItem === id) slot.classList.add('selected');
       slot.onclick = () => {
         if (S.selectedItem === id) {
@@ -2063,7 +2066,7 @@ function renderInventory() {
           log(t('msg.deselected'), 'info');
         } else {
           S.selectedItem = id;
-          log(`Selected: ${item.name} — ${item.desc}`, 'hint');
+          log(`${t('item.selected_prefix')}${t('item.' + id + '.name') || item.name} — ${t('item.' + id + '.desc') || item.desc}`, 'hint');
         }
         renderInventory();
       };
@@ -2075,7 +2078,7 @@ function renderInventory() {
 function renderNotes() {
   const box = document.getElementById('notes-content');
   if (!S.notes.length) {
-    box.innerHTML = '<p>No entries yet.</p>';
+    box.innerHTML = `<p>${t('side.no_entries')}</p>`;
     return;
   }
   box.innerHTML = S.notes.map(n =>
@@ -2099,7 +2102,7 @@ function renderNav() {
     const span = document.createElement('span');
     span.className = 'rp-room ' + (isCurrent ? 'current' : isVisited ? 'visited' : 'future');
     span.textContent = r.emoji;
-    span.title = r.name + (isCurrent ? ' — YOU ARE HERE' : isVisited ? ' — visited' : canEnter(rid) ? ' — unlocked' : ' — locked');
+    span.title = (t('room.' + rid) || r.name) + (isCurrent ? t('nav.here') : isVisited ? t('nav.visited') : canEnter(rid) ? t('nav.unlocked') : t('nav.locked'));
     pathEl.appendChild(span);
     if (i < ROOM_ORDER.length - 1) {
       const sep = document.createElement('span');
@@ -2144,7 +2147,7 @@ function renderNav() {
 let _onSubmit  = null;
 
 function openModal({ tag, title, body, questionKey, placeholder, submitLabel, onSubmit, noInput, choices, onChoice }) {
-  document.getElementById('modal-tag').textContent   = tag   || 'QUALITY CONTROL';
+  document.getElementById('modal-tag').textContent   = tag   || t('modal.default_tag');
   document.getElementById('modal-title').textContent = title || '';
 
   // Append translated question block for non-English players
@@ -2345,7 +2348,7 @@ document.getElementById('start-btn').onclick = () => {
   // Real mode: signal ready to server; game starts when all members are ready
   if (S.socket) {
     document.getElementById('start-btn').disabled = true;
-    document.getElementById('start-btn').textContent = '✓ I\'m Ready — waiting…';
+    document.getElementById('start-btn').textContent = t('start.btn_waiting_text');
     document.getElementById('start-waiting').style.display = 'block';
     document.getElementById('lobby-error-msg').textContent = '';
     S.socket.emit('player_ready');
@@ -2443,7 +2446,7 @@ function connectSocket() {
 
   sock.on('connect', () => {
     document.getElementById('chat-input').disabled     = false;
-    document.getElementById('chat-input').placeholder  = 'Message your team…';
+    document.getElementById('chat-input').placeholder  = t('chat.placeholder');
   });
 
   sock.on('state_init', ({ state, chats, members }) => {
@@ -2524,7 +2527,7 @@ function connectSocket() {
     // Re-enable the begin button so player can try again
     const btn = document.getElementById('start-btn');
     btn.disabled = false;
-    btn.textContent = 'BEGIN AUDIT SIMULATION';
+    btn.textContent = t('login.demo_start_btn');
     document.getElementById('start-waiting').style.display = 'none';
   });
 
@@ -2541,23 +2544,24 @@ function connectSocket() {
     if (fromName === S.memberName) {
       const fb = document.getElementById('modal-feedback');
       fb.className = 'ok';
-      fb.textContent = `✓ Correct! Waiting for team (${confirmedCount}/${required} confirmed)…`;
+      fb.dataset.teamWaiting = '1';
+      fb.textContent = t('modal.waiting_team').replace('{done}', confirmedCount).replace('{required}', required);
       document.getElementById('modal-submit').disabled = true;
-      log(`🔑 You found the code for "${label}" — waiting for ${required - confirmedCount} more teammate(s).`, 'hint');
+      log(t('log.code_found').replace('{label}', label).replace('{n}', required - confirmedCount), 'hint');
     } else {
       showTeamConfirm({ puzzleKey, code, fromName, label, required, confirmedCount });
-      log(`🔑 ${escHtml(fromName)} found the answer to "${label}" — enter the code to confirm!`, 'warn');
+      log(t('log.code_found_other').replace('{name}', escHtml(fromName)).replace('{label}', label), 'warn');
     }
   });
 
   sock.on('confirm_progress', ({ puzzleKey, count, required, fromName }) => {
     if (fromName !== S.memberName) appendSystemChat(`✓ ${fromName} confirmed (${count}/${required})`);
     if (window._tcPuzzleKey === puzzleKey) {
-      document.getElementById('tc-progress').textContent = `✓ ${count} / ${required} members confirmed`;
+      document.getElementById('tc-progress').textContent = t('tc.progress').replace('{count}', count).replace('{required}', required);
     }
     const fb = document.getElementById('modal-feedback');
-    if (fb && fb.textContent.includes('Waiting for team')) {
-      fb.textContent = `✓ Waiting for team (${count}/${required} confirmed)…`;
+    if (fb && fb.dataset.teamWaiting === '1') {
+      fb.textContent = t('modal.confirming_team').replace('{done}', count).replace('{required}', required);
     }
   });
 
@@ -2586,7 +2590,7 @@ function connectSocket() {
 
   sock.on('disconnect', () => {
     document.getElementById('chat-input').disabled    = true;
-    document.getElementById('chat-input').placeholder = 'Reconnecting…';
+    document.getElementById('chat-input').placeholder = t('chat.reconnecting');
   });
 }
 
@@ -2597,13 +2601,13 @@ function showTeamConfirm({ puzzleKey, code, fromName, label, required, confirmed
   window._tcPuzzleKey = puzzleKey;
   document.getElementById('tc-title').textContent = label;
   document.getElementById('tc-body').innerHTML =
-    `<strong>${escHtml(fromName)}</strong> found the answer. All ${required} members must enter this code to proceed:`;
+    t('tc.body_html').replace('{name}', escHtml(fromName)).replace('{required}', required);
   document.getElementById('tc-code-display').textContent = code;
   document.getElementById('tc-input').value = '';
   document.getElementById('tc-input').disabled = false;
   document.getElementById('tc-feedback').textContent = '';
   document.getElementById('tc-feedback').className = '';
-  document.getElementById('tc-progress').textContent = `${confirmedCount} / ${required} members confirmed`;
+  document.getElementById('tc-progress').textContent = t('tc.progress').replace('{count}', confirmedCount).replace('{required}', required);
   document.getElementById('tc-submit').disabled = false;
   document.getElementById('team-confirm-overlay').classList.add('show');
   setTimeout(() => document.getElementById('tc-input').focus(), 60);
@@ -2622,13 +2626,13 @@ document.getElementById('tc-submit').onclick = () => {
   const code = document.getElementById('tc-code-display').textContent;
   const expected = code.toUpperCase().replace(/[-\s]/g, '');
   if (val === expected) {
-    document.getElementById('tc-feedback').textContent = '✓ Confirmed! Waiting for remaining teammates…';
+    document.getElementById('tc-feedback').textContent = t('tc.confirmed_waiting');
     document.getElementById('tc-feedback').className = 'ok';
     document.getElementById('tc-submit').disabled = true;
     inp.disabled = true;
     S.socket.emit('confirm_code', { puzzleKey, code });
   } else {
-    document.getElementById('tc-feedback').textContent = 'Incorrect — enter the code exactly as shown above.';
+    document.getElementById('tc-feedback').textContent = t('tc.incorrect');
     document.getElementById('tc-feedback').className = 'bad';
     S.wrongAnswers++;
     if (S.socket) S.socket.emit('wrong_answer');
