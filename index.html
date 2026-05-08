@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&display=swap" rel="stylesheet">
   <title data-t="page.title">MediSeal Quality Week — Escape Room</title>
   <style>
     /* ── Login Screen ── */
@@ -88,7 +88,7 @@
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: 'Noto Sans Devanagari', 'Mangal', 'Sanskrit Text', 'Courier New', monospace;
+      font-family: 'Heebo', 'Noto Sans Devanagari', 'Mangal', 'Sanskrit Text', 'Courier New', monospace;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -503,6 +503,21 @@
     #tc-feedback { font-size: 0.78rem; min-height: 18px; margin-bottom: 8px; }
     #tc-feedback.ok  { color: var(--accent2); }
     #tc-feedback.bad { color: var(--danger); }
+
+    /* ── RTL overrides (Hebrew) ── */
+    [dir="rtl"] .nav-btn { text-align: right; }
+    [dir="rtl"] .nav-btn.prev::before { content: none; }
+    [dir="rtl"] .nav-btn.prev::after  { content: ' →'; color: var(--accent2); }
+    [dir="rtl"] #notes-content p { padding-left: 0; padding-right: 8px; border-left: none; border-right: 2px solid var(--border); }
+    [dir="rtl"] #notes-content p.important { border-right-color: var(--accent2); }
+    [dir="rtl"] #end-stats { text-align: right; }
+    [dir="rtl"] .alarm-rooms { text-align: right; }
+    [dir="rtl"] .start-card { text-align: right; }
+    [dir="rtl"] .lf { text-align: right; }
+    [dir="rtl"] #lb-table th { text-align: right; }
+    [dir="rtl"] #lb-table td { text-align: right; }
+    [dir="rtl"] #lobby-status { text-align: right; }
+    [dir="rtl"] #demo-pw-box { text-align: right; }
   </style>
   <script src="/socket.io/socket.io.js"></script>
   <script src="/translations.js"></script>
@@ -540,7 +555,7 @@
     </div>
     <div class="lf">
       <label data-t="login.select_group">Select Your Group</label>
-      <select id="group-select"><option value="">Loading groups…</option></select>
+      <select id="group-select"><option value="" data-t="start.connecting">Loading groups…</option></select>
     </div>
     <div class="lf">
       <label data-t="login.group_pin">Group PIN</label>
@@ -1364,7 +1379,7 @@ function handleAction(action) {
       if (!S.found.coa) {
         S.found.coa = true;
         addItem('coa');
-        addNote('CoA found — Lot <strong>RM-4471</strong>, supplier Kautschuk GmbH. Must be entered into GMP terminal to release material.', true);
+        addNote(t('note.coa_found'), true);
         return { msg: t('msg.coa_found'), cls: 'success' };
       }
       return { msg: t('msg.coa_already'), cls: 'info' };
@@ -1423,7 +1438,7 @@ function handleAction(action) {
       if (!S.found.aql_table) {
         S.found.aql_table = true;
         addItem('aql_table');
-        addNote('AQL Chart: Lot 3,200 | Level II | AQL 1.0 → Sample size <strong>125</strong> | Ac=3, Re=4', true);
+        addNote(t('note.aql_chart'), true);
         log(t('msg.aql_fact'), 'fact');
         return { msg: t('msg.aql_chart_found'), cls: 'success' };
       }
@@ -1495,7 +1510,7 @@ function handleAction(action) {
     case 'check_station3_log':
       if (!S.found.station3_log) {
         S.found.station3_log = true;
-        addNote('Station 3 Instrument Log: Micrometer SN-7734 recorded systematic deviation of <strong>+0.03 mm</strong> on batch BN-2024-3200. Reference plug = 12.50 mm; instrument read 12.53 mm.', true);
+        addNote(t('note.station3_log'), true);
         return { msg: t('msg.station3_log'), cls: 'warn' };
       }
       return { msg: t('msg.station3_log_done'), cls: 'info' };
@@ -1540,7 +1555,7 @@ function handleAction(action) {
       if (!S.found.cal_ref) {
         S.found.cal_ref = true;
         addItem('cal_ref');
-        addNote('Calibration Reference: Certified Gauge Block = <strong>12.50 mm</strong> (±0.001 mm). Use to verify micrometer SN-7734.', true);
+        addNote(t('note.cal_ref'), true);
         return { msg: t('msg.cal_cabinet_opened'), cls: 'success' };
       }
       return { msg: t('msg.cal_already'), cls: 'info' };
@@ -1582,7 +1597,7 @@ function handleAction(action) {
     case 'check_sop_rack':
       if (!S.found.sop_checked) {
         S.found.sop_checked = true;
-        addNote('SOP rack: SOP-QC-015 (Visual Inspection), SOP-QC-022 (AQL Sampling), SOP-MAINT-009 (Mould Lubricant — Grade A-3 ONLY)');
+        addNote(t('note.sop_rack'));
         return { msg: t('msg.sop_rack'), cls: 'warn' };
       }
       return { msg: t('msg.sop_already'), cls: 'info' };
@@ -1590,7 +1605,7 @@ function handleAction(action) {
     case 'check_equip_log':
       if (!S.found.equip_log) {
         S.found.equip_log = true;
-        addNote('Equipment Log — Micrometer SN-7734: OVERDUE 90 days. Historical deviation data on <strong>Station 3 Instrument Log</strong> (Production area).', true);
+        addNote(t('note.equip_log'), true);
         return { msg: t('msg.equip_log'), cls: 'warn' };
       }
       return { msg: t('msg.equip_log_done'), cls: 'info' };
@@ -1600,7 +1615,7 @@ function handleAction(action) {
       if (!S.found.maint_log) {
         S.found.maint_log = true;
         addItem('maint_log');
-        addNote('Maintenance Log — Station 3: Lubricant changed to <strong>Grade B-7</strong> (wrong). Correct grade: <strong>Grade A-3</strong>. No deviation raised!', true);
+        addNote(t('note.maint_log'), true);
         return { msg: t('msg.maint_log_found'), cls: 'warn' };
       }
       return { msg: t('msg.maint_log_already'), cls: 'info' };
@@ -1672,7 +1687,7 @@ function handleAction(action) {
     case 'check_iso_files':
       if (!S.found.iso_checked) {
         S.found.iso_checked = true;
-        addNote('ISO 13485 key clauses: §4 QMS | §6 Resources | §7 Product Realisation | <strong>§8 Measurement, Analysis & Improvement</strong> — includes §8.3 Nonconforming Product, §8.5.2 Corrective Action, §8.5.3 Preventive Action');
+        addNote(t('note.iso13485'));
         return { msg: t('msg.iso13485_files'), cls: 'hint' };
       }
       return { msg: t('msg.iso13485_already'), cls: 'info' };
@@ -1692,7 +1707,7 @@ function handleAction(action) {
       if (S.socket) S.socket.emit('puzzle_solved', { key: 'batch_retrieved', puzzlesDone: S.puzzlesDone });
       S.found.batch_cert = true;
       addItem('batch_cert');
-      addNote('Batch Release Certificate — Auth PIN: <strong>4471</strong>. Disposition: REJECT & Quarantine.', true);
+      addNote(t('note.batch_cert'), true);
       return { msg: t('msg.batch_safe_opened'), cls: 'success' };
 
     // ── DISPATCH ──────────────────────────────────────────────
@@ -1853,7 +1868,7 @@ function handleAction(action) {
       if (!S.found.stopper_spec) {
         S.found.stopper_spec = true;
         addItem('stopper_spec');
-        addNote('ISO 15378:2017 Packaging Spec: Rubber stoppers from Kautschuk GmbH. Standard combines <strong>ISO 9001:2015 + GMP</strong> for primary packaging. Key ref: <strong>Clause 8.7</strong> — Control of Nonconforming Outputs.', true);
+        addNote(t('note.iso15378'), true);
       }
       openModal({
         tag: t('tag.iso15378_1'),
@@ -1915,7 +1930,7 @@ function handleAction(action) {
       if (!S.found.iso9001_cert) {
         S.found.iso9001_cert = true;
         addItem('iso9001_cert');
-        addNote('ISO 9001:2015 Certificate — MediSeal. Quality Management System. Certified scope covers design, manufacture, and distribution of pharmaceutical packaging materials. Review the certificate details carefully.', true);
+        addNote(t('note.iso9001_cert'), true);
       }
       openModal({
         tag: t('tag.iso9001_1'),
@@ -2157,7 +2172,7 @@ function openModal({ tag, title, body, questionKey, placeholder, submitLabel, on
   if (questionKey && S.lang !== 'en') {
     const tq = t(questionKey);
     if (tq && tq !== questionKey) {
-      finalBody += `<div style="margin-top:14px;padding:10px 14px;background:rgba(0,153,230,0.1);border-left:3px solid var(--accent);border-radius:3px;font-size:0.9rem;color:var(--text);font-weight:600;">🌐 ${tq}</div>`;
+      finalBody += `<div style="margin-top:14px;padding:10px 14px;background:rgba(0,153,230,0.1);border-inline-start:3px solid var(--accent);border-radius:3px;font-size:0.9rem;color:var(--text);font-weight:600;">🌐 ${tq}</div>`;
     }
   }
   document.getElementById('modal-body').innerHTML    = finalBody;
@@ -2380,16 +2395,16 @@ const PUZZLE_LABELS = {
 
 // Maps each puzzle key → where to go and exactly which button to press
 const PUZZLE_ROOM = {
-  coa_verified:    { room: 'receiving',   emoji: '📦', name: 'Receiving Dock',                  btn: 'GMP Receiving Terminal' },
-  inspection_done: { room: 'production',  emoji: '🏭', name: 'Production Line',                 btn: 'Visual Inspection Light Box' },
-  ncr_filed:       { room: 'production',  emoji: '🏭', name: 'Production Line',                 btn: 'NCR Filing Station' },
-  calibration_done:{ room: 'qclab',       emoji: '🔬', name: 'Quality Control Laboratory',      btn: 'Micrometer Station' },
-  capa_done:       { room: 'qaoffice',    emoji: '🗂️', name: 'QA & Compliance Office',          btn: 'CAPA Workstation' },
-  iso15378_done:   { room: 'qclab',       emoji: '🔬', name: 'Quality Control Laboratory',      btn: 'ISO 15378 Packaging Compliance File' },
-  iso9001_done:    { room: 'qaoffice',    emoji: '🗂️', name: 'QA & Compliance Office',          btn: 'ISO 9001 Management Review' },
-  motto_challenge: { room: 'dispatch',    emoji: '🚚', name: 'Dispatch & Release Bay',          btn: 'Quality Week Banner' },
-  motto_production:{ room: 'production',  emoji: '🏭', name: 'Production Line',                 btn: 'Quality Improvement Poster' },
-  motto_qaoffice:  { room: 'qaoffice',    emoji: '🗂️', name: 'QA & Compliance Office',          btn: 'Quality Pledge (Wall Frame)' },
+  coa_verified:    { room: 'receiving',   emoji: '📦', name: 'Receiving Dock',               btn: 'GMP Receiving Terminal',              hs: 'hs.gmp_terminal' },
+  inspection_done: { room: 'production',  emoji: '🏭', name: 'Production Line',              btn: 'Visual Inspection Light Box',         hs: 'hs.use_lightbox' },
+  ncr_filed:       { room: 'production',  emoji: '🏭', name: 'Production Line',              btn: 'NCR Filing Station',                  hs: 'hs.file_ncr' },
+  calibration_done:{ room: 'qclab',       emoji: '🔬', name: 'Quality Control Laboratory',   btn: 'Micrometer Station',                  hs: 'hs.use_micrometer' },
+  capa_done:       { room: 'qaoffice',    emoji: '🗂️', name: 'QA & Compliance Office',       btn: 'CAPA Workstation',                    hs: 'hs.use_capa_station' },
+  iso15378_done:   { room: 'qclab',       emoji: '🔬', name: 'Quality Control Laboratory',   btn: 'ISO 15378 Packaging Compliance File', hs: 'hs.check_iso15378' },
+  iso9001_done:    { room: 'qaoffice',    emoji: '🗂️', name: 'QA & Compliance Office',       btn: 'ISO 9001 Management Review',          hs: 'hs.check_iso9001' },
+  motto_challenge: { room: 'dispatch',    emoji: '🚚', name: 'Dispatch & Release Bay',       btn: 'Quality Week Banner',                 hs: 'hs.read_qw_banner' },
+  motto_production:{ room: 'production',  emoji: '🏭', name: 'Production Line',              btn: 'Quality Improvement Poster',          hs: 'hs.read_quality_poster' },
+  motto_qaoffice:  { room: 'qaoffice',    emoji: '🗂️', name: 'QA & Compliance Office',       btn: 'Quality Pledge (Wall Frame)',         hs: 'hs.read_quality_pledge' },
 };
 
 function showAlarm(missingKeys, context) {
@@ -2408,7 +2423,7 @@ function showAlarm(missingKeys, context) {
     if (!seen[roomKey]) {
       seen[roomKey] = { info, btns: [] };
     }
-    seen[roomKey].btns.push({ label: PUZZLE_LABELS[k] || k, btn: info.btn });
+    seen[roomKey].btns.push({ label: PUZZLE_LABELS[k] || k, btn: t(info.hs) || info.btn });
   });
   Object.values(seen).forEach(({ info, btns }) => {
     const div = document.createElement('div');
@@ -2469,13 +2484,13 @@ function connectSocket() {
     S.solved[key]  = true;
     S.puzzlesDone  = Math.max(S.puzzlesDone, puzzlesDone);
     updateProgress(); renderNav(); renderRoom();
-    log(`✓ ${fromName} completed: ${PUZZLE_LABELS[key] || key}`, 'success');
+    log(t('log.teammate_done').replace('{name}', fromName).replace('{label}', t('puzzle.label.' + key) || PUZZLE_LABELS[key] || key), 'success');
   });
 
   sock.on('item_found', ({ itemId, fromName }) => {
     if (S.inventory.includes(itemId)) return;
     addItem(itemId, false);
-    log(`🤝 ${fromName} found: ${ITEMS[itemId] ? ITEMS[itemId].name : itemId}`, 'hint');
+    log(t('log.item_found_other').replace('{name}', fromName).replace('{item}', t('item.' + itemId + '.name') || (ITEMS[itemId] ? ITEMS[itemId].name : itemId)), 'hint');
   });
 
   sock.on('note_added', ({ html, important }) => {
@@ -2493,7 +2508,7 @@ function connectSocket() {
       S.hintPenalty += (ptsCost || 50);
       S.timerSec = Math.max(0, S.timerSec - (timeCost || 60));
       renderRoom();
-      log(`💡 ${fromName} used the hint for ${ROOMS[room] ? ROOMS[room].name : room}. −${timeCost}s / −${ptsCost} pts applied to your team.`, 'warn');
+      log(t('log.hint_used_other').replace('{name}', fromName).replace('{room}', ROOMS[room] ? (t('room.' + room) || ROOMS[room].name) : room).replace('{time}', timeCost).replace('{pts}', ptsCost), 'warn');
     }
   });
 
@@ -2542,17 +2557,18 @@ function connectSocket() {
 
   // ── Collaborative code events ─────────────────────────────────────────────
   sock.on('code_revealed', ({ puzzleKey, code, fromName, label, required, confirmed: confirmedCount }) => {
-    appendSystemChat(`🔑 ${fromName} found: ${label}`);
+    const tLabel = t('puzzle.label.' + puzzleKey) || label;
+    appendSystemChat(`🔑 ${fromName} found: ${tLabel}`);
     if (fromName === S.memberName) {
       const fb = document.getElementById('modal-feedback');
       fb.className = 'ok';
       fb.dataset.teamWaiting = '1';
       fb.textContent = t('modal.waiting_team').replace('{done}', confirmedCount).replace('{required}', required);
       document.getElementById('modal-submit').disabled = true;
-      log(t('log.code_found').replace('{label}', label).replace('{n}', required - confirmedCount), 'hint');
+      log(t('log.code_found').replace('{label}', tLabel).replace('{n}', required - confirmedCount), 'hint');
     } else {
-      showTeamConfirm({ puzzleKey, code, fromName, label, required, confirmedCount });
-      log(t('log.code_found_other').replace('{name}', escHtml(fromName)).replace('{label}', label), 'warn');
+      showTeamConfirm({ puzzleKey, code, fromName, label: tLabel, required, confirmedCount });
+      log(t('log.code_found_other').replace('{name}', escHtml(fromName)).replace('{label}', tLabel), 'warn');
     }
   });
 
