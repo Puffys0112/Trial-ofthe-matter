@@ -645,119 +645,125 @@
     <span class="tag">AQL / ISO 2859-1</span>
     <span class="tag">CAPA</span>
     <span class="tag">ISO 13485</span>
-    <span class="tag">Calibration</span>
-    <span class="tag">Batch Records</span>
+    <span class="tag" data-t="topic.calibration">Calibration</span>
+    <span class="tag" data-t="topic.batch_records">Batch Records</span>
     <span class="tag">NCR</span>
-    <span class="tag">Visual Inspection</span>
-    <span class="tag">Defect Classification</span>
-    <span class="tag">SOP Compliance</span>
+    <span class="tag" data-t="topic.visual_inspection">Visual Inspection</span>
+    <span class="tag" data-t="topic.defect_class">Defect Classification</span>
+    <span class="tag" data-t="topic.sop_compliance">SOP Compliance</span>
     <span class="tag">ISO 9001:2015</span>
     <span class="tag">ISO 15378:2017</span>
-    <span class="tag">Risk-Based Thinking</span>
+    <span class="tag" data-t="topic.risk_thinking">Risk-Based Thinking</span>
   </div>
 
   <div class="start-card" style="font-size:0.82rem;">
     <h3 data-t="start.how_h">How to Play</h3>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 20px;line-height:1.9;">
-      <div>🔍 <strong style="color:var(--text);">Examine hotspots</strong> in each area to find clues and collect items</div>
-      <div>🎒 <strong style="color:var(--text);">Select an item</strong> from your inventory, then click a hotspot to use it</div>
-      <div>🧩 <strong style="color:var(--text);">Solve puzzles</strong> — every answer is grounded in real quality principles</div>
-      <div>📋 <strong style="color:var(--text);">Check Field Notes</strong> — clues and facts are recorded automatically</div>
-      <div>💬 <strong style="color:var(--text);">Use Group Chat</strong> — coordinate with your team in real time</div>
-      <div>🔑 <strong style="color:var(--text);">Confirm codes together</strong> — key milestones require all members to enter the code</div>
-    </div>
-    <div style="margin-top:10px;padding:8px 12px;background:rgba(0,153,230,0.07);border-left:3px solid var(--accent);border-radius:2px;font-size:0.77rem;color:var(--dim);line-height:1.7;">
-      There are <strong style="color:var(--text);">5 areas</strong> and <strong style="color:var(--text);">11 puzzles</strong> to complete in <strong style="color:var(--text);">25 minutes</strong>.
-      Areas unlock as you progress — you cannot skip ahead.
+    <div data-t-html="start.how_content">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 20px;line-height:1.9;">
+        <div>🔍 <strong style="color:var(--text);">Examine hotspots</strong> in each area to find clues and collect items</div>
+        <div>🎒 <strong style="color:var(--text);">Select an item</strong> from your inventory, then click a hotspot to use it</div>
+        <div>🧩 <strong style="color:var(--text);">Solve puzzles</strong> — every answer is grounded in real quality principles</div>
+        <div>📋 <strong style="color:var(--text);">Check Field Notes</strong> — clues and facts are recorded automatically</div>
+        <div>💬 <strong style="color:var(--text);">Use Group Chat</strong> — coordinate with your team in real time</div>
+        <div>🔑 <strong style="color:var(--text);">Confirm codes together</strong> — key milestones require all members to enter the code</div>
+      </div>
+      <div style="margin-top:10px;padding:8px 12px;background:rgba(0,153,230,0.07);border-left:3px solid var(--accent);border-radius:2px;font-size:0.77rem;color:var(--dim);line-height:1.7;">
+        There are <strong style="color:var(--text);">5 areas</strong> and <strong style="color:var(--text);">11 puzzles</strong> to complete in <strong style="color:var(--text);">25 minutes</strong>.
+        Areas unlock as you progress — you cannot skip ahead.
+      </div>
     </div>
   </div>
 
   <div class="start-card" style="font-size:0.81rem;">
     <h3 data-t="start.rules_h">Rules</h3>
-    <table style="width:100%;border-collapse:collapse;">
-      <tr style="border-bottom:1px solid var(--border);">
-        <td style="padding:7px 8px 7px 0;width:28px;font-size:1rem;">👥</td>
-        <td style="padding:7px 0;color:var(--dim);"><strong style="color:var(--text);">Team size:</strong> 3 – 5 members. All must be connected before the game starts.</td>
-      </tr>
-      <tr style="border-bottom:1px solid var(--border);">
-        <td style="padding:7px 8px 7px 0;font-size:1rem;">⏱️</td>
-        <td style="padding:7px 0;color:var(--dim);"><strong style="color:var(--text);">Simultaneous start:</strong> Every player must click <em>"I'm Ready"</em>. The timer starts for all at the same moment.</td>
-      </tr>
-      <tr style="border-bottom:1px solid var(--border);">
-        <td style="padding:7px 8px 7px 0;font-size:1rem;">🔑</td>
-        <td style="padding:7px 0;color:var(--dim);"><strong style="color:var(--text);">Team confirmation:</strong> At key checkpoints the code is revealed to all — every member must type it to proceed.</td>
-      </tr>
-      <tr style="border-bottom:1px solid var(--border);">
-        <td style="padding:7px 8px 7px 0;font-size:1rem;">🚪</td>
-        <td style="padding:7px 0;color:var(--dim);"><strong style="color:var(--text);">Area locks:</strong> Each area is locked until the previous task is completed — complete tasks in order.</td>
-      </tr>
-      <tr style="border-bottom:1px solid var(--border);">
-        <td style="padding:7px 8px 7px 0;font-size:1rem;">❌</td>
-        <td style="padding:7px 0;color:var(--dim);"><strong style="color:var(--text);">Wrong answers:</strong> Each incorrect answer deducts <strong style="color:var(--danger);">10 points</strong> from your final score — think before you submit.</td>
-      </tr>
-      <tr style="border-bottom:1px solid var(--border);">
-        <td style="padding:7px 8px 7px 0;font-size:1rem;">💡</td>
-        <td style="padding:7px 0;color:var(--dim);"><strong style="color:var(--text);">Hints:</strong> Each area has one hint available. Using a hint costs <strong style="color:var(--danger);">−60 seconds</strong> and <strong style="color:var(--danger);">−50 points</strong>. Hints are subtle — they do not give you the answer.</td>
-      </tr>
-      <tr>
-        <td style="padding:7px 8px 7px 0;font-size:1rem;">🏁</td>
-        <td style="padding:7px 0;color:var(--dim);"><strong style="color:var(--text);">One attempt:</strong> Each group plays once. Results are final and posted to the leaderboard.</td>
-      </tr>
-    </table>
+    <div data-t-html="start.rules_content">
+      <table style="width:100%;border-collapse:collapse;">
+        <tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:7px 8px 7px 0;width:28px;font-size:1rem;">👥</td>
+          <td style="padding:7px 0;color:var(--dim);"><strong style="color:var(--text);">Team size:</strong> 3 – 5 members. All must be connected before the game starts.</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:7px 8px 7px 0;font-size:1rem;">⏱️</td>
+          <td style="padding:7px 0;color:var(--dim);"><strong style="color:var(--text);">Simultaneous start:</strong> Every player must click <em>"I'm Ready"</em>. The timer starts for all at the same moment.</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:7px 8px 7px 0;font-size:1rem;">🔑</td>
+          <td style="padding:7px 0;color:var(--dim);"><strong style="color:var(--text);">Team confirmation:</strong> At key checkpoints the code is revealed to all — every member must type it to proceed.</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:7px 8px 7px 0;font-size:1rem;">🚪</td>
+          <td style="padding:7px 0;color:var(--dim);"><strong style="color:var(--text);">Area locks:</strong> Each area is locked until the previous task is completed — complete tasks in order.</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:7px 8px 7px 0;font-size:1rem;">❌</td>
+          <td style="padding:7px 0;color:var(--dim);"><strong style="color:var(--text);">Wrong answers:</strong> Each incorrect answer deducts <strong style="color:var(--danger);">10 points</strong> from your final score — think before you submit.</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:7px 8px 7px 0;font-size:1rem;">💡</td>
+          <td style="padding:7px 0;color:var(--dim);"><strong style="color:var(--text);">Hints:</strong> Each area has one hint available. Using a hint costs <strong style="color:var(--danger);">−60 seconds</strong> and <strong style="color:var(--danger);">−50 points</strong>. Hints are subtle — they do not give you the answer.</td>
+        </tr>
+        <tr>
+          <td style="padding:7px 8px 7px 0;font-size:1rem;">🏁</td>
+          <td style="padding:7px 0;color:var(--dim);"><strong style="color:var(--text);">One attempt:</strong> Each group plays once. Results are final and posted to the leaderboard.</td>
+        </tr>
+      </table>
+    </div>
   </div>
 
   <div class="start-card" style="font-size:0.81rem;">
     <h3 data-t="start.scoring_h">Scoring</h3>
-    <table style="width:100%;border-collapse:collapse;margin-bottom:10px;">
-      <thead>
-        <tr style="border-bottom:1px solid var(--border);">
-          <th style="text-align:left;font-size:0.65rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--dim);padding:5px 0;">What</th>
-          <th style="text-align:right;font-size:0.65rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--dim);padding:5px 0;">Points</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr style="border-bottom:1px solid #14162a;">
-          <td style="padding:8px 0;color:var(--dim);">✅ Each puzzle solved</td>
-          <td style="padding:8px 0;text-align:right;color:var(--accent2);font-weight:bold;">+200 pts</td>
-        </tr>
-        <tr style="border-bottom:1px solid #14162a;">
-          <td style="padding:8px 0;color:var(--dim);">⏱️ Every second remaining on the clock <em>(win only)</em></td>
-          <td style="padding:8px 0;text-align:right;color:var(--accent2);font-weight:bold;">+2 pts / sec</td>
-        </tr>
-        <tr style="border-bottom:1px solid #14162a;">
-          <td style="padding:8px 0;color:var(--dim);">❌ Each wrong answer</td>
-          <td style="padding:8px 0;text-align:right;color:var(--danger);font-weight:bold;">−10 pts</td>
-        </tr>
-        <tr>
-          <td style="padding:8px 0;color:var(--dim);">💡 Using a hint</td>
-          <td style="padding:8px 0;text-align:right;color:var(--danger);font-weight:bold;">−50 pts &amp; −60s</td>
-        </tr>
-      </tbody>
-    </table>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
-      <div style="background:#0a0c18;border:1px solid var(--border);border-radius:6px;padding:10px 14px;text-align:center;">
-        <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--dim);margin-bottom:4px;">Max puzzle pts</div>
-        <div style="font-size:1.2rem;font-weight:bold;color:var(--accent2);">2,200</div>
-        <div style="font-size:0.68rem;color:var(--dim);">11 × 200</div>
+    <div data-t-html="start.scoring_content">
+      <table style="width:100%;border-collapse:collapse;margin-bottom:10px;">
+        <thead>
+          <tr style="border-bottom:1px solid var(--border);">
+            <th style="text-align:left;font-size:0.65rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--dim);padding:5px 0;">What</th>
+            <th style="text-align:right;font-size:0.65rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--dim);padding:5px 0;">Points</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid #14162a;">
+            <td style="padding:8px 0;color:var(--dim);">✅ Each puzzle solved</td>
+            <td style="padding:8px 0;text-align:right;color:var(--accent2);font-weight:bold;">+200 pts</td>
+          </tr>
+          <tr style="border-bottom:1px solid #14162a;">
+            <td style="padding:8px 0;color:var(--dim);">⏱️ Every second remaining on the clock <em>(win only)</em></td>
+            <td style="padding:8px 0;text-align:right;color:var(--accent2);font-weight:bold;">+2 pts / sec</td>
+          </tr>
+          <tr style="border-bottom:1px solid #14162a;">
+            <td style="padding:8px 0;color:var(--dim);">❌ Each wrong answer</td>
+            <td style="padding:8px 0;text-align:right;color:var(--danger);font-weight:bold;">−10 pts</td>
+          </tr>
+          <tr>
+            <td style="padding:8px 0;color:var(--dim);">💡 Using a hint</td>
+            <td style="padding:8px 0;text-align:right;color:var(--danger);font-weight:bold;">−50 pts &amp; −60s</td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+        <div style="background:#0a0c18;border:1px solid var(--border);border-radius:6px;padding:10px 14px;text-align:center;">
+          <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--dim);margin-bottom:4px;">Max puzzle pts</div>
+          <div style="font-size:1.2rem;font-weight:bold;color:var(--accent2);">2,200</div>
+          <div style="font-size:0.68rem;color:var(--dim);">11 × 200</div>
+        </div>
+        <div style="background:#0a0c18;border:1px solid var(--border);border-radius:6px;padding:10px 14px;text-align:center;">
+          <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--dim);margin-bottom:4px;">Max time bonus</div>
+          <div style="font-size:1.2rem;font-weight:bold;color:var(--accent2);">3,000</div>
+          <div style="font-size:0.68rem;color:var(--dim);">1,500 sec × 2</div>
+        </div>
       </div>
-      <div style="background:#0a0c18;border:1px solid var(--border);border-radius:6px;padding:10px 14px;text-align:center;">
-        <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--dim);margin-bottom:4px;">Max time bonus</div>
-        <div style="font-size:1.2rem;font-weight:bold;color:var(--accent2);">3,000</div>
-        <div style="font-size:0.68rem;color:var(--dim);">1,500 sec × 2</div>
+      <div style="margin-top:8px;padding:8px 12px;background:rgba(255,215,0,0.06);border:1px solid rgba(255,215,0,0.25);border-radius:4px;text-align:center;font-size:0.78rem;color:#ffd700;">
+        🏆 Maximum possible score: <strong>5,200 pts</strong> — all puzzles solved, no wrong answers, no hints, instant finish
       </div>
-    </div>
-    <div style="margin-top:8px;padding:8px 12px;background:rgba(255,215,0,0.06);border:1px solid rgba(255,215,0,0.25);border-radius:4px;text-align:center;font-size:0.78rem;color:#ffd700;">
-      🏆 Maximum possible score: <strong>5,200 pts</strong> — all puzzles solved, no wrong answers, no hints, instant finish
     </div>
   </div>
 
   <!-- Lobby status (shown after login, hidden in demo mode) -->
   <div id="lobby-status" style="display:none;background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:16px 20px;margin-top:10px;max-width:460px;width:100%;text-align:left;">
     <div data-t="start.lobby_h" style="font-size:0.68rem;text-transform:uppercase;letter-spacing:2px;color:var(--accent);margin-bottom:10px;">👥 TEAM LOBBY</div>
-    <div id="lobby-members" style="font-size:0.82rem;color:var(--dim);margin-bottom:8px;">Connecting…</div>
+    <div id="lobby-members" data-t="start.connecting" style="font-size:0.82rem;color:var(--dim);margin-bottom:8px;">Connecting…</div>
     <div id="lobby-ready-bar" style="font-size:0.8rem;color:var(--accent2);margin-bottom:8px;min-height:18px;"></div>
     <div id="lobby-error-msg" style="font-size:0.78rem;color:var(--danger);min-height:16px;"></div>
-    <p style="font-size:0.73rem;color:var(--dim);margin-top:6px;line-height:1.6;">
+    <p data-t-html="start.lobby_hint" style="font-size:0.73rem;color:var(--dim);margin-top:6px;line-height:1.6;">
       Groups of <strong style="color:var(--text);">3–5 members</strong> must all be connected before starting.<br>
       All members click <strong style="color:var(--text);">I'm Ready</strong> to begin simultaneously.
     </p>
@@ -774,8 +780,8 @@
 <!-- ═══════════════ HEADER ═══════════════ -->
 <header>
   <div class="header-left">
-    <h1>🏭 MediSeal — Quality Week</h1>
-    <span>PROGRESS IN EVERY STEP · QUALITY IN EVERY DETAIL</span>
+    <h1 data-t="header.title">🏭 MediSeal — Quality Week</h1>
+    <span data-t="header.motto">PROGRESS IN EVERY STEP · QUALITY IN EVERY DETAIL</span>
   </div>
   <div id="timer">25:00</div>
 </header>
@@ -798,25 +804,25 @@
 
   <div id="side-panel">
     <div class="panel-box">
-      <h3>Inventory</h3>
+      <h3 data-t="side.inventory">Inventory</h3>
       <div id="inventory-grid"></div>
     </div>
     <div class="panel-box">
-      <h3>Field Notes</h3>
-      <div id="notes-content"><p>No entries yet.</p></div>
+      <h3 data-t="side.field_notes">Field Notes</h3>
+      <div id="notes-content"><p data-t="side.no_entries">No entries yet.</p></div>
     </div>
     <div class="panel-box">
       <h3 style="display:flex;align-items:center;justify-content:space-between;">
-        Group Chat <span id="members-online"></span>
+        <span data-t="side.group_chat">Group Chat</span> <span id="members-online"></span>
       </h3>
       <div id="chat-msgs"></div>
       <div id="chat-input-row">
-        <input type="text" id="chat-input" placeholder="Connect first…" maxlength="200" autocomplete="off" disabled />
+        <input type="text" id="chat-input" data-t-ph="side.chat_ph" placeholder="Connect first…" maxlength="200" autocomplete="off" disabled />
         <button id="chat-send-btn" title="Send">↑</button>
       </div>
     </div>
     <div class="panel-box">
-      <h3>Areas</h3>
+      <h3 data-t="side.areas">Areas</h3>
       <div id="room-nav"></div>
     </div>
   </div>
@@ -863,16 +869,16 @@
 <!-- ═══════════════ TEAM CONFIRM OVERLAY ═══════════════ -->
 <div id="team-confirm-overlay">
   <div id="team-confirm-box">
-    <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:2px;color:var(--warn);margin-bottom:6px;">🔑 TEAM CONFIRMATION REQUIRED</div>
+    <div data-t="tc.header" style="font-size:0.62rem;text-transform:uppercase;letter-spacing:2px;color:var(--warn);margin-bottom:6px;">🔑 TEAM CONFIRMATION REQUIRED</div>
     <div id="tc-title" style="font-size:1rem;color:var(--text);margin-bottom:10px;font-weight:bold;"></div>
     <div id="tc-body" style="font-size:0.82rem;color:var(--dim);line-height:1.7;margin-bottom:6px;"></div>
     <div id="tc-code-display"></div>
-    <p style="font-size:0.75rem;color:var(--dim);margin-bottom:8px;">Type the code above to confirm you've received it:</p>
-    <input type="text" id="tc-input" placeholder="Enter the code…" maxlength="20" autocomplete="off" />
+    <p data-t="tc.instruction" style="font-size:0.75rem;color:var(--dim);margin-bottom:8px;">Type the code above to confirm you've received it:</p>
+    <input type="text" id="tc-input" data-t-ph="tc.input_ph" placeholder="Enter the code…" maxlength="20" autocomplete="off" />
     <div id="tc-feedback"></div>
     <div id="tc-progress"></div>
     <div style="display:flex;gap:8px;justify-content:flex-end;">
-      <button class="btn primary" id="tc-submit">Confirm</button>
+      <button class="btn primary" id="tc-submit" data-t="tc.btn">Confirm</button>
     </div>
   </div>
 </div>
@@ -2289,28 +2295,26 @@ function showEndScreen(won, data) {
   end.className = 'show ' + (won ? 'win' : 'lose');
   document.getElementById('end-icon').textContent  = won ? '🏆' : '⏱️';
   document.getElementById('end-title').textContent = won ? t('end.won') : t('end.lost');
-  document.getElementById('end-msg').textContent   = won
-    ? "Excellent work! Your group completed all quality checks, identified the root cause, and correctly dispositioned the nonconforming batch — protecting patients and MediSeal's GMP licence."
-    : "Time expired. The FDA auditor arrived before your group completed all quality checks. Batch BN-2024-3200 remains unresolved.";
+  document.getElementById('end-msg').textContent   = won ? t('end.msg_won') : t('end.msg_lost');
 
   let statsHtml =
-    '<strong style="color:' + (won ? 'var(--accent)' : 'var(--danger)') + '">Score Breakdown — ' + (S.demoMode ? 'DEMO' : escHtml(S.groupName || '')) + '</strong><br>' +
-    'Puzzles completed (' + puzzlesDone + ' × ' + ptPerPuzzle + '): <span>+' + (puzzlesDone * ptPerPuzzle).toLocaleString() + ' pts</span><br>';
+    '<strong style="color:' + (won ? 'var(--accent)' : 'var(--danger)') + '">' + t('end.score_title') + ' — ' + (S.demoMode ? 'DEMO' : escHtml(S.groupName || '')) + '</strong><br>' +
+    t('end.puzzles_n').replace('{n}', puzzlesDone).replace('{pts}', ptPerPuzzle) + ': <span>+' + (puzzlesDone * ptPerPuzzle).toLocaleString() + ' pts</span><br>';
 
   if (won && !isOvertime) {
-    statsHtml += 'Time bonus (' + regSecsLeft + 's × 2): <span>+' + timeBonusPts.toLocaleString() + ' pts</span><br>';
+    statsHtml += t('end.time_bonus_n').replace('{secs}', regSecsLeft) + ': <span>+' + timeBonusPts.toLocaleString() + ' pts</span><br>';
   } else {
-    statsHtml += 'Time bonus (overtime — no bonus): <span>0 pts</span><br>';
+    statsHtml += t('end.time_bonus_ot') + ': <span>0 pts</span><br>';
   }
   if (isOvertime) {
-    statsHtml += 'Overtime penalty (' + Math.ceil(overtimeSecs/60) + ' min × −30): <span style="color:var(--danger);">−' + overtimePenalty.toLocaleString() + ' pts</span><br>';
+    statsHtml += t('end.overtime_n').replace('{min}', Math.ceil(overtimeSecs/60)) + ': <span style="color:var(--danger);">−' + overtimePenalty.toLocaleString() + ' pts</span><br>';
   }
   statsHtml +=
-    'Wrong answer penalty (' + wrongAnswers + ' × −10): <span style="color:var(--danger);">−' + penaltyPts.toLocaleString() + ' pts</span><br>' +
-    (hintPenalty ? 'Hint penalty: <span style="color:var(--danger);">−' + hintPenalty.toLocaleString() + ' pts</span><br>' : '') +
-    '<strong>TOTAL SCORE: <span style="font-size:1.2rem;color:' + (won ? 'var(--accent2)' : 'var(--danger)') + ';">' + score.toLocaleString() + '</span> pts</strong><br><br>' +
-    'Time taken: <span>' + em + ':' + es + '</span><br>' +
-    (S.demoMode ? '<em style="color:var(--dim);">Demo — score not saved</em>' : '<a href="/admin.html" target="_blank" style="color:var(--accent);">📊 View Leaderboard</a>');
+    t('end.wrong_n').replace('{n}', wrongAnswers) + ': <span style="color:var(--danger);">−' + penaltyPts.toLocaleString() + ' pts</span><br>' +
+    (hintPenalty ? t('end.hint_pen') + ': <span style="color:var(--danger);">−' + hintPenalty.toLocaleString() + ' pts</span><br>' : '') +
+    '<strong>' + t('end.total_score') + ' <span style="font-size:1.2rem;color:' + (won ? 'var(--accent2)' : 'var(--danger)') + ';">' + score.toLocaleString() + '</span> pts</strong><br><br>' +
+    t('end.time_taken') + ' <span>' + em + ':' + es + '</span><br>' +
+    (S.demoMode ? '<em style="color:var(--dim);">' + t('end.demo_note') + '</em>' : '<a href="/admin.html" target="_blank" style="color:var(--accent);">' + t('end.lb_link') + '</a>');
 
   document.getElementById('end-stats').innerHTML = statsHtml;
 }
@@ -2668,7 +2672,7 @@ function updateLobbyMembers(members) {
   const names = members.join(', ') || '—';
   const statusColor = count >= 3 ? 'var(--accent2)' : 'var(--warn)';
   el.innerHTML = `<span style="color:${statusColor};">${count}/5 connected</span> &nbsp;— ${escHtml(names)}<br>`
-    + `<span style="font-size:0.72rem;color:var(--dim);">${count < 3 ? 'Need at least 3 members to start.' : count < 5 ? 'Waiting for all members to click ready.' : 'All 5 members connected!'}</span>`;
+    + `<span style="font-size:0.72rem;color:var(--dim);">${count < 3 ? t('lobby.need_3') : count < 5 ? t('lobby.waiting_ready') : t('lobby.all_5')}</span>`;
 }
 
 // ── Chat helpers ────────────────────────────────
