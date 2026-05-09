@@ -1332,6 +1332,173 @@ const TRANSLATIONS = {
     'body.iso15378_2':     'Los tapones de caucho están ahora en cuarentena y etiquetados. Debe presentarse un NCR al proveedor.<br><br>Tu colega León completó el formulario de desviación del proveedor — pero notas que cubrió el número de lote incorrecto con <strong>líquido corrector (Tipp-Ex)</strong> y escribió el correcto encima. La entrada original está ahora completamente oculta.<br><br>¿El método de corrección de León es aceptable según las <strong>Buenas Prácticas de Documentación (GDP)</strong>, que son un requisito BPF fundamental en MediSeal?',
     'body.iso9001_1':      'El equipo CAPA de MediSeal está revisando el incidente de lubricación (NCR-0892). El equipo de mantenimiento había usado durante 3 meses un grado de lubricante no aprobado — y <strong>ningún proceso lo había detectado hasta que apareció una no conformidad de embalaje</strong>.<br><br>La ISO 9001:2015 introdujo el <strong>pensamiento basado en riesgos</strong> — la idea de que las organizaciones deben identificar proactivamente qué <em>podría</em> salir mal, antes de que se convierta en una no conformidad.<br><br>Según este principio, ¿qué falla de proceso explica MEJOR por qué este incidente pasó desapercibido durante 3 meses?',
     'body.iso9001_2':      'La Revisión de Gestión es una reunión formal y documentada donde la alta dirección evalúa qué tan bien está funcionando el Sistema de Gestión de Calidad.<br><br>Dados los eventos de esta semana — NCR-0892 (no conformidad de lubricante), CAPA-0112 (plan de acción correctiva) y desviación de calibración en Estación 3 — el Director de Calidad debe preparar la agenda de la Revisión de Gestión.<br><br>¿Qué combinación de entradas corresponde MEJOR a lo que debe estar en una agenda de Revisión de Gestión?',
+    /* Team confirmation */
+    'tc.body_html':        '<strong>{name}</strong> encontró la respuesta. Los {required} miembros deben ingresar este código para continuar:',
+    'tc.progress':         '✓ {count} / {required} miembros confirmados',
+    'tc.confirmed_waiting':'✓ ¡Confirmado! Esperando a los compañeros restantes…',
+    'tc.incorrect':        'Incorrecto — ingresa el código exactamente como aparece arriba.',
+
+    /* Modal */
+    'modal.default_tag':   'CONTROL DE CALIDAD',
+    'modal.waiting_team':  '✓ ¡Correcto! Esperando al equipo ({done}/{required} confirmado)…',
+    'modal.confirming_team':'✓ Esperando al equipo ({done}/{required} confirmado)…',
+
+    /* Nav */
+    'nav.blocked':         'Bloqueado.',
+    'nav.here':            ' — ESTÁS AQUÍ',
+    'nav.visited':         ' — visitado',
+    'nav.unlocked':        ' — desbloqueado',
+    'nav.locked':          ' — bloqueado',
+
+    /* Feedback — puzzle answers */
+    'fb.gmp_ok':               '✓ ¡Número de lote correcto! Notificando al equipo — esperando confirmación de todos los miembros…',
+    'fb.gmp_bad':              'Número de lote no reconocido. Revisa el Certificado de Análisis.',
+    'fb.inspection_ok':        '✓ Correcto — 4 defectos encontrados.',
+    'fb.inspection_reject_bad':'Incorrecto. Con 4 defectos y Re=4, el lote debe ser RECHAZADO. Re significa rechazar si ≥ 4 defectos — 4 es igual a 4.',
+    'fb.inspection_type_bad':  'Escribe exactamente ACCEPT o REJECT.',
+    'fb.inspection_count_bad': 'Contaste {n}, pero eso no coincide con el registro de inspección. Examina la bandeja más detenidamente.',
+    'fb.inspection_nan':       'Por favor, ingresa un número.',
+    'fb.ncr_bad':              'Número de lote no encontrado. Revisa tus notas — el número de lote fue indicado en el resumen del escenario.',
+    'fb.cal_bad':              'Incorrecto. Corrección = referencia − lectura = 12,50 − 12,53 = ?',
+    'fb.capa_root_ok':         '✓ Causa raíz correctamente identificada.',
+    'fb.capa_prev_bad':        'No es la mejor opción. Piensa qué impediría permanentemente el uso del lubricante incorrecto — ¿qué cambio a nivel de sistema elimina la oportunidad de error?',
+    'fb.capa_root_bad':        'Incorrecto. Revisa los hallazgos del registro de mantenimiento y el estante de SOPs — la evidencia física apunta a un cambio de material específico.',
+    'fb.pin_bad':              '❌ PIN incorrecto. Revisa el Certificado de Liberación de Lote en tu inventario.',
+    'fb.pin_ok':               '✓ ¡PIN correcto! Todos los miembros del equipo deben confirmar para autorizar la disposición del lote…',
+    'fb.motto_prod_bad':       'Piensa en qué significa «progreso» en la práctica. El rechazo solo resuelve el problema esta vez — ¿qué lo previene la próxima vez?',
+    'fb.motto_qa_bad':         'Piensa en quién realizó realmente la acción. Las BPF asignan la responsabilidad documental a la persona que lleva a cabo el paso.',
+    'fb.motto_dis_bad':        'No del todo. Reflexiona sobre lo que «progreso en cada paso» y «calidad en cada detalle» implican sobre cómo tratamos nuestros procesos a lo largo del tiempo.',
+    'fb.iso15378_1_ok':        '✓ ¡Correcto! La segregación y la documentación deben ser lo primero — sin disposición no controlada.',
+    'fb.iso15378_2_bad':       'Incorrecto. Recuerda las BPD — la documentación correcta siempre debe ser trazable. La entrada original debe seguir siendo legible.',
+    'fb.iso15378_1_bad':       'Incorrecto. La ISO 15378 fue diseñada para añadir requisitos de BPF sobre una norma de sistema de calidad existente — el referente global de gestión de calidad.',
+    'fb.iso9001_1_ok':         '✓ ¡Correcto! El pensamiento basado en riesgos implica evaluar los procedimientos de cambio ANTES de implementarlos. Sin evaluación de riesgos = sin control.',
+    'fb.iso9001_2_bad':        'Incorrecto. Piensa en qué debe evaluar una revisión del SGC — debe cubrir eventos de calidad, acciones correctivas y el desempeño del sistema.',
+    'fb.iso9001_1_bad':        'Incorrecto. El problema no fue la frecuencia de auditorías ni el archivo de registros. ¿Qué proceso debería haber evitado el uso de un material no aprobado?',
+
+    /* Hint */
+    'hint.penalty_log':    '⚠️ Penalización por pista aplicada: −{time}s y −{pts} pts.',
+
+    /* Chat */
+    'chat.placeholder':    'Escribe un mensaje a tu equipo…',
+    'chat.reconnecting':   'Reconectando…',
+
+    /* Activity log */
+    'log.code_found':       '🔑 Encontraste el código de «{label}» — esperando a {n} compañero(s) más.',
+    'log.code_found_other': '🔑 {name} encontró la respuesta de «{label}» — ¡ingresa el código para confirmar!',
+    'log.hint_used_other':  '💡 {name} usó la pista de {room}. −{time}s / −{pts} pts aplicados a tu equipo.',
+    'log.teammate_done':    '✓ {name} completó: {label}',
+    'log.item_found_other': '🤝 {name} encontró: {item}',
+
+    /* Puzzle labels */
+    'puzzle.label.coa_verified':      'Verificación de Materiales GMP',
+    'puzzle.label.inspection_done':   'Inspección Visual AQL',
+    'puzzle.label.ncr_filed':         'Informe de No Conformidad',
+    'puzzle.label.calibration_done':  'Calibración de Instrumentos',
+    'puzzle.label.capa_done':         'Análisis de Causa Raíz CAPA',
+    'puzzle.label.batch_retrieved':   'Registro de Lote Recuperado',
+    'puzzle.label.game_won':          'Liberación Final del Lote',
+    'puzzle.label.iso15378_done':     'Verificación de Conformidad ISO 15378:2017',
+    'puzzle.label.iso9001_done':      'Revisión de Gestión ISO 9001:2015',
+    'puzzle.label.motto_challenge':   'Desafío del Lema — Semana de Calidad (Despacho)',
+    'puzzle.label.motto_production':  'Lema de Mejora de Calidad (Producción)',
+    'puzzle.label.motto_qaoffice':    'Lema de Responsabilidad de Calidad (Oficina QA)',
+
+    /* Login extras */
+    'login.card_title':              'SEMANA DE CALIDAD',
+    'login.card_sub':                'INICIO DE SESIÓN GRUPAL',
+    'login.card_motto':              'Progreso en cada paso · Calidad en cada detalle',
+    'login.select_group_placeholder':'— Selecciona tu grupo —',
+    'login.select_error':            'Por favor, selecciona tu grupo.',
+    'login.pin_error':               'Por favor, ingresa tu PIN.',
+    'login.fail':                    'Error de inicio de sesión. Verifica tu PIN e inténtalo de nuevo.',
+    'login.logged_in_as':            'Sesión iniciada como: {name}',
+    'login.demo_mode_label':         'Modo Demo (Admin)',
+    'login.demo_start_btn':          'INICIAR SIMULACIÓN DE AUDITORÍA',
+    'login.admin_pw_wrong':          'Contraseña de administrador incorrecta.',
+    'login.server_error':            'No se pudo conectar con el servidor. Usa el Modo Demo para probar el juego sin puntuación.',
+    'login.server_unavailable':      'Servidor no disponible — usa el Modo Demo',
+
+    /* Start screen */
+    'start.card_motto':        'Progreso en cada paso · Calidad en cada detalle',
+    'start.btn_waiting_text':  '✓ Listo — esperando…',
+
+    /* Leaderboard */
+    'lb.h2':               '📊 Tabla de Clasificación',
+    'lb.admin_pw':         'Contraseña de Administrador',
+    'lb.admin_pw_ph':      'Ingresa la contraseña de admin',
+    'lb.view_btn':         'Ver Tabla de Clasificación',
+    'lb.close_btn':        'Cerrar',
+    'lb.close_btn2':       'Cerrar',
+    'lb.completed_groups': 'GRUPOS COMPLETADOS — CLASIFICADOS POR PUNTUACIÓN',
+    'lb.empty':            'Aún no hay grupos que hayan completado el juego.',
+    'lb.col_group':        'Grupo',
+    'lb.col_score':        'Puntuación',
+    'lb.col_puzzles':      'Puzles',
+    'lb.col_time_left':    'Tiempo Restante',
+    'lb.col_wrong':        'Errores',
+    'lb.col_finished':     'Finalizado',
+    'lb.wrong_pw':         'Contraseña incorrecta.',
+
+    /* Already-played screen */
+    'already.title': 'YA COMPLETADO',
+    'already.sub':   'TU GRUPO YA HA JUGADO',
+    'already.body':  'Tu grupo ya completó el Escape Room de la Semana de Calidad.<br>Cada grupo solo puede jugar una vez. ¡Consulta la tabla de clasificación para ver tu puntuación!',
+    'already.lb_btn':'📊 Ver Tabla de Clasificación',
+
+    /* End screen */
+    'end.lb_btn':    '📊 Ver Tabla de Clasificación',
+
+    /* Sidebar */
+    'side.no_entries_html': 'Aún no hay entradas.',
+
+    /* Room badges and descriptions */
+    'room.badge.receiving':  'ÁREA 01 — MUELLE DE RECEPCIÓN',
+    'room.badge.production': 'ÁREA 02 — LÍNEA DE PRODUCCIÓN',
+    'room.badge.qclab':      'ÁREA 03 — LABORATORIO DE CC',
+    'room.badge.qaoffice':   'ÁREA 04 — QA / CUMPLIMIENTO',
+    'room.badge.dispatch':   'ÁREA 05 — DESPACHO / LIBERACIÓN',
+    'room.desc.receiving':   'Los materiales llegan aquí para el control de calidad de entrada. Según las BPF, cada lote entrante debe tener un Certificado de Análisis (CdA) revisado y verificado antes de liberar el material a producción.',
+    'room.desc.production':  'La línea principal de moldeo y ensamblaje de émbolos de caucho para viales de insulina y jeringas precargadas. La línea está detenida en la Estación 3 — una luz ámbar pulsa sobre ella. Una caja de luz de inspección visual espera al lado.',
+    'room.desc.qclab':       'El laboratorio de CC huele a alcohol isopropílico y fluido de calibración. Calibradores dimensionales, contadores de partículas y equipos de pruebas de esterilidad cubren las mesas. Una estación de micrómetro lleva una etiqueta amarilla "FUERA DE CALIBRACIÓN".',
+    'room.desc.qaoffice':    'El centro de las operaciones de calidad. Las etiquetas de cláusulas de la ISO 13485 recorren los archivadores. La estación de trabajo CAPA muestra: "NO CONFORMIDAD #NCR-0892 — PENDIENTE DE ANÁLISIS DE CAUSA RAÍZ".',
+    'room.desc.dispatch':    'El último punto de control antes de que el producto salga de las instalaciones. Una jaula de cuarentena retiene el lote BN-2024-3200 — con candado pendiente de autorización de QA. El terminal de liberación de lote brilla en ámbar.',
+
+    /* Inventory items */
+    'item.selected_prefix':     'Seleccionado: ',
+    'item.coa.name':            'Certificado de Análisis',
+    'item.coa.desc':            'CdA — Compuesto de Caucho RC-500 | Lote: RM-4471 | Proveedor: Kautschuk GmbH | Estado: PENDIENTE DE VERIFICACIÓN GMP. Todos los materiales entrantes deben verificarse según las BPF.',
+    'item.aql_table.name':      'Tabla de Muestreo AQL',
+    'item.aql_table.desc':      'Tabla AQL ISO 2859-1: Tamaño de lote 3.200 | Nivel II | AQL 1,0 → Código de muestra K → Tamaño de muestra: 125 | Aceptar ≤ 3 | Rechazar ≥ 4.',
+    'item.ncr_form.name':       'Informe de No Conformidad',
+    'item.ncr_form.desc':       'NCR-0892: Lote BN-2024-3200 — 4 defectos encontrados en muestra de 125. Supera Re=4. Disposición del lote: RECHAZADO. Emitido según SOP-QC-015.',
+    'item.cal_ref.name':        'Referencia de Calibración',
+    'item.cal_ref.desc':        'Bloque patrón certificado: 12,50 mm (±0,001 mm). Certificado N.° CAL-7734. Trazable a patrones nacionales según ISO/IEC 17025. Usar para verificar la exactitud del instrumento.',
+    'item.maint_log.name':      'Registro de Mantenimiento',
+    'item.maint_log.desc':      'Entrada del 14/03/24 — Utillaje de molde Estación 3: Lubricante de desmoldeo reemplazado por Grado B-7 (sintético). El grado CORRECTO según SOP-MAINT-009 es Grado A-3 (silicona grado alimentario). ¡Sin registro de desviación!',
+    'item.capa_report.name':    'Informe CAPA Completado',
+    'item.capa_report.desc':    'CAPA-0112: Causa raíz — Grado de lubricante incorrecto en utillaje de molde (Grado B-7 en lugar de A-3). Acción inmediata: parada de producción. Preventiva: actualización de SOP + reentrenamiento. Ref: ISO 13485 §8.5.',
+    'item.batch_cert.name':     'Certificado de Liberación de Lote',
+    'item.batch_cert.desc':     'Lote BN-2024-3200 | Disposición: RECHAZAR y Cuarentena | Motivo: NCR-0892 / CAPA-0112. PIN de autorización QA: 4471. Firmado según ISO 13485 §8.3 — Control de Producto No Conforme.',
+    'item.stopper_spec.name':   'Especificación de Embalaje ISO 15378',
+    'item.stopper_spec.desc':   'Especificación de tapones de caucho — ISO 15378:2017 Materiales de embalaje primario para medicamentos. Proveedor: Kautschuk GmbH. Material: compuesto de caucho bromobutilo. Cláusula clave: ISO 9001:2015 Cláusula 8.7 — Control de salidas no conformes.',
+    'item.iso9001_cert.name':   'Certificado ISO 9001:2015',
+    'item.iso9001_cert.desc':   'Certificado del Sistema de Gestión de Calidad ISO 9001:2015 — MediSeal Manufacturing. Alcance: diseño, fabricación y suministro de émbolos de caucho y cierres para dispositivos médicos. Conceptos clave: pensamiento basado en riesgos, mejora continua.',
+
+    /* Field notes */
+    'note.coa_found':     'CdA encontrado — Lote <strong>RM-4471</strong>, proveedor Kautschuk GmbH. Debe ingresarse en el terminal GMP para liberar el material.',
+    'note.aql_chart':     'Tabla AQL: Lote 3.200 | Nivel II | AQL 1,0 → Tamaño de muestra <strong>125</strong> | Ac=3, Re=4',
+    'note.station3_log':  'Registro de instrumentos Estación 3: Micrómetro SN-7734 registró desviación sistemática de <strong>+0,03 mm</strong> en el lote BN-2024-3200. Referencia = 12,50 mm; instrumento: 12,53 mm.',
+    'note.cal_ref':       'Referencia de calibración: Bloque patrón certificado = <strong>12,50 mm</strong> (±0,001 mm). Usar para verificar el micrómetro SN-7734.',
+    'note.sop_rack':      'Estante SOPs: SOP-QC-015 (Inspección Visual), SOP-QC-022 (Muestreo AQL), SOP-MAINT-009 (Lubricante de Molde — Grado A-3 ÚNICAMENTE)',
+    'note.equip_log':     'Registro de equipos — Micrómetro SN-7734: VENCIDO 90 días. Datos históricos de desviación en el <strong>Registro de instrumentos Estación 3</strong> (zona de producción).',
+    'note.maint_log':     'Registro de mantenimiento — Estación 3: Lubricante cambiado a <strong>Grado B-7</strong> (incorrecto). Grado correcto: <strong>Grado A-3</strong>. ¡Sin registro de desviación!',
+    'note.iso13485':      'Cláusulas clave ISO 13485: §4 SGC | §6 Recursos | §7 Realización del Producto | <strong>§8 Medición, Análisis y Mejora</strong> — incluye §8.3 Producto No Conforme, §8.5.2 Acción Correctiva, §8.5.3 Acción Preventiva',
+    'note.batch_cert':    'Certificado de Liberación de Lote — PIN de autorización: <strong>4471</strong>. Disposición: RECHAZAR y Cuarentena.',
+    'note.iso15378':      'Especificación de embalaje ISO 15378:2017: Tapones de caucho de Kautschuk GmbH. La norma combina <strong>ISO 9001:2015 + BPF</strong> para embalaje primario. Ref. clave: <strong>Cláusula 8.7</strong> — Control de salidas no conformes.',
+    'note.iso9001_cert':  'Certificado ISO 9001:2015 — MediSeal. Sistema de Gestión de Calidad. El alcance certifica diseño, fabricación y distribución de materiales de embalaje farmacéutico. Revisa atentamente los detalles del certificado.',
+
+    /* Page title */
+    'page.title': 'MediSeal Semana de Calidad — Escape Room',
   },
 
   /* ─── BRAZILIAN PORTUGUESE ──────────────────────────────── */
