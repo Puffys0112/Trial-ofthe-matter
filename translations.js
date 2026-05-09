@@ -2643,6 +2643,173 @@ const TRANSLATIONS = {
     'body.iso15378_2':     '고무 마개가 이제 격리 및 라벨링되었습니다. 공급업체 NCR을 제출해야 합니다.<br><br>동료 Leon이 공급업체 이탈 양식을 작성했지만 — 잘못된 로트 번호를 <strong>수정액(Tipp-Ex)</strong>으로 덮고 올바른 것을 위에 썼음을 알아차렸습니다. 원래 항목이 이제 완전히 가려졌습니다.<br><br>MediSeal의 기본 GMP 요건인 <strong>우수 문서화 실무(GDocP)</strong>에 따라 Leon의 수정 방법이 허용됩니까?',
     'body.iso9001_1':      'MediSeal의 CAPA 팀이 윤활제 사고(NCR-0892)를 검토하고 있습니다. 유지보수 팀이 3개월 동안 비승인 등급의 윤활제를 사용했는데 — <strong>포장 부적합이 나타날 때까지 어떤 프로세스도 이를 발견하지 못했습니다</strong>.<br><br>ISO 9001:2015는 <strong>리스크 기반 사고</strong>를 도입했습니다 — 조직이 부적합이 되기 전에 무엇이 잘못될 수 있는지 선제적으로 식별해야 한다는 개념입니다.<br><br>이 원칙에 따라, 이 사고가 3개월 동안 발견되지 않은 이유를 가장 잘 설명하는 프로세스 실패는 무엇입니까?',
     'body.iso9001_2':      '경영 검토는 최고 경영진이 품질 경영 시스템이 얼마나 잘 작동하고 있는지 평가하는 공식적인 문서화된 회의입니다.<br><br>이번 주의 사건들 — NCR-0892(윤활제 부적합), CAPA-0112(시정 조치 계획) 및 스테이션 3 교정 이탈 — 을 고려하여 품질 이사가 경영 검토 안건을 준비해야 합니다.<br><br>경영 검토 안건에 포함되어야 하는 것을 가장 잘 반영하는 입력 항목의 조합은 무엇입니까?',
+    /* 팀 확인 */
+    'tc.body_html':        '<strong>{name}</strong>이(가) 정답을 찾았습니다. {required}명 모두 이 코드를 입력해야 진행할 수 있습니다:',
+    'tc.progress':         '✓ {count} / {required}명 확인 완료',
+    'tc.confirmed_waiting':'✓ 확인되었습니다! 나머지 팀원을 기다리는 중…',
+    'tc.incorrect':        '틀렸습니다 — 위에 표시된 코드를 정확히 입력하세요.',
+
+    /* 모달 */
+    'modal.default_tag':   '품질 관리',
+    'modal.waiting_team':  '✓ 정답입니다! 팀을 기다리는 중 ({done}/{required}명 확인)…',
+    'modal.confirming_team':'✓ 팀을 기다리는 중 ({done}/{required}명 확인)…',
+
+    /* 내비게이션 상태 */
+    'nav.blocked':  '차단됨.',
+    'nav.here':     ' — 현재 위치',
+    'nav.visited':  ' — 방문함',
+    'nav.unlocked': ' — 잠금 해제',
+    'nav.locked':   ' — 잠김',
+
+    /* 피드백 — 퍼즐 정답/오답 */
+    'fb.gmp_ok':               '✓ 올바른 로트 번호입니다! 팀에게 알리는 중 — 모든 팀원의 확인을 기다리는 중…',
+    'fb.gmp_bad':              '로트 번호를 인식할 수 없습니다. 성적서(CoA)를 확인하세요.',
+    'fb.inspection_ok':        '✓ 정답입니다 — 불량 4개 발견.',
+    'fb.inspection_reject_bad':'오답입니다. 불량 4개, Re=4인 경우 배치는 반드시 불합격 처리해야 합니다. Re는 불량이 4개 이상이면 불합격을 의미합니다 — 4는 4와 같습니다.',
+    'fb.inspection_type_bad':  'ACCEPT 또는 REJECT를 정확히 입력하세요.',
+    'fb.inspection_count_bad': '{n}개로 입력했지만 검사 기록과 일치하지 않습니다. 트레이를 더 주의 깊게 살펴보세요.',
+    'fb.inspection_nan':       '숫자를 입력해 주세요.',
+    'fb.ncr_bad':              '배치 번호를 찾을 수 없습니다. 메모를 확인하세요 — 배치 번호는 시나리오 설명에 나와 있습니다.',
+    'fb.cal_bad':              '오답입니다. 수정 계수 = 기준값 − 측정값 = 12.50 − 12.53 = ?',
+    'fb.capa_root_ok':         '✓ 올바른 근본 원인을 확인했습니다.',
+    'fb.capa_prev_bad':        '최선의 선택이 아닙니다. 잘못된 윤활제가 다시 사용되지 않도록 영구적으로 방지하는 방법을 생각해보세요 — 어떤 시스템 수준의 변경이 오류 기회를 없앨 수 있을까요?',
+    'fb.capa_root_bad':        '오답입니다. 유지보수 로그와 SOP 선반의 발견 사항을 검토하세요 — 물적 증거는 특정 재료 변경을 가리킵니다.',
+    'fb.pin_bad':              '❌ PIN이 틀렸습니다. 인벤토리의 배치 출고 인증서를 확인하세요.',
+    'fb.pin_ok':               '✓ PIN이 맞습니다! 모든 팀원이 배치 처분을 승인해야 합니다…',
+    'fb.motto_prod_bad':       '실천 속 "발전"의 의미를 생각해보세요. 거부만으로는 이번에 문제를 해결하지만 — 다음에는 무엇이 예방할 수 있을까요?',
+    'fb.motto_qa_bad':         '실제로 작업을 수행한 사람이 누구인지 생각해보세요. GMP는 각 단계를 수행한 사람에게 문서 책임을 부여합니다.',
+    'fb.motto_dis_bad':        '아닙니다. "매 단계에서 발전"과 "모든 세부사항에 품질을"이 시간이 지남에 따라 프로세스를 어떻게 다루는지에 대해 무엇을 의미하는지 생각해보세요.',
+    'fb.iso15378_1_ok':        '✓ 정답입니다! 분리와 문서화가 먼저 이루어져야 합니다 — 통제되지 않은 처분은 없습니다.',
+    'fb.iso15378_2_bad':       '오답입니다. GDocP를 생각해보세요 — 올바른 문서화는 항상 추적 가능해야 합니다. 원래 항목은 여전히 읽을 수 있어야 합니다.',
+    'fb.iso15378_1_bad':       '오답입니다. ISO 15378은 기존 QMS 표준에 GMP 요구사항을 추가하기 위해 설계되었습니다 — 글로벌 품질 경영 기준이 무엇인지 생각해보세요.',
+    'fb.iso9001_1_ok':         '✓ 정답입니다! 위험 기반 사고는 변경 절차가 실행되기 전에 위험을 평가하는 것을 의미합니다. 위험 평가 없음 = 관리 없음.',
+    'fb.iso9001_2_bad':        '오답입니다. QMS 검토에서 무엇을 평가해야 하는지 생각해보세요 — 품질 이벤트, 시정 조치, 시스템 성과를 포함해야 합니다.',
+    'fb.iso9001_1_bad':        '오답입니다. 문제는 감사 빈도나 로그 파일링이 아니었습니다. 처음부터 승인되지 않은 재료 사용을 방지했어야 하는 프로세스는 무엇인가요?',
+
+    /* 힌트 */
+    'hint.penalty_log': '⚠️ 힌트 패널티 적용: −{time}초 및 −{pts}점.',
+
+    /* 채팅 */
+    'chat.placeholder':  '팀에게 메시지 보내기…',
+    'chat.reconnecting': '재연결 중…',
+
+    /* 활동 로그 */
+    'log.code_found':       '🔑 "{label}"의 코드를 찾았습니다 — {n}명의 팀원을 더 기다리고 있습니다.',
+    'log.code_found_other': '🔑 {name}이(가) "{label}"의 정답을 찾았습니다 — 코드를 입력하여 확인하세요!',
+    'log.hint_used_other':  '💡 {name}이(가) {room}의 힌트를 사용했습니다. 팀에 −{time}초 / −{pts}점이 적용되었습니다.',
+    'log.teammate_done':    '✓ {name} 완료: {label}',
+    'log.item_found_other': '🤝 {name}이(가) 발견: {item}',
+
+    /* 퍼즐 라벨 */
+    'puzzle.label.coa_verified':     'GMP 원자재 검증',
+    'puzzle.label.inspection_done':  'AQL 육안 검사',
+    'puzzle.label.ncr_filed':        '부적합 보고서 (NCR)',
+    'puzzle.label.calibration_done': '기기 교정',
+    'puzzle.label.capa_done':        'CAPA 근본 원인 분석',
+    'puzzle.label.batch_retrieved':  '배치 기록 확보',
+    'puzzle.label.game_won':         '최종 배치 출고',
+    'puzzle.label.iso15378_done':    'ISO 15378:2017 적합성 검증',
+    'puzzle.label.iso9001_done':     'ISO 9001:2015 경영 검토',
+    'puzzle.label.motto_challenge':  '품질 주간 모토 과제 (출하)',
+    'puzzle.label.motto_production': '품질 개선 모토 (생산)',
+    'puzzle.label.motto_qaoffice':   '품질 책임 모토 (QA 사무실)',
+
+    /* 로그인 추가 항목 */
+    'login.card_title':              '품질 주간',
+    'login.card_sub':                '그룹 로그인',
+    'login.card_motto':              '모든 단계에서 진보 · 모든 세부 사항에서 품질',
+    'login.select_group_placeholder':'— 그룹을 선택하세요 —',
+    'login.select_error':            '그룹을 선택해 주세요.',
+    'login.pin_error':               'PIN을 입력해 주세요.',
+    'login.fail':                    '로그인에 실패했습니다. PIN을 확인하고 다시 시도하세요.',
+    'login.logged_in_as':            '로그인: {name}',
+    'login.demo_mode_label':         '데모 모드 (관리자)',
+    'login.demo_start_btn':          '감사 시뮬레이션 시작',
+    'login.admin_pw_wrong':          '관리자 비밀번호가 틀렸습니다.',
+    'login.server_error':            '서버에 연결할 수 없습니다. 데모 모드를 사용하여 점수 없이 게임을 테스트하세요.',
+    'login.server_unavailable':      '서버를 사용할 수 없습니다 — 데모 모드를 사용하세요',
+
+    /* 시작 화면 */
+    'start.card_motto':       '모든 단계에서 진보 · 모든 세부 사항에서 품질',
+    'start.btn_waiting_text': '✓ 준비 완료 — 대기 중…',
+
+    /* 순위표 */
+    'lb.h2':               '📊 순위표',
+    'lb.admin_pw':         '관리자 비밀번호',
+    'lb.admin_pw_ph':      '관리자 비밀번호 입력',
+    'lb.view_btn':         '순위표 보기',
+    'lb.close_btn':        '닫기',
+    'lb.close_btn2':       '닫기',
+    'lb.completed_groups': '완료된 그룹 — 점수순 순위',
+    'lb.empty':            '아직 게임을 완료한 그룹이 없습니다.',
+    'lb.col_group':        '그룹',
+    'lb.col_score':        '점수',
+    'lb.col_puzzles':      '퍼즐',
+    'lb.col_time_left':    '남은 시간',
+    'lb.col_wrong':        '오답',
+    'lb.col_finished':     '완료 시각',
+    'lb.wrong_pw':         '비밀번호가 틀렸습니다.',
+
+    /* 이미 완료 화면 */
+    'already.title': '이미 완료됨',
+    'already.sub':   '이 그룹은 이미 플레이했습니다',
+    'already.body':  '이 그룹은 이미 품질 주간 에스케이프 룸을 완료했습니다.<br>각 그룹은 한 번만 플레이할 수 있습니다. 순위표에서 점수를 확인하세요!',
+    'already.lb_btn':'📊 순위표 보기',
+
+    /* 종료 화면 */
+    'end.lb_btn': '📊 순위표 보기',
+
+    /* 사이드바 */
+    'side.no_entries_html': '아직 항목이 없습니다.',
+
+    /* 구역 배지 및 설명 */
+    'room.badge.receiving':  '구역 01 — 입고 도크',
+    'room.badge.production': '구역 02 — 생산 라인',
+    'room.badge.qclab':      '구역 03 — QC 실험실',
+    'room.badge.qaoffice':   '구역 04 — QA / 규정 준수',
+    'room.badge.dispatch':   '구역 05 — 출하 / 출고',
+    'room.desc.receiving':   '원자재가 입고 품질 관리를 위해 도착하는 곳입니다. GMP에 따라 모든 입고 배치는 생산에 투입되기 전에 성적서(CoA)를 검토하고 검증해야 합니다. 고무 화합물 팔레트 위에 빨간 보류 표시등이 깜빡이고 있습니다.',
+    'room.desc.production':  '인슐린 바이알과 당뇨병 주사 기기용 고무 피스톤의 주요 성형 및 조립 라인입니다. 스테이션 3에서 라인이 멈춰 있으며 황색 경고등이 깜빡이고 있습니다. 품질 주간 시각 검사 라이트박스 스테이션이 설치되어 있습니다.',
+    'room.desc.qclab':       'QC 실험실에서는 IPA와 교정 액체 냄새가 납니다. 치수 게이지, 입자 계수기, 무균 검사 장비가 작업대를 가득 채우고 있습니다. 모서리의 마이크로미터 스테이션에는 노란 "교정 기한 초과 — 사용 금지" 스티커가 붙어 있습니다.',
+    'room.desc.qaoffice':    '품질 운영의 중심부입니다. ISO 13485 조항 레이블이 파일 캐비닛에 붙어 있습니다. CAPA 워크스테이션에 표시됩니다: "부적합 #NCR-0892 — 근본 원인 분석 대기 중."',
+    'room.desc.dispatch':    '제품이 시설을 떠나기 전 마지막 검사 지점입니다. 격리 케이지에 배치 BN-2024-3200이 보관되어 있으며 QA 승인을 기다리며 자물쇠가 걸려 있습니다. 배치 출고 터미널이 황색으로 빛나고 있습니다.',
+
+    /* 인벤토리 항목 */
+    'item.selected_prefix':     '선택됨: ',
+    'item.coa.name':            '성적서 (CoA)',
+    'item.coa.desc':            'CoA — 고무 화합물 RC-500 | 로트: RM-4471 | 공급업체: Kautschuk GmbH | 상태: GMP 검증 대기 중. 모든 입고 자재는 GMP에 따라 검증해야 합니다.',
+    'item.aql_table.name':      'AQL 샘플링 차트',
+    'item.aql_table.desc':      'ISO 2859-1 AQL 표: 로트 크기 3,200 | 검사 수준 II | AQL 1.0 → 샘플 코드 문자 K → 샘플 크기: 125 | 합격 ≤ 3 | 불합격 ≥ 4.',
+    'item.ncr_form.name':       '부적합 보고서 (NCR)',
+    'item.ncr_form.desc':       'NCR-0892: 배치 BN-2024-3200 — 125개 샘플 중 불량 4개 발견. Re=4 초과. 배치 처분: 불합격. SOP-QC-015에 따라 제출됨.',
+    'item.cal_ref.name':        '교정 기준',
+    'item.cal_ref.desc':        '인증된 게이지 블록: 12.50mm (±0.001mm). 인증서 번호 CAL-7734. ISO/IEC 17025에 따라 국가 표준으로 소급 가능. 기기 정확도 검증에 사용하세요.',
+    'item.maint_log.name':      '유지보수 로그',
+    'item.maint_log.desc':      '로그 항목 14/03/24 — 스테이션 3 금형 공구: 윤활제를 B-7급(합성)으로 교체. SOP-MAINT-009의 올바른 등급은 A-3급(식품용 실리콘)입니다. 이탈 양식 미작성!',
+    'item.capa_report.name':    '완료된 CAPA 보고서',
+    'item.capa_report.desc':    'CAPA-0112: 근본 원인 — 금형 공구에 잘못된 윤활제 등급 사용(A-3 대신 B-7). 즉각적 조치: 생산 중단. 예방 조치: SOP 업데이트 + 재교육. 참조: ISO 13485 §8.5.',
+    'item.batch_cert.name':     '배치 출고 인증서',
+    'item.batch_cert.desc':     '배치 BN-2024-3200 | 처분: 불합격 및 격리 | 사유: NCR-0892 / CAPA-0112. QA 승인 PIN: 4471. ISO 13485 §8.3 — 부적합 제품 관리에 따라 서명됨.',
+    'item.stopper_spec.name':   'ISO 15378 포장 사양',
+    'item.stopper_spec.desc':   '고무 마개 사양 — ISO 15378:2017 의약품용 1차 포장재. 공급업체: Kautschuk GmbH. 소재: 브로모부틸 고무 화합물. 핵심 조항: ISO 9001:2015 조항 8.7 — 부적합 출력물 관리.',
+    'item.iso9001_cert.name':   'ISO 9001:2015 인증서',
+    'item.iso9001_cert.desc':   'ISO 9001:2015 품질 경영 시스템 인증서 — MediSeal Manufacturing. 범위: 의료기기용 고무 피스톤 및 밀폐재 설계, 제조 및 공급. 핵심 개념: 위험 기반 사고, 지속적 개선.',
+
+    /* 현장 노트 */
+    'note.coa_found':    'CoA 확인됨 — 로트 <strong>RM-4471</strong>, 공급업체 Kautschuk GmbH. 자재를 출고하려면 GMP 터미널에 입력해야 합니다.',
+    'note.aql_chart':    'AQL 차트: 로트 3,200 | 수준 II | AQL 1.0 → 샘플 크기 <strong>125</strong> | Ac=3, Re=4',
+    'note.station3_log': '스테이션 3 기기 로그: 마이크로미터 SN-7734가 배치 BN-2024-3200에서 <strong>+0.03mm</strong>의 체계적 편차 기록. 기준값 = 12.50mm; 기기 측정값 12.53mm.',
+    'note.cal_ref':      '교정 기준: 인증된 게이지 블록 = <strong>12.50mm</strong> (±0.001mm). 마이크로미터 SN-7734 검증에 사용하세요.',
+    'note.sop_rack':     'SOP 선반: SOP-QC-015 (육안 검사), SOP-QC-022 (AQL 샘플링), SOP-MAINT-009 (금형 윤활제 — A-3급만 사용)',
+    'note.equip_log':    '장비 로그 — 마이크로미터 SN-7734: 90일 초과. 편차 이력 데이터는 <strong>스테이션 3 기기 로그</strong> (생산 구역)에 있습니다.',
+    'note.maint_log':    '유지보수 로그 — 스테이션 3: 윤활제가 <strong>B-7급</strong>(잘못됨)으로 교체됨. 올바른 등급: <strong>A-3급</strong>. 이탈 미기록!',
+    'note.iso13485':     'ISO 13485 핵심 조항: §4 QMS | §6 자원 | §7 제품 실현 | <strong>§8 측정, 분석 및 개선</strong> — §8.3 부적합 제품, §8.5.2 시정 조치, §8.5.3 예방 조치 포함',
+    'note.batch_cert':   '배치 출고 인증서 — 승인 PIN: <strong>4471</strong>. 처분: 불합격 &amp; 격리.',
+    'note.iso15378':     'ISO 15378:2017 포장 사양: Kautschuk GmbH의 고무 마개. 이 표준은 1차 포장재에 대해 <strong>ISO 9001:2015 + GMP</strong>를 결합합니다. 핵심 참조: <strong>조항 8.7</strong> — 부적합 출력물 관리.',
+    'note.iso9001_cert': 'ISO 9001:2015 인증서 — MediSeal. 품질 경영 시스템. 인증 범위는 의약품 포장재의 설계, 제조 및 유통을 포함합니다. 인증서 세부 사항을 주의 깊게 검토하세요.',
+
+    /* 페이지 제목 */
+    'page.title': 'MediSeal 품질 주간 — 에스케이프 룸',
   },
 
   /* ─── DANISH ────────────────────────────────────────────── */
