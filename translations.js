@@ -4463,6 +4463,180 @@ const TRANSLATIONS = {
     'body.iso15378_2':     'Penyumbat getah kini dikuarantinkan dan dilabel. NCR pembekal mesti dikemukakan.<br><br>Rakan sekerja anda Leon telah mengisi borang sisihan pembekal — tetapi anda perasan dia telah menutup nombor lot yang salah dengan <strong>cecair pembetulan (Tipp-Ex)</strong> dan menulis yang betul di atasnya. Entri asal kini tersembunyi sepenuhnya.<br><br>Adakah kaedah pembetulan Leon boleh diterima mengikut <strong>Amalan Dokumentasi Baik (GDocP)</strong>, yang merupakan keperluan GMP asas di MediSeal?',
     'body.iso9001_1':      'Pasukan CAPA MediSeal sedang menyemak insiden pelincir (NCR-0892). Pasukan penyelenggaraan telah menggunakan gred pelincir yang tidak diluluskan selama 3 bulan — dan <strong>tiada proses yang mengesannya sehingga ketidakakuran pembungkusan muncul</strong>.<br><br>ISO 9001:2015 memperkenalkan <strong>pemikiran berasaskan risiko</strong> — idea bahawa organisasi mesti mengenal pasti secara proaktif apa yang <em>mungkin</em> salah, sebelum ia menjadi ketidakakuran.<br><br>Mengikut prinsip ini, kegagalan proses manakah yang PALING BAIK menjelaskan mengapa insiden ini tidak dikesan selama 3 bulan?',
     'body.iso9001_2':      'Semakan Pengurusan adalah mesyuarat formal yang didokumenkan di mana pengurusan atasan menilai sejauh mana Sistem Pengurusan Kualiti berfungsi dengan baik.<br><br>Memandangkan kejadian minggu ini — NCR-0892 (ketidakakuran pelincir), CAPA-0112 (pelan tindakan pembetulan) dan sisihan penentukuran di Stesen 3 — Pengarah Kualiti mesti menyediakan agenda Semakan Pengurusan.<br><br>Kombinasi input manakah yang PALING BAIK mencerminkan apa yang perlu ada dalam agenda Semakan Pengurusan?',
+
+    /* Skrin sudah-selesai */
+    'already.title': 'Sudah Selesai',
+    'already.sub':   'Kumpulan anda telah menyertai permainan ini',
+    'already.body':  'Kumpulan anda telah melengkapkan Escape Room Minggu Kualiti.<br>Setiap kumpulan boleh menyertai sekali sahaja. Semak papan kedudukan untuk markah anda!',
+    'already.lb_btn':'📊 Lihat Papan Kedudukan',
+
+    /* Sembang */
+    'chat.placeholder':  'Hantar mesej kepada pasukan…',
+    'chat.reconnecting': 'Menyambung semula…',
+
+    /* Butang papan kedudukan skrin akhir */
+    'end.lb_btn': '📊 Lihat Papan Kedudukan',
+
+    /* Maklum balas teka-teki */
+    'fb.gmp_ok':               '✓ Nombor lot betul! Memaklumkan pasukan — menunggu semua ahli mengesahkan…',
+    'fb.gmp_bad':              'Nombor lot tidak dikenali. Semak Sijil Analisis (CoA).',
+    'fb.inspection_ok':        '✓ Betul — 4 kecacatan ditemui.',
+    'fb.inspection_reject_bad':'Jawapan tidak betul. 4 kecacatan ditemui dan Re=4, jadi kelompok mesti DITOLAK. Re bermakna anda menolak apabila bilangan kecacatan ≥ 4 — 4 bersamaan 4.',
+    'fb.inspection_type_bad':  'Masukkan tepat ACCEPT atau REJECT.',
+    'fb.inspection_count_bad': 'Anda memasukkan {n}, tetapi ia tidak sepadan dengan rekod pemeriksaan. Lihat dulang dengan teliti.',
+    'fb.inspection_nan':       'Sila masukkan nombor.',
+    'fb.ncr_bad':              'Nombor kelompok tidak ditemui. Semak nota anda — nombor kelompok dinyatakan dalam taklimat situasi.',
+    'fb.cal_bad':              'Tidak betul. Pembetulan = nilai piawai − bacaan = 12.50 − 12.53 = ?',
+    'fb.capa_root_ok':         '✓ Punca akar dikenal pasti dengan betul.',
+    'fb.capa_root_bad':        'Tidak betul. Semak penemuan log penyelenggaraan dan rak SOP — bukti fizikal menunjukkan satu perubahan bahan tertentu.',
+    'fb.capa_prev_bad':        'Bukan pilihan terbaik. Fikirkan cara mencegah gred pelincir yang salah daripada digunakan dari peringkat akar — perubahan tahap sistem mana yang menghapuskan peluang untuk melakukan kesilapan?',
+    'fb.pin_bad':              '❌ PIN tidak betul. Semak sijil pelepasan kelompok dalam inventori anda.',
+    'fb.pin_ok':               '✓ PIN betul! Semua ahli pasukan mesti mengesahkan untuk mengizinkan pelupusan kelompok…',
+    'fb.motto_prod_bad':       'Fikirkan apakah maksud "kemajuan" dalam amalan. Menolak kelompok sahaja menyelesaikan masalah kali ini — bagaimana kita mencegah yang seterusnya?',
+    'fb.motto_qa_bad':         'Fikirkan siapa yang sebenarnya melakukan tindakan tersebut. GMP menghubungkan tanggungjawab dokumentasi kepada orang yang melaksanakan langkah itu.',
+    'fb.motto_dis_bad':        'Tidak tepat. Fikirkan makna yang lebih mendalam "Kemajuan di setiap langkah · Kualiti dalam setiap perincian" terhadap cara kita menangani proses dari semasa ke semasa.',
+    'fb.iso15378_1_ok':        '✓ Betul! Pengasingan dan dokumentasi mesti diutamakan — tiada pelupusan yang tidak terkawal.',
+    'fb.iso15378_1_bad':       'Tidak betul. ISO 15378 direka untuk menambah keperluan GMP pada piawaian sistem pengurusan kualiti yang ada — itulah piawaian kualiti asas global.',
+    'fb.iso15378_2_bad':       'Tidak betul. Fikirkan GDocP — dokumentasi yang baik mesti sentiasa boleh dikesan. Rekod asal mesti kekal boleh dibaca.',
+    'fb.iso9001_1_ok':         '✓ Betul! Pemikiran berasaskan risiko bermakna menilai risiko sebelum melaksanakan perubahan prosedur. Tiada penilaian risiko = tiada kawalan.',
+    'fb.iso9001_1_bad':        'Tidak betul. Isu bukan pada kekerapan audit atau penyimpanan log. Proses mana yang sepatutnya menghalang penggunaan bahan yang tidak diluluskan dari awal?',
+    'fb.iso9001_2_bad':        'Tidak betul. Fikirkan apa yang perlu dinilai dalam semakan SMK — ia harus merangkumi kejadian kualiti, tindakan pembetulan dan prestasi sistem.',
+
+    /* Log penalti petunjuk */
+    'hint.penalty_log': '⚠️ Penalti petunjuk ditolak: −{time} saat dan −{pts} mata.',
+
+    /* Item inventori */
+    'item.selected_prefix':     'Dipilih: ',
+    'item.coa.name':            'Sijil Analisis (CoA)',
+    'item.coa.desc':            'CoA — Kompaun Getah RC-500 | Lot: RM-4471 | Pembekal: Kautschuk GmbH | Status: Pengesahan GMP belum selesai. Semua bahan masuk mesti disahkan mengikut GMP.',
+    'item.aql_table.name':      'Carta Pensampelan AQL',
+    'item.aql_table.desc':      'Jadual AQL ISO 2859-1: Saiz kelompok 3,200 | Tahap Pemeriksaan II | AQL 1.0 → Huruf kod sampel K → Saiz sampel: 125 | Terima ≤ 3 | Tolak ≥ 4.',
+    'item.ncr_form.name':       'Laporan Ketidakakuran (NCR)',
+    'item.ncr_form.desc':       'NCR-0892: Kelompok BN-2024-3200 — 4 kecacatan ditemui dalam 125 sampel, melebihi Re=4. Pelupusan kelompok: DITOLAK. Dikemukakan mengikut SOP-QC-015.',
+    'item.cal_ref.name':        'Rujukan Penentukuran',
+    'item.cal_ref.desc':        'Blok Tolok Bertauliah: 12.50 mm (±0.001 mm). Sijil No. CAL-7734. Boleh dikesan ke piawai kebangsaan mengikut ISO/IEC 17025. Digunakan untuk mengesahkan ketepatan instrumen.',
+    'item.maint_log.name':      'Log Penyelenggaraan',
+    'item.maint_log.desc':      'Entri log 14/03/24 — Perkakas Acuan Stesen 3: Pelincir pelepas ditukar kepada Gred B-7 (Sintetik). SOP-MAINT-009 menetapkan gred yang betul ialah A-3 (Silikon Gred Makanan). Tiada borang sisihan diisi!',
+    'item.capa_report.name':    'Laporan CAPA Selesai',
+    'item.capa_report.desc':    'CAPA-0112: Punca akar — gred pelincir yang salah digunakan pada perkakas acuan (B-7 bukannya A-3). Tindakan segera: Hentikan pengeluaran. Pencegahan: Kemaskini SOP + latihan semula. Rujukan: ISO 13485 §8.5.',
+    'item.batch_cert.name':     'Sijil Pelepasan Kelompok',
+    'item.batch_cert.desc':     'Kelompok BN-2024-3200 | Pelupusan: Tolak & Kuarantin | Sebab: NCR-0892 / CAPA-0112. PIN Kebenaran QA: 4471. Ditandatangani mengikut ISO 13485 §8.3 — Kawalan Produk Tidak Akur.',
+    'item.stopper_spec.name':   'Spesifikasi Pembungkusan ISO 15378',
+    'item.stopper_spec.desc':   'Spesifikasi Penyumbat Getah — ISO 15378:2017 Bahan Pembungkusan Primer Farmaseutikal. Pembekal: Kautschuk GmbH. Bahan: Kompaun Bromobutyl Getah. Klausa utama: ISO 9001:2015 Klausa 8.7 — Kawalan Output Tidak Akur.',
+    'item.iso9001_cert.name':   'Sijil ISO 9001:2015',
+    'item.iso9001_cert.desc':   'Sijil Sistem Pengurusan Kualiti ISO 9001:2015 — MediSeal Manufacturing. Skop: Reka bentuk, pembuatan dan bekalan piston getah serta penutup untuk peranti perubatan. Konsep utama: Pemikiran berasaskan risiko, Semakan Pengurusan.',
+
+    /* Papan kedudukan */
+    'lb.h2':               '📊 Papan Kedudukan',
+    'lb.admin_pw':         'Kata Laluan Pentadbir',
+    'lb.admin_pw_ph':      'Masukkan kata laluan pentadbir',
+    'lb.view_btn':         'Lihat Papan Kedudukan',
+    'lb.close_btn':        'Tutup',
+    'lb.close_btn2':       'Tutup',
+    'lb.completed_groups': 'KUMPULAN SELESAI — DISUSUN MENGIKUT MARKAH',
+    'lb.empty':            'Tiada kumpulan telah menyiapkan permainan lagi.',
+    'lb.col_group':        'Kumpulan',
+    'lb.col_score':        'Markah',
+    'lb.col_puzzles':      'Teka-teki',
+    'lb.col_time_left':    'Masa Berbaki',
+    'lb.col_wrong':        'Salah',
+    'lb.col_finished':     'Masa Selesai',
+    'lb.wrong_pw':         'Kata laluan tidak betul.',
+
+    /* Bilik menunggu / unit mata */
+    'lobby.connected':    '{count}/5 bersambung',
+    'lobby.ready_status': '✓ Bersedia: {count} / {total}  ({names})',
+    'members.online':     '{n} dalam talian',
+    'pts':                'mata',
+
+    /* Log aktiviti */
+    'log.code_found':       '🔑 Anda menemui kod untuk "{label}" — menunggu {n} rakan sepasukan lagi.',
+    'log.code_found_other': '🔑 {name} menemui jawapan untuk "{label}" — taip kod untuk mengesahkan!',
+    'log.hint_used_other':  '💡 {name} menggunakan petunjuk untuk {room}. Pasukan ditolak −{time}s / −{pts} mata.',
+    'log.teammate_done':    '✓ {name} telah selesai: {label}',
+    'log.item_found_other': '🤝 {name} menemui: {item}',
+
+    /* Log masuk tambahan */
+    'login.card_title':              'MINGGU KUALITI',
+    'login.card_sub':                'LOG MASUK KUMPULAN',
+    'login.card_motto':              'Kemajuan di setiap langkah · Kualiti dalam setiap perincian',
+    'login.select_group_placeholder':'— Pilih kumpulan anda —',
+    'login.select_error':            'Sila pilih kumpulan anda.',
+    'login.pin_error':               'Sila masukkan PIN.',
+    'login.fail':                    'Log masuk gagal — semak PIN anda dan cuba lagi.',
+    'login.logged_in_as':            'Log masuk sebagai: {name}',
+    'login.demo_mode_label':         'Mod Demo (Pentadbir)',
+    'login.demo_start_btn':          'Mulakan Simulasi Audit',
+    'login.admin_pw_wrong':          'Kata laluan pentadbir tidak betul.',
+    'login.server_error':            'Tidak dapat berhubung dengan pelayan. Gunakan Mod Demo untuk menguji permainan tanpa skor.',
+    'login.server_unavailable':      'Pelayan tidak tersedia — gunakan Mod Demo',
+
+    /* Modal */
+    'modal.default_tag':   'KAWALAN KUALITI',
+    'modal.waiting_team':  '✓ Betul! Menunggu pasukan ({done}/{required} telah disahkan)…',
+    'modal.confirming_team':'✓ Menunggu pasukan ({done}/{required} telah disahkan)…',
+
+    /* Status navigasi */
+    'nav.blocked':  'Disekat.',
+    'nav.here':     ' — Anda di sini',
+    'nav.visited':  ' — Dilawati',
+    'nav.unlocked': ' — Dibuka kunci',
+    'nav.locked':   ' — Dikunci',
+
+    /* Nota lapangan */
+    'note.coa_found':    'CoA ditemui — Lot <strong>RM-4471</strong>, pembekal Kautschuk GmbH. Mesti dimasukkan ke terminal GMP untuk melepaskan bahan.',
+    'note.aql_chart':    'Carta AQL: Kelompok 3,200 | Tahap II | AQL 1.0 → Saiz sampel <strong>125</strong> | Ac=3, Re=4',
+    'note.station3_log': 'Log Instrumen Stesen 3: Mikrometer SN-7734 merekodkan sisihan sistematik <strong>+0.03 mm</strong> pada kelompok BN-2024-3200. Rujukan = 12.50 mm; instrumen membaca 12.53 mm.',
+    'note.cal_ref':      'Rujukan Penentukuran: Blok Tolok Bertauliah = <strong>12.50 mm</strong> (±0.001 mm). Digunakan untuk mengesahkan mikrometer SN-7734.',
+    'note.sop_rack':     'Rak SOP: SOP-QC-015 (Pemeriksaan Visual), SOP-QC-022 (Pensampelan AQL), SOP-MAINT-009 (Pelincir Acuan — Gred A-3 SAHAJA)',
+    'note.equip_log':    'Log Peralatan — Mikrometer SN-7734: LEWAT 90 hari. Data sisihan sejarah dalam <strong>Log Instrumen Stesen 3</strong> (kawasan Pengeluaran).',
+    'note.maint_log':    'Log Penyelenggaraan — Stesen 3: Pelincir ditukar kepada <strong>Gred B-7</strong> (salah). Gred yang betul: <strong>Gred A-3</strong>. Tiada sisihan dilaporkan!',
+    'note.iso13485':     'Klausa utama ISO 13485: §4 SMK | §6 Sumber | §7 Realisasi Produk | <strong>§8 Pengukuran, Analisis &amp; Penambahbaikan</strong> — termasuk §8.3 Produk Tidak Akur, §8.5.2 Tindakan Pembetulan, §8.5.3 Tindakan Pencegahan',
+    'note.batch_cert':   'Sijil Pelepasan Kelompok — PIN Kebenaran: <strong>4471</strong>. Pelupusan: TOLAK &amp; Kuarantin.',
+    'note.iso15378':     'Spesifikasi Pembungkusan ISO 15378:2017: Penyumbat getah daripada Kautschuk GmbH. Piawaian menggabungkan <strong>ISO 9001:2015 + GMP</strong> untuk pembungkusan primer. Rujukan utama: <strong>Klausa 8.7</strong> — Kawalan Output Tidak Akur.',
+    'note.iso9001_cert': 'Sijil ISO 9001:2015 — MediSeal. Sistem Pengurusan Kualiti. Skop bertauliah merangkumi reka bentuk, pembuatan dan pengedaran bahan pembungkusan farmaseutikal. Semak butiran sijil dengan teliti.',
+
+    /* Tajuk halaman */
+    'page.title': 'MediSeal Minggu Kualiti — Escape Room',
+
+    /* Label teka-teki */
+    'puzzle.label.coa_verified':     'Pengesahan Bahan GMP',
+    'puzzle.label.inspection_done':  'Pemeriksaan Visual AQL',
+    'puzzle.label.ncr_filed':        'Laporan Ketidakakuran (NCR)',
+    'puzzle.label.calibration_done': 'Penentukuran Instrumen',
+    'puzzle.label.capa_done':        'Analisis Punca Akar CAPA',
+    'puzzle.label.batch_retrieved':  'Rekod Kelompok Diperolehi',
+    'puzzle.label.game_won':         'Pelepasan Kelompok Akhir',
+    'puzzle.label.iso15378_done':    'Pengesahan Pematuhan ISO 15378:2017',
+    'puzzle.label.iso9001_done':     'Semakan Pengurusan ISO 9001:2015',
+    'puzzle.label.motto_challenge':  'Cabaran Moto Minggu Kualiti (Zon Penghantaran)',
+    'puzzle.label.motto_production': 'Moto Penambahbaikan Kualiti (Talian Pengeluaran)',
+    'puzzle.label.motto_qaoffice':   'Moto Tanggungjawab Kualiti (Pejabat QA)',
+
+    /* Lencana dan penerangan kawasan */
+    'room.badge.receiving':  'Zon 01 — Dok Penerimaan',
+    'room.badge.production': 'Zon 02 — Talian Pengeluaran',
+    'room.badge.qclab':      'Zon 03 — Makmal Kawalan Kualiti',
+    'room.badge.qaoffice':   'Zon 04 — QA / Pematuhan',
+    'room.badge.dispatch':   'Zon 05 — Penghantaran / Pelepasan',
+    'room.desc.receiving':   'Bahan mentah menjalani kawalan kualiti masuk di sini. Mengikut GMP, setiap bahan masuk mesti mempunyai Sijil Analisis (CoA) yang disemak dan disahkan sebelum digunakan dalam pengeluaran. Lampu penunjuk tahan merah di atas palet kompaun getah berkelip.',
+    'room.desc.production':  'Talian utama pengacuan dan pemasangan piston getah untuk vial insulin dan picagari praisi. Di Stesen 3, lampu amaran kuning berkelip dan talian pengeluaran terhenti. Stesen kotak cahaya untuk pemeriksaan visual sudah bersedia sebagai aktiviti Minggu Kualiti.',
+    'room.desc.qclab':       'Makmal kawalan kualiti berbau isopropanol dan cecair penentukuran. Meja kerja dipenuhi tolok dimensi, pembilang zarah dan peralatan ujian kesterilan. Stesen mikrometer di sudut mempunyai label kuning "TAMAT TEMPOH — JANGAN GUNA".',
+    'room.desc.qaoffice':    'Pusat operasi kualiti. Kabinet fail dilabel dengan klausa ISO 13485. Stesen kerja CAPA memaparkan: "Ketidakakuran #NCR-0892 — Menunggu analisis punca akar."',
+    'room.desc.dispatch':    'Titik semakan akhir sebelum produk meninggalkan kemudahan. Sangkar kuarantin memegang kelompok BN-2024-3200 — menunggu tandatangan QA, berkunci. Terminal pelepasan kelompok menyala dalam warna kuning.',
+
+    /* Bar sisi */
+    'side.no_entries_html': 'Tiada entri lagi.',
+
+    /* Skrin mula tambahan */
+    'start.card_motto':       'Kemajuan di setiap langkah · Kualiti dalam setiap perincian',
+    'start.btn_waiting_text': '✓ Bersedia — Menunggu…',
+
+    /* Pengesahan pasukan */
+    'tc.body_html':        '<strong>{name}</strong> telah menemui jawapan. Kesemua {required} ahli perlu menaip kod ini untuk meneruskan:',
+    'tc.progress':         '✓ {count} / {required} ahli telah mengesahkan',
+    'tc.confirmed_waiting':'✓ Disahkan! Menunggu rakan sepasukan yang lain…',
+    'tc.incorrect':        'Tidak betul — masukkan kod tepat seperti yang ditunjukkan di atas.',
   },
 
   /* ─── TAMIL ─────────────────────────────────────────────── */
