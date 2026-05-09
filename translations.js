@@ -3461,6 +3461,173 @@ const TRANSLATIONS = {
     'body.iso15378_2':     '橡胶塞现已隔离并贴标。需向供应商提交NCR。<br><br>同事Leon填写了供应商偏差表单——但您注意到他用<strong>修正液（Tipp-Ex）</strong>盖住了错误的批号并在上面写了正确的。原始记录现已完全被遮盖。<br><br>根据MediSeal基本GMP要求的<strong>良好文件实践（GDocP）</strong>，Leon的更正方法是否可接受？',
     'body.iso9001_1':      'MediSeal的CAPA团队正在审查润滑剂事件（NCR-0892）。维护团队使用未经批准的润滑剂等级长达3个月——<strong>直到出现包装不合格，没有任何流程发现这一问题</strong>。<br><br>ISO 9001:2015引入了<strong>基于风险的思维</strong>——即组织必须在不合格发生之前，主动识别可能出错的事情。<br><br>根据这一原则，哪项流程失效最能解释为什么此事件在3个月内未被发现？',
     'body.iso9001_2':      '管理评审是一次正式的、有记录的会议，最高管理层在其中评估质量管理体系的运行效果。<br><br>鉴于本周的事件——NCR-0892（润滑剂不合格）、CAPA-0112（纠正措施计划）和3号工位校准偏差——质量总监需要准备管理评审议程。<br><br>哪种输入项组合最符合管理评审议程应包含的内容？',
+    /* 团队确认 */
+    'tc.body_html':        '<strong>{name}</strong> 找到了答案。全部 {required} 名成员须输入此代码方可继续：',
+    'tc.progress':         '✓ 已确认 {count} / {required} 名成员',
+    'tc.confirmed_waiting':'✓ 已确认！等待其余队友……',
+    'tc.incorrect':        '不正确——请按上方所示准确输入代码。',
+
+    /* 弹窗 */
+    'modal.default_tag':   '质量控制',
+    'modal.waiting_team':  '✓ 正确！正在等待团队（{done}/{required} 已确认）……',
+    'modal.confirming_team':'✓ 正在等待团队（{done}/{required} 已确认）……',
+
+    /* 导航状态 */
+    'nav.blocked':  '已锁定。',
+    'nav.here':     ' — 您在这里',
+    'nav.visited':  ' — 已访问',
+    'nav.unlocked': ' — 已解锁',
+    'nav.locked':   ' — 已锁定',
+
+    /* 谜题反馈 */
+    'fb.gmp_ok':               '✓ 批号正确！正在通知团队——等待所有成员确认……',
+    'fb.gmp_bad':              '未能识别此批号，请检查分析证书（CoA）。',
+    'fb.inspection_ok':        '✓ 正确——发现 4 个不合格品。',
+    'fb.inspection_reject_bad':'答案不正确。发现 4 个不合格品且 Re=4，该批次必须被拒绝（REJECTED）。Re 表示不合格品数量 ≥ 4 时拒绝——4 等于 4。',
+    'fb.inspection_type_bad':  '请准确输入 ACCEPT 或 REJECT。',
+    'fb.inspection_count_bad': '您输入了 {n}，但与检验记录不符。请仔细查看托盘。',
+    'fb.inspection_nan':       '请输入数字。',
+    'fb.ncr_bad':              '未找到该批号。请检查您的笔记——批号已在情景简报中说明。',
+    'fb.cal_bad':              '不正确。修正值 = 标准值 − 读数 = 12.50 − 12.53 = ?',
+    'fb.capa_root_ok':         '✓ 已正确识别根本原因。',
+    'fb.capa_prev_bad':        '这不是最佳选项。请思考如何从根本上防止再次使用错误润滑剂——哪种系统级变更能消除出错的机会？',
+    'fb.capa_root_bad':        '不正确。请查看维护日志和 SOP 文件架的发现——实物证据指向一项特定的物料变更。',
+    'fb.pin_bad':              '❌ PIN 码不正确。请查看库存中的批次放行证书。',
+    'fb.pin_ok':               '✓ PIN 码正确！所有团队成员须确认，方可授权批次处置……',
+    'fb.motto_prod_bad':       '请思考"进步"在实践中的含义。仅拒绝批次只能解决这一次问题——下一次该如何预防？',
+    'fb.motto_qa_bad':         '请思考谁实际执行了该操作。GMP 将文件责任归属于执行该步骤的人员。',
+    'fb.motto_dis_bad':        '不完全正确。请思考"每一步都在进步"和"每个细节皆有品质"对于我们随时间处理流程方式的深层含义。',
+    'fb.iso15378_1_ok':        '✓ 正确！隔离和文件记录须优先——不得进行不受控处置。',
+    'fb.iso15378_2_bad':       '不正确。请思考 GDocP——良好的文件记录必须始终具有可追溯性。原始记录必须保持可读。',
+    'fb.iso15378_1_bad':       '不正确。ISO 15378 旨在为现有质量管理体系标准增加 GMP 要求——那是全球质量管理的基准标准。',
+    'fb.iso9001_1_ok':         '✓ 正确！基于风险的思维意味着在实施变更程序之前评估风险。无风险评估 = 无控制措施。',
+    'fb.iso9001_2_bad':        '不正确。请思考质量管理体系评审需要评估的内容——应涵盖质量事件、纠正措施和体系绩效。',
+    'fb.iso9001_1_bad':        '不正确。问题不在于审计频率或日志归档。从一开始，哪个流程本应阻止使用未经批准的物料？',
+
+    /* 提示 */
+    'hint.penalty_log': '⚠️ 已扣除提示罚分：−{time}秒及 −{pts} 分。',
+
+    /* 聊天 */
+    'chat.placeholder':  '向团队发送消息……',
+    'chat.reconnecting': '正在重新连接……',
+
+    /* 活动日志 */
+    'log.code_found':       '🔑 您找到了"{label}"的代码——还需等待 {n} 名队友。',
+    'log.code_found_other': '🔑 {name} 找到了"{label}"的答案——请输入代码确认！',
+    'log.hint_used_other':  '💡 {name} 使用了 {room} 的提示。已扣除团队 −{time}秒 / −{pts} 分。',
+    'log.teammate_done':    '✓ {name} 已完成：{label}',
+    'log.item_found_other': '🤝 {name} 发现了：{item}',
+
+    /* 谜题标签 */
+    'puzzle.label.coa_verified':     'GMP 原料核查',
+    'puzzle.label.inspection_done':  'AQL 目视检验',
+    'puzzle.label.ncr_filed':        '不合格报告（NCR）',
+    'puzzle.label.calibration_done': '仪器校准',
+    'puzzle.label.capa_done':        'CAPA 根本原因分析',
+    'puzzle.label.batch_retrieved':  '批次记录已获取',
+    'puzzle.label.game_won':         '最终批次放行',
+    'puzzle.label.iso15378_done':    'ISO 15378:2017 合规核查',
+    'puzzle.label.iso9001_done':     'ISO 9001:2015 管理评审',
+    'puzzle.label.motto_challenge':  '质量周格言挑战（发货区）',
+    'puzzle.label.motto_production': '质量改进格言（生产线）',
+    'puzzle.label.motto_qaoffice':   '质量责任格言（QA 办公室）',
+
+    /* 登录补充项 */
+    'login.card_title':              '质量周',
+    'login.card_sub':                '小组登录',
+    'login.card_motto':              '每一步都在进步 · 每个细节皆有品质',
+    'login.select_group_placeholder':'— 请选择小组 —',
+    'login.select_error':            '请选择您的小组。',
+    'login.pin_error':               '请输入 PIN 码。',
+    'login.fail':                    '登录失败，请检查 PIN 码后重试。',
+    'login.logged_in_as':            '已登录：{name}',
+    'login.demo_mode_label':         '演示模式（管理员）',
+    'login.demo_start_btn':          '开始审计模拟',
+    'login.admin_pw_wrong':          '管理员密码不正确。',
+    'login.server_error':            '无法连接到服务器。请使用演示模式，在不计分的情况下测试游戏。',
+    'login.server_unavailable':      '服务器不可用——请使用演示模式',
+
+    /* 开始界面 */
+    'start.card_motto':       '每一步都在进步 · 每个细节皆有品质',
+    'start.btn_waiting_text': '✓ 已准备好——等待中……',
+
+    /* 排行榜 */
+    'lb.h2':               '📊 排行榜',
+    'lb.admin_pw':         '管理员密码',
+    'lb.admin_pw_ph':      '请输入管理员密码',
+    'lb.view_btn':         '查看排行榜',
+    'lb.close_btn':        '关闭',
+    'lb.close_btn2':       '关闭',
+    'lb.completed_groups': '已完成小组——按得分排名',
+    'lb.empty':            '暂无小组完成游戏。',
+    'lb.col_group':        '小组',
+    'lb.col_score':        '得分',
+    'lb.col_puzzles':      '谜题',
+    'lb.col_time_left':    '剩余时间',
+    'lb.col_wrong':        '答错次数',
+    'lb.col_finished':     '完成时间',
+    'lb.wrong_pw':         '密码不正确。',
+
+    /* 已完成界面 */
+    'already.title': '已完成',
+    'already.sub':   '您的小组已参与过游戏',
+    'already.body':  '您的小组已完成质量周密室逃脱。<br>每个小组只能参与一次。请查看排行榜了解您的得分！',
+    'already.lb_btn':'📊 查看排行榜',
+
+    /* 结束界面 */
+    'end.lb_btn': '📊 查看排行榜',
+
+    /* 侧边栏 */
+    'side.no_entries_html': '暂无记录。',
+
+    /* 区域徽章与描述 */
+    'room.badge.receiving':  '区域 01 — 收货区',
+    'room.badge.production': '区域 02 — 生产线',
+    'room.badge.qclab':      '区域 03 — 质量控制实验室',
+    'room.badge.qaoffice':   '区域 04 — QA / 合规',
+    'room.badge.dispatch':   '区域 05 — 发货 / 放行',
+    'room.desc.receiving':   '原料在此进行进货质量控制。根据GMP规定，每批进货原料在用于生产前，必须审核并核查分析证书（CoA）。橡胶混合物托盘上方的红色保留指示灯正在闪烁。',
+    'room.desc.production':  '用于胰岛素药瓶和预填充注射器的橡胶活塞主要成型与组装生产线。3号工位处，一盏琥珀色警示灯正在闪烁，生产线已停工。一台用于目视检验的灯箱工作站作为质量周活动已就绪。',
+    'room.desc.qclab':       '质量控制实验室弥漫着异丙醇和校准液的气味。工作台上摆满尺寸量规、粒子计数仪及无菌测试设备。角落的千分尺工作站贴有黄色"超期未校准——禁止使用"标签。',
+    'room.desc.qaoffice':    '质量运营的核心所在。档案柜上标有ISO 13485各条款标签。CAPA工作站显示："不合格 #NCR-0892——等待根本原因分析。"',
+    'room.desc.dispatch':    '产品离开工厂前的最后检查点。隔离笼内存放着批次BN-2024-3200——等待QA签批，挂锁锁定。批次放行终端呈琥珀色亮起。',
+
+    /* 库存物品 */
+    'item.selected_prefix':     '已选择：',
+    'item.coa.name':            '分析证书（CoA）',
+    'item.coa.desc':            'CoA——橡胶混合物 RC-500 | 批号：RM-4471 | 供应商：Kautschuk GmbH | 状态：GMP核查待完成。所有进货原料须按GMP要求核查。',
+    'item.aql_table.name':      'AQL 抽样图表',
+    'item.aql_table.desc':      'ISO 2859-1 AQL 表：批量 3,200 | 检验水平 II | AQL 1.0 → 样本代码字母 K → 样本量：125 | 接收 ≤ 3 | 拒收 ≥ 4。',
+    'item.ncr_form.name':       '不合格报告（NCR）',
+    'item.ncr_form.desc':       'NCR-0892：批次 BN-2024-3200——125 件样本中发现 4 件不合格品，超过 Re=4。批次处置：已拒绝。依据 SOP-QC-015 提交。',
+    'item.cal_ref.name':        '校准参考',
+    'item.cal_ref.desc':        '认证量块：12.50 mm（±0.001 mm）。证书编号 CAL-7734。依据 ISO/IEC 17025 可溯源至国家标准。用于验证仪器精度。',
+    'item.maint_log.name':      '维护日志',
+    'item.maint_log.desc':      '日志记录 14/03/24——3号工位模具工装：脱模润滑剂已更换为B-7级（合成型）。SOP-MAINT-009规定正确等级为A-3级（食品级硅脂）。未填写偏差表！',
+    'item.capa_report.name':    '已完成的CAPA报告',
+    'item.capa_report.desc':    'CAPA-0112：根本原因——模具工装使用了错误润滑剂等级（B-7级代替A-3级）。即时措施：停产。预防措施：SOP更新 + 再培训。参考：ISO 13485 §8.5。',
+    'item.batch_cert.name':     '批次放行证书',
+    'item.batch_cert.desc':     '批次 BN-2024-3200 | 处置：拒绝并隔离 | 原因：NCR-0892 / CAPA-0112。QA授权PIN：4471。依据 ISO 13485 §8.3——不合格产品控制签署。',
+    'item.stopper_spec.name':   'ISO 15378 包装规范',
+    'item.stopper_spec.desc':   '橡胶塞规范——ISO 15378:2017 药品初级包装材料。供应商：Kautschuk GmbH。材料：溴丁基橡胶混合物。关键条款：ISO 9001:2015 第8.7条——不合格输出控制。',
+    'item.iso9001_cert.name':   'ISO 9001:2015 认证证书',
+    'item.iso9001_cert.desc':   'ISO 9001:2015 质量管理体系认证证书——MediSeal Manufacturing。范围：药用橡胶活塞及密封件的设计、制造和供应。核心概念：基于风险的思维、持续改进。',
+
+    /* 现场笔记 */
+    'note.coa_found':    'CoA 已找到——批号 <strong>RM-4471</strong>，供应商 Kautschuk GmbH。须录入GMP终端以放行原料。',
+    'note.aql_chart':    'AQL 图表：批量 3,200 | 水平 II | AQL 1.0 → 样本量 <strong>125</strong> | Ac=3，Re=4',
+    'note.station3_log': '3号工位仪器记录：千分尺SN-7734在批次BN-2024-3200上记录到 <strong>+0.03 mm</strong> 的系统性偏差。参考值 = 12.50 mm；仪器读数 12.53 mm。',
+    'note.cal_ref':      '校准参考：认证量块 = <strong>12.50 mm</strong>（±0.001 mm）。用于验证千分尺SN-7734。',
+    'note.sop_rack':     'SOP文件架：SOP-QC-015（目视检验）、SOP-QC-022（AQL抽样）、SOP-MAINT-009（模具润滑剂——仅限A-3级）',
+    'note.equip_log':    '设备记录——千分尺SN-7734：已逾期90天。历史偏差数据见<strong>3号工位仪器记录</strong>（生产区）。',
+    'note.maint_log':    '维护日志——3号工位：润滑剂已更换为<strong>B-7级</strong>（错误）。正确等级：<strong>A-3级</strong>。未记录偏差！',
+    'note.iso13485':     'ISO 13485 关键条款：§4 质量管理体系 | §6 资源 | §7 产品实现 | <strong>§8 测量、分析和改进</strong>——含§8.3 不合格产品、§8.5.2 纠正措施、§8.5.3 预防措施',
+    'note.batch_cert':   '批次放行证书——授权PIN：<strong>4471</strong>。处置：拒绝 &amp; 隔离。',
+    'note.iso15378':     'ISO 15378:2017 包装规范：Kautschuk GmbH 橡胶塞。该标准将<strong>ISO 9001:2015 + GMP</strong>结合用于初级包装。关键参考：<strong>第8.7条</strong>——不合格输出控制。',
+    'note.iso9001_cert': 'ISO 9001:2015 认证证书——MediSeal。质量管理体系。认证范围涵盖药品包装材料的设计、制造和销售。请仔细查看证书详细信息。',
+
+    /* 页面标题 */
+    'page.title': 'MediSeal 质量周——密室逃脱',
   },
 
   /* ─── TRADITIONAL CHINESE (Taiwan Mandarin) ─────────────── */
