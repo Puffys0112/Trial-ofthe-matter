@@ -2311,6 +2311,7 @@ function showEndScreen(won, data) {
   const timeSpentSec     = data.timeSpentSec || (MAX_SECS_CLIENT - secondsRemaining);
   const em = String(Math.floor(timeSpentSec / 60)).padStart(2,'0');
   const es = String(timeSpentSec % 60).padStart(2,'0');
+  const pts = t('pts');
 
   const end = document.getElementById('endscreen');
   end.className = 'show ' + (won ? 'win' : 'lose');
@@ -2320,20 +2321,20 @@ function showEndScreen(won, data) {
 
   let statsHtml =
     '<strong style="color:' + (won ? 'var(--accent)' : 'var(--danger)') + '">' + t('end.score_title') + ' — ' + (S.demoMode ? 'DEMO' : escHtml(S.groupName || '')) + '</strong><br>' +
-    t('end.puzzles_n').replace('{n}', puzzlesDone).replace('{pts}', ptPerPuzzle) + ': <span>+' + (puzzlesDone * ptPerPuzzle).toLocaleString() + ' pts</span><br>';
+    t('end.puzzles_n').replace('{n}', puzzlesDone).replace('{pts}', ptPerPuzzle) + ': <span>+' + (puzzlesDone * ptPerPuzzle).toLocaleString() + ' ' + pts + '</span><br>';
 
   if (won && !isOvertime) {
-    statsHtml += t('end.time_bonus_n').replace('{secs}', regSecsLeft) + ': <span>+' + timeBonusPts.toLocaleString() + ' pts</span><br>';
+    statsHtml += t('end.time_bonus_n').replace('{secs}', regSecsLeft) + ': <span>+' + timeBonusPts.toLocaleString() + ' ' + pts + '</span><br>';
   } else {
-    statsHtml += t('end.time_bonus_ot') + ': <span>0 pts</span><br>';
+    statsHtml += t('end.time_bonus_ot') + ': <span>0 ' + pts + '</span><br>';
   }
   if (isOvertime) {
-    statsHtml += t('end.overtime_n').replace('{min}', Math.ceil(overtimeSecs/60)) + ': <span style="color:var(--danger);">−' + overtimePenalty.toLocaleString() + ' pts</span><br>';
+    statsHtml += t('end.overtime_n').replace('{min}', Math.ceil(overtimeSecs/60)) + ': <span style="color:var(--danger);">−' + overtimePenalty.toLocaleString() + ' ' + pts + '</span><br>';
   }
   statsHtml +=
-    t('end.wrong_n').replace('{n}', wrongAnswers) + ': <span style="color:var(--danger);">−' + penaltyPts.toLocaleString() + ' pts</span><br>' +
-    (hintPenalty ? t('end.hint_pen') + ': <span style="color:var(--danger);">−' + hintPenalty.toLocaleString() + ' pts</span><br>' : '') +
-    '<strong>' + t('end.total_score') + ' <span style="font-size:1.2rem;color:' + (won ? 'var(--accent2)' : 'var(--danger)') + ';">' + score.toLocaleString() + '</span> pts</strong><br><br>' +
+    t('end.wrong_n').replace('{n}', wrongAnswers) + ': <span style="color:var(--danger);">−' + penaltyPts.toLocaleString() + ' ' + pts + '</span><br>' +
+    (hintPenalty ? t('end.hint_pen') + ': <span style="color:var(--danger);">−' + hintPenalty.toLocaleString() + ' ' + pts + '</span><br>' : '') +
+    '<strong>' + t('end.total_score') + ' <span style="font-size:1.2rem;color:' + (won ? 'var(--accent2)' : 'var(--danger)') + ';">' + score.toLocaleString() + '</span> ' + pts + '</strong><br><br>' +
     t('end.time_taken') + ' <span>' + em + ':' + es + '</span><br>' +
     (S.demoMode ? '<em style="color:var(--dim);">' + t('end.demo_note') + '</em>' : '<a href="/admin.html" target="_blank" style="color:var(--accent);">' + t('end.lb_link') + '</a>');
 
@@ -2531,7 +2532,7 @@ function connectSocket() {
     const bar = document.getElementById('lobby-ready-bar');
     if (bar) {
       const names = readyNames.join(', ') || '—';
-      bar.textContent = `✓ Ready: ${readyCount} / ${total}  (${names})`;
+      bar.textContent = t('lobby.ready_status').replace('{count}', readyCount).replace('{total}', total).replace('{names}', names);
     }
   });
 
@@ -2685,7 +2686,7 @@ function applyServerState(state) {
 
 function updateMembersOnline(members) {
   const el = document.getElementById('members-online');
-  if (el) el.textContent = members.length + ' online';
+  if (el) el.textContent = t('members.online').replace('{n}', members.length);
 }
 
 function updateLobbyMembers(members) {
@@ -2694,7 +2695,7 @@ function updateLobbyMembers(members) {
   const count = members.length;
   const names = members.join(', ') || '—';
   const statusColor = count >= 3 ? 'var(--accent2)' : 'var(--warn)';
-  el.innerHTML = `<span style="color:${statusColor};">${count}/5 connected</span> &nbsp;— ${escHtml(names)}<br>`
+  el.innerHTML = `<span style="color:${statusColor};">${t('lobby.connected').replace('{count}', count)}</span> &nbsp;— ${escHtml(names)}<br>`
     + `<span style="font-size:0.72rem;color:var(--dim);">${count < 3 ? t('lobby.need_3') : count < 5 ? t('lobby.waiting_ready') : t('lobby.all_5')}</span>`;
 }
 

@@ -515,6 +515,12 @@ const TRANSLATIONS = {
     'note.batch_cert':   'Batch Release Certificate — Auth PIN: <strong>4471</strong>. Disposition: REJECT &amp; Quarantine.',
     'note.iso15378':     'ISO 15378:2017 Packaging Spec: Rubber stoppers from Kautschuk GmbH. Standard combines <strong>ISO 9001:2015 + GMP</strong> for primary packaging. Key ref: <strong>Clause 8.7</strong> — Control of Nonconforming Outputs.',
     'note.iso9001_cert': 'ISO 9001:2015 Certificate — MediSeal. Quality Management System. Certified scope covers design, manufacture, and distribution of pharmaceutical packaging materials. Review the certificate details carefully.',
+
+    /* Lobby / score unit — used by JS directly */
+    'pts':                'pts',
+    'lobby.ready_status': '✓ Ready: {count} / {total}  ({names})',
+    'members.online':     '{n} online',
+    'lobby.connected':    '{count}/5 connected',
   },
 
   /* ─── GERMAN ────────────────────────────────────────────── */
@@ -3628,6 +3634,12 @@ const TRANSLATIONS = {
 
     /* 页面标题 */
     'page.title': 'MediSeal 质量周——密室逃脱',
+
+    /* 大厅状态与分数单位 */
+    'pts':                '分',
+    'lobby.ready_status': '✓ 已准备：{count} / {total}（{names}）',
+    'members.online':     '{n} 名在线',
+    'lobby.connected':    '{count}/5 已连接',
   },
 
   /* ─── TRADITIONAL CHINESE (Taiwan Mandarin) ─────────────── */
