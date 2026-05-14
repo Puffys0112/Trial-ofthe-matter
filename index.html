@@ -786,6 +786,7 @@
         </tr>
       </table>
     </div>
+    <p id="rules-english-note" data-t="rules.english_answers" style="margin-top:8px;font-size:0.75rem;color:var(--dim);border-top:1px solid var(--border);padding-top:8px;"></p>
   </div>
 
   <div class="start-card" style="font-size:0.81rem;">
@@ -934,7 +935,7 @@
     <div id="modal-title">Puzzle Title</div>
     <div id="modal-body">Body text.</div>
     <div id="modal-choices"></div>
-    <input type="text" id="modal-input" placeholder="" style="display:none" />
+    <input type="text" id="modal-input" placeholder="" style="display:none" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
     <div id="modal-feedback"></div>
     <div class="modal-btns">
       <button class="btn" id="modal-cancel">Close</button>
@@ -962,7 +963,7 @@
     <div id="tc-body" style="font-size:0.82rem;color:var(--dim);line-height:1.7;margin-bottom:6px;"></div>
     <div id="tc-code-display"></div>
     <p data-t="tc.instruction" style="font-size:0.75rem;color:var(--dim);margin-bottom:8px;">Type the code above to confirm you've received it:</p>
-    <input type="text" id="tc-input" data-t-ph="tc.input_ph" placeholder="Enter the code…" maxlength="20" autocomplete="off" />
+    <input type="text" id="tc-input" data-t-ph="tc.input_ph" placeholder="Enter the code…" maxlength="20" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
     <div id="tc-feedback"></div>
     <div id="tc-progress"></div>
     <div style="display:flex;gap:8px;justify-content:flex-end;">
@@ -1401,7 +1402,7 @@ const ROOM_PUZZLES = {
   production: ['inspection_done', 'ncr_filed', 'motto_production'],
   qclab:      ['calibration_done', 'iso15378_done'],
   qaoffice:   ['capa_done', 'iso9001_done', 'motto_qaoffice'],
-  dispatch:   ['motto_challenge'],
+  dispatch:   ['motto_challenge', 'batch_retrieved'],
 };
 
 function getMissingInRoom(roomId) {
@@ -1496,10 +1497,10 @@ function handleAction(action) {
               log(t('msg.gmp_fact'), 'fact');
               renderNav();
             } else {
-              // Collaborative — notify team, wait for all to confirm
+              // Per-player: each player submits independently
               setFeedback(t('fb.gmp_ok'), 'ok');
-              document.getElementById('modal-submit').disabled = true;
-              S.socket.emit('code_found', { puzzleKey: 'coa_verified', code: 'RM-4471', label: 'GMP Material Verification (Lot RM-4471)' });
+              window._currentPuzzleKey = 'coa_verified';
+              myPuzzleComplete('coa_verified');
             }
           } else {
             S.wrongAnswers++;
@@ -1844,7 +1845,7 @@ function handleAction(action) {
           // Correct PIN — now check all puzzles complete
           const required = ['coa_verified','inspection_done','ncr_filed','calibration_done',
                             'capa_done','iso15378_done','iso9001_done','motto_challenge',
-                            'motto_production','motto_qaoffice'];
+                            'motto_production','motto_qaoffice','batch_retrieved'];
           const missing = required.filter(k => !S.solved[k]);
           if (missing.length > 0) {
             closeModal();
@@ -1859,8 +1860,8 @@ function handleAction(action) {
             triggerWin();
           } else {
             setFeedback(t('fb.pin_ok'), 'ok');
-            document.getElementById('modal-submit').disabled = true;
-            S.socket.emit('code_found', { puzzleKey: 'game_won', code: '4471', label: 'Final Batch Disposition (PIN 4471)' });
+            window._currentPuzzleKey = 'game_won';
+            myPuzzleComplete('game_won');
           }
         },
       });
@@ -2390,7 +2391,7 @@ function openModal({ tag, title, body, questionKey, placeholder, submitLabel, on
       const b = document.createElement('button');
       b.className = 'choice-btn';
       b.textContent = ch.label;
-      b.onclick = () => onChoice && onChoice(ch.correct, ch.label, ch);
+      b.onclick = () => { if (S.paused || S.over) return; onChoice && onChoice(ch.correct, ch.label, ch); };
       choicesEl.appendChild(b);
     });
   } else if (noInput) {
@@ -2537,6 +2538,19 @@ function showEndScreen(won, data) {
     '<strong>' + t('end.total_score') + ' <span style="font-size:1.2rem;color:' + (won ? 'var(--accent2)' : 'var(--danger)') + ';">' + score.toLocaleString() + '</span> ' + pts + '</strong><br><br>' +
     t('end.time_taken') + ' <span>' + em + ':' + es + '</span><br>' +
     (S.demoMode ? '<em style="color:var(--dim);">' + t('end.demo_note') + '</em>' : '<a href="/admin.html" target="_blank" style="color:var(--accent);">' + t('end.lb_link') + '</a>');
+
+  // HQ per-question breakdown
+  if (hiddenFound > 0) {
+    statsHtml += '<br><strong style="color:var(--dim);font-size:0.78rem;">' + t('end.hq_breakdown_h') + '</strong><br>';
+    const hqMap = data.hiddenAnswers || S.hiddenAnswers || {};
+    Object.entries(hqMap).forEach(([hqId, r]) => {
+      if (!r) return;
+      const qTitle = t('hq.' + hqId + '.title') || hqId;
+      const icon   = r.isCorrect ? '✓' : '✗';
+      const col    = r.isCorrect ? 'var(--accent2)' : 'var(--danger)';
+      statsHtml += '<span style="color:' + col + ';font-size:0.75rem;">' + icon + ' ' + escHtml(qTitle) + (r.isCorrect ? ' (+' + r.bonusPts + ' ' + pts + ')' : '') + '</span><br>';
+    });
+  }
 
   document.getElementById('end-stats').innerHTML = statsHtml;
 }
@@ -2691,10 +2705,15 @@ function connectSocket() {
     S.mySolved[key] = true;  // also mark my own (in case server confirmed me)
     S.puzzlesDone   = Math.max(S.puzzlesDone, puzzlesDone);
     closeModal();
-    closeTeamConfirm();
     puzzleDone();
     updateProgress(); renderNav(); renderRoom();
     log(t('log.all_players_done').replace('{label}', t('puzzle.label.' + key) || PUZZLE_LABELS[key] || key), 'success');
+    // Per-puzzle post-actions
+    if (key === 'coa_verified') {
+      log(t('msg.gmp_fact'), 'fact');
+    } else if (key === 'game_won') {
+      triggerWin();
+    }
   });
 
   // player_puzzle_progress = individual player completed their task
@@ -2781,14 +2800,14 @@ function connectSocket() {
   sock.on('member_join', ({ memberName, members }) => {
     updateMembersOnline(members);
     updateLobbyMembers(members);
-    appendSystemChat(memberName + ' joined the team');
+    appendSystemChat(t('msg.member_joined').replace('{name}', memberName));
     if (memberName !== S.memberName) log(t('msg.member_joined').replace('{name}', memberName), 'hint');
   });
 
   sock.on('member_leave', ({ memberName, members }) => {
     updateMembersOnline(members);
     updateLobbyMembers(members);
-    appendSystemChat(memberName + ' left');
+    appendSystemChat(t('msg.member_left').replace('{name}', memberName));
   });
 
   // ── Lobby events ──────────────────────────────────────────────────────────
@@ -2804,10 +2823,12 @@ function connectSocket() {
     doStartGame(timerSec);
   });
 
-  sock.on('lobby_error', ({ message }) => {
+  sock.on('lobby_error', ({ message, code, required, online }) => {
+    let msg = message || '';
+    if (code === 'wrong_count') msg = t('lobby.wrong_count').replace('{required}', required).replace('{online}', online);
+    else if (code === 'too_many') msg = t('lobby.too_many').replace('{required}', required).replace('{online}', online);
     const el = document.getElementById('lobby-error-msg');
-    if (el) el.textContent = message;
-    // Re-enable the begin button so player can try again
+    if (el) el.textContent = msg;
     const btn = document.getElementById('start-btn');
     btn.disabled = false;
     btn.textContent = t('login.demo_start_btn');
@@ -2821,51 +2842,6 @@ function connectSocket() {
     showEndScreen(data.won, data);
   });
 
-  // ── Collaborative code events ─────────────────────────────────────────────
-  sock.on('code_revealed', ({ puzzleKey, code, fromName, label, required, confirmed: confirmedCount }) => {
-    const tLabel = t('puzzle.label.' + puzzleKey) || label;
-    appendSystemChat(`🔑 ${fromName} found: ${tLabel}`);
-    if (fromName === S.memberName) {
-      const fb = document.getElementById('modal-feedback');
-      fb.className = 'ok';
-      fb.dataset.teamWaiting = '1';
-      fb.textContent = t('modal.waiting_team').replace('{done}', confirmedCount).replace('{required}', required);
-      document.getElementById('modal-submit').disabled = true;
-      log(t('log.code_found').replace('{label}', tLabel).replace('{n}', required - confirmedCount), 'hint');
-    } else {
-      showTeamConfirm({ puzzleKey, code, fromName, label: tLabel, required, confirmedCount });
-      log(t('log.code_found_other').replace('{name}', escHtml(fromName)).replace('{label}', tLabel), 'warn');
-    }
-  });
-
-  sock.on('confirm_progress', ({ puzzleKey, count, required, fromName }) => {
-    if (fromName !== S.memberName) appendSystemChat(`✓ ${fromName} confirmed (${count}/${required})`);
-    if (window._tcPuzzleKey === puzzleKey) {
-      document.getElementById('tc-progress').textContent = t('tc.progress').replace('{count}', count).replace('{required}', required);
-    }
-    const fb = document.getElementById('modal-feedback');
-    if (fb && fb.dataset.teamWaiting === '1') {
-      fb.textContent = t('modal.confirming_team').replace('{done}', count).replace('{required}', required);
-    }
-  });
-
-  sock.on('puzzle_complete', ({ puzzleKey, puzzlesDone: pd }) => {
-    closeTeamConfirm();
-    if (S.solved[puzzleKey]) return;
-    S.puzzlesDone = Math.max(S.puzzlesDone, pd);
-    if (puzzleKey === 'coa_verified') {
-      S.solved.coa_verified = true;
-      updateProgress(); closeModal();
-      log(t('msg.all_confirmed_gmp'), 'success');
-      log(t('msg.gmp_fact'), 'fact');
-      renderNav(); renderRoom();
-    } else if (puzzleKey === 'game_won') {
-      S.solved.game_won = true;
-      updateProgress(); closeModal();
-      log(t('msg.all_confirmed_pin'), 'success');
-      triggerWin();
-    }
-  });
 
   sock.on('kicked', ({ reason }) => {
     alert('Admin action: ' + reason + '\nPlease refresh and login again.');
@@ -2875,6 +2851,13 @@ function connectSocket() {
   sock.on('disconnect', () => {
     document.getElementById('chat-input').disabled    = true;
     document.getElementById('chat-input').placeholder = t('chat.reconnecting');
+  });
+
+  // iOS Safari: re-connect when tab becomes visible again after being hidden
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && !sock.connected) {
+      sock.connect();
+    }
   });
 }
 
@@ -2903,6 +2886,7 @@ function closeTeamConfirm() {
 }
 
 document.getElementById('tc-submit').onclick = () => {
+  if (S.paused || S.over) return;
   const puzzleKey = window._tcPuzzleKey;
   if (!puzzleKey || !S.socket) return;
   const inp = document.getElementById('tc-input');
@@ -2960,8 +2944,10 @@ function applyServerState(state) {
   if (state.groupSize)    S.requiredSize  = state.groupSize;
   if (state.inventory) state.inventory.forEach(id => { if (!S.inventory.includes(id)) S.inventory.push(id); });
   if (state.notes && state.notes.length) S.notes = [...state.notes];
-  if (state.puzzlesDone !== undefined)   S.puzzlesDone = Math.max(S.puzzlesDone, state.puzzlesDone);
-  if (state.timerSec   !== undefined)    S.timerSec    = state.timerSec;
+  if (state.puzzlesDone  !== undefined)  S.puzzlesDone  = Math.max(S.puzzlesDone, state.puzzlesDone);
+  if (state.wrongAnswers !== undefined)  S.wrongAnswers = Math.max(S.wrongAnswers, state.wrongAnswers);
+  if (state.hintPenalty  !== undefined)  S.hintPenalty  = Math.max(S.hintPenalty, state.hintPenalty);
+  if (state.timerSec     !== undefined)  S.timerSec     = state.timerSec;
   // Restore pause state
   if (state.paused) {
     S.paused = true;

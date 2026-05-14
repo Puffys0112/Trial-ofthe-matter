@@ -49,14 +49,39 @@ const groupSessions = new Map();
 // ── Per-group chat history ─────────────────────────────────────────────────
 const groupChats = new Map();
 
-// ── Collaborative code confirmations ──────────────────────────────────────
-const pendingConfirms = new Map();
-
 // ── Per-group lobby ready state ────────────────────────────────────────────
 const groupReadyState = new Map();
 
 // ── Race-condition guard for pre-game joins ────────────────────────────────
 const groupJoiningLock = new Map();  // groupId → Set<memberName>
+
+// ── Session persistence ────────────────────────────────────────────────────
+const SESSIONS_FILE = path.join(__dirname, 'data', 'sessions.json');
+
+function saveSessions() {
+  const obj = {};
+  groupSessions.forEach((sess, groupId) => { obj[groupId] = sess; });
+  try { fs.writeFileSync(SESSIONS_FILE, JSON.stringify(obj)); } catch (e) {}
+}
+
+function loadSessions() {
+  if (!fs.existsSync(SESSIONS_FILE)) return;
+  try {
+    const obj = JSON.parse(fs.readFileSync(SESSIONS_FILE, 'utf8'));
+    const data = load();
+    Object.entries(obj).forEach(([groupId, sess]) => {
+      const group = data.groups.find(g => g.id === groupId);
+      if (group && group.status === 'playing') {
+        // Server just restarted — all players disconnected; mark paused
+        if (!sess.paused) {
+          sess.paused   = true;
+          sess.pausedAt = Date.now();
+        }
+        groupSessions.set(groupId, sess);
+      }
+    });
+  } catch (e) { console.warn('Could not load sessions:', e.message); }
+}
 
 // ── Data helpers ───────────────────────────────────────────────────────────
 function load() { return JSON.parse(fs.readFileSync(DATA_FILE, 'utf8')); }
@@ -119,12 +144,12 @@ function calcScore({ puzzlesDone, wrongAnswers, hintPenalty, timerSec, won, resu
 function getOnlineMembers(groupId) {
   const room = io.sockets.adapter.rooms.get(groupId);
   if (!room) return [];
-  const names = [];
+  const seen = new Set();
   for (const sid of room) {
     const s = io.sockets.sockets.get(sid);
-    if (s && s.memberName) names.push(s.memberName);
+    if (s && s.memberName) seen.add(s.memberName);
   }
-  return names;
+  return [...seen];
 }
 
 // ── HTTP Routes ────────────────────────────────────────────────────────────
@@ -213,6 +238,13 @@ app.post('/api/game/start', requireGroup, (req, res) => {
   res.json({ ok: true, timerSec: calcSecsRemaining(req.groupId) });
 });
 
+// ── Required puzzles list (must match ROOM_PUZZLES + finale) ─────────────
+const REQUIRED_PUZZLES = [
+  'coa_verified','inspection_done','ncr_filed','calibration_done',
+  'capa_done','iso15378_done','iso9001_done','motto_challenge',
+  'motto_production','motto_qaoffice','batch_retrieved','game_won',
+];
+
 // Submit final score
 app.post('/api/game/submit', requireGroup, (req, res) => {
   const { won } = req.body || {};
@@ -223,7 +255,29 @@ app.post('/api/game/submit', requireGroup, (req, res) => {
     return res.json({ score: group.score, alreadyDone: true });
   }
 
-  const sess         = groupSessions.get(req.groupId) || {};
+  const sess = groupSessions.get(req.groupId);
+  if (!sess) return res.status(400).json({ error: 'No active session found.' });
+
+  // Validate win claim server-side
+  if (won) {
+    if (sess.paused) return res.status(400).json({ error: 'Cannot submit while game is paused.' });
+    const missingGroup = REQUIRED_PUZZLES.filter(k => !sess.solved[k]);
+    if (missingGroup.length > 0) {
+      return res.status(400).json({ error: 'Not all puzzles completed.', missing: missingGroup });
+    }
+    // Per-player check
+    const roster = sess.lockedRoster || [];
+    if (roster.length > 0) {
+      const incomplete = roster.filter(name => {
+        const my = (sess.playerSolved || {})[name] || {};
+        return REQUIRED_PUZZLES.some(k => sess.solved[k] && !my[k]);
+      });
+      if (incomplete.length > 0) {
+        return res.status(400).json({ error: 'Not all players completed all puzzles.', players: incomplete });
+      }
+    }
+  }
+
   const puzzlesDone  = sess.puzzlesDone  || 0;
   const wrongAnswers = sess.wrongAnswers || 0;
   const hintPenalty  = sess.hintPenalty  || 0;
@@ -378,7 +432,6 @@ app.post('/api/admin/reset', requireAdmin, (req, res) => {
 
   groupSessions.delete(groupId);
   groupChats.delete(groupId);
-  pendingConfirms.delete(groupId);
   groupReadyState.delete(groupId);
   groupJoiningLock.delete(groupId);
 
@@ -519,6 +572,14 @@ io.on('connection', (socket) => {
     if (joining.size === 0) groupJoiningLock.delete(groupId);
   }
 
+  // Kick any other socket using the same token (single-session enforcement)
+  const tokenMeta = groupTokens.get(socket.handshake.auth.token);
+  if (tokenMeta && tokenMeta.socketId && tokenMeta.socketId !== socket.id) {
+    const prev = io.sockets.sockets.get(tokenMeta.socketId);
+    if (prev) prev.disconnect(true);
+  }
+  if (tokenMeta) tokenMeta.socketId = socket.id;
+
   const sess = groupSessions.get(groupId);
   socket.emit('state_init', {
     state: sess ? {
@@ -529,6 +590,7 @@ io.on('connection', (socket) => {
       notes:         sess.notes,
       puzzlesDone:   sess.puzzlesDone,
       wrongAnswers:  sess.wrongAnswers,
+      hintPenalty:   sess.hintPenalty || 0,
       timerSec:      calcSecsRemaining(groupId),
       resumed:       !!sess.resumed,
       lockedRoster:  sess.lockedRoster || [],
@@ -585,27 +647,13 @@ io.on('connection', (socket) => {
     if (allDone && !gs.solved[key]) {
       gs.solved[key]  = true;
       gs.puzzlesDone  = Math.max(gs.puzzlesDone, Number(puzzlesDone) || Object.keys(gs.solved).length);
+      saveSessions();
       io.to(groupId).emit('puzzle_solved', {
         key, puzzlesDone: gs.puzzlesDone, fromName: memberName,
       });
     }
   });
 
-  // ── Legacy puzzle_solved (kept for collaborative code path compatibility) ─
-  socket.on('puzzle_solved', ({ key, puzzlesDone }) => {
-    const gs = groupSessions.get(groupId);
-    if (!gs || gs.solved[key]) return;
-    // For collaborative puzzles resolved via code_found/confirm_code flow,
-    // also mark per-player for the submitting player
-    if (!gs.playerSolved) gs.playerSolved = {};
-    if (!gs.playerSolved[memberName]) gs.playerSolved[memberName] = {};
-    gs.playerSolved[memberName][key] = true;
-    gs.solved[key]  = true;
-    gs.puzzlesDone  = Math.max(gs.puzzlesDone, Number(puzzlesDone) || 0);
-    socket.to(groupId).emit('puzzle_solved', {
-      key, puzzlesDone: gs.puzzlesDone, fromName: memberName,
-    });
-  });
 
   // ── Item found ────────────────────────────────────────────────────────────
   socket.on('item_found', ({ itemId }) => {
@@ -683,28 +731,28 @@ io.on('connection', (socket) => {
 
     if (required > 0 && online < required) {
       socket.emit('lobby_error', {
-        message: `Need exactly ${required} players. Currently ${online} connected.`,
+        code: 'wrong_count', required, online,
       });
       rs.delete(socket.id);
       return;
     }
     if (required > 0 && online > required) {
       socket.emit('lobby_error', {
-        message: `Too many players. Expected ${required}, got ${online}.`,
+        code: 'too_many', required, online,
       });
       rs.delete(socket.id);
       return;
     }
     if (online < 3) {
       socket.emit('lobby_error', {
-        message: `Need at least 3 members online to start. Currently ${online} connected.`,
+        code: 'wrong_count', required: 3, online,
       });
       rs.delete(socket.id);
       return;
     }
     if (online > 5) {
       socket.emit('lobby_error', {
-        message: `Maximum group size is 5. Currently ${online} connected.`,
+        code: 'too_many', required: 5, online,
       });
       rs.delete(socket.id);
       return;
@@ -735,76 +783,8 @@ io.on('connection', (socket) => {
       }
 
       groupReadyState.delete(groupId);
+      saveSessions();
       io.to(groupId).emit('game_start', { timerSec: MAX_SECS });
-    }
-  });
-
-  // ── Collaborative: code found ─────────────────────────────────────────────
-  socket.on('code_found', ({ puzzleKey, code, label }) => {
-    const gs = groupSessions.get(groupId);
-    if (!gs || gs.solved[puzzleKey]) return;
-
-    if (!pendingConfirms.has(groupId)) pendingConfirms.set(groupId, new Map());
-    const gConfirms = pendingConfirms.get(groupId);
-    if (gConfirms.has(puzzleKey)) return;
-
-    const room     = io.sockets.adapter.rooms.get(groupId);
-    const required = room ? room.size : 1;
-    const confirmed = new Set([socket.id]);
-    gConfirms.set(puzzleKey, { code, fromName: memberName, confirmed, required });
-
-    if (required <= 1) {
-      if (!gs.playerSolved) gs.playerSolved = {};
-      if (!gs.playerSolved[memberName]) gs.playerSolved[memberName] = {};
-      gs.playerSolved[memberName][puzzleKey] = true;
-      gs.solved[puzzleKey] = true;
-      gs.puzzlesDone++;
-      gConfirms.delete(puzzleKey);
-      io.to(groupId).emit('puzzle_complete', { puzzleKey, puzzlesDone: gs.puzzlesDone, code });
-      return;
-    }
-
-    io.to(groupId).emit('code_revealed', {
-      puzzleKey, code, fromName: memberName, label, required, confirmed: 1,
-    });
-  });
-
-  // ── Collaborative: code confirmed ─────────────────────────────────────────
-  socket.on('confirm_code', ({ puzzleKey, code }) => {
-    const gs = groupSessions.get(groupId);
-    if (!gs || gs.solved[puzzleKey]) return;
-
-    const gConfirms = pendingConfirms.get(groupId);
-    if (!gConfirms) return;
-    const pend = gConfirms.get(puzzleKey);
-    if (!pend) return;
-
-    const normalise = s => String(s || '').trim().toUpperCase().replace(/[-\s]/g, '');
-    if (normalise(code) !== normalise(pend.code)) return;
-    if (pend.confirmed.has(socket.id)) return;
-
-    pend.confirmed.add(socket.id);
-
-    // Mark per-player completion for this confirming player
-    if (!gs.playerSolved) gs.playerSolved = {};
-    if (!gs.playerSolved[memberName]) gs.playerSolved[memberName] = {};
-    gs.playerSolved[memberName][puzzleKey] = true;
-
-    const count = pend.confirmed.size;
-    io.to(groupId).emit('confirm_progress', {
-      puzzleKey, count, required: pend.required, fromName: memberName,
-    });
-
-    const room   = io.sockets.adapter.rooms.get(groupId);
-    const online = room ? room.size : 1;
-
-    if (count >= online || count >= pend.required) {
-      gs.solved[puzzleKey] = true;
-      gs.puzzlesDone++;
-      gConfirms.delete(puzzleKey);
-      io.to(groupId).emit('puzzle_complete', {
-        puzzleKey, puzzlesDone: gs.puzzlesDone, code: pend.code,
-      });
     }
   });
 
@@ -883,6 +863,10 @@ io.on('connection', (socket) => {
 });
 
 // ── Start ──────────────────────────────────────────────────────────────────
+// Load persisted sessions (crash recovery) and start auto-save interval
+loadSessions();
+setInterval(saveSessions, 30 * 1000);
+
 function getLanIP() {
   const nets = os.networkInterfaces();
   for (const list of Object.values(nets)) {
