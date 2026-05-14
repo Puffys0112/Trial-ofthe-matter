@@ -807,6 +807,8 @@ io.on('connection', (socket) => {
   socket.on('overtime_hardstop', () => {
     const gs = groupSessions.get(groupId);
     if (!gs || gs.solved.game_won) return;
+    // Prevent clients from forcing game-over before time actually expires
+    if (calcSecsRemaining(groupId) > 30) return;
     const secsLeft      = 0;
     const hiddenAnswers = gs.hiddenAnswers || {};
     const hiddenCorrect = Object.values(hiddenAnswers).filter(a => a && a.isCorrect).length;
