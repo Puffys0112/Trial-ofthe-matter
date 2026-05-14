@@ -12,7 +12,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g2",
@@ -25,7 +29,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g3",
@@ -38,7 +46,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g4",
@@ -51,7 +63,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g5",
@@ -64,7 +80,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g6",
@@ -77,7 +97,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g7",
@@ -90,7 +114,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g8",
@@ -103,7 +131,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g9",
@@ -116,7 +148,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g10",
@@ -129,7 +165,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g11",
@@ -142,7 +182,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g12",
@@ -155,7 +199,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g13",
@@ -168,7 +216,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g14",
@@ -181,7 +233,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g15",
@@ -194,7 +250,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g16",
@@ -207,7 +267,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g17",
@@ -220,7 +284,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g18",
@@ -233,7 +301,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g19",
@@ -246,7 +318,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g20",
@@ -259,7 +335,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g21",
@@ -272,7 +352,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g22",
@@ -285,7 +369,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g23",
@@ -298,7 +386,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g24",
@@ -311,7 +403,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g25",
@@ -324,7 +420,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g26",
@@ -337,7 +437,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g27",
@@ -350,7 +454,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g28",
@@ -363,7 +471,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g29",
@@ -376,7 +488,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g30",
@@ -389,7 +505,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g31",
@@ -402,7 +522,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g32",
@@ -415,7 +539,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g33",
@@ -428,7 +556,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g34",
@@ -441,7 +573,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g35",
@@ -454,7 +590,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g36",
@@ -467,7 +607,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g37",
@@ -480,7 +624,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g38",
@@ -493,7 +641,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g39",
@@ -506,7 +658,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g40",
@@ -519,7 +675,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g41",
@@ -532,7 +692,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g42",
@@ -545,7 +709,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g43",
@@ -558,7 +726,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g44",
@@ -571,7 +743,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g45",
@@ -584,7 +760,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g46",
@@ -597,7 +777,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g47",
@@ -610,7 +794,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g48",
@@ -623,7 +811,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g49",
@@ -636,7 +828,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g50",
@@ -649,7 +845,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g51",
@@ -662,7 +862,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g52",
@@ -675,7 +879,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g53",
@@ -688,7 +896,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g54",
@@ -701,7 +913,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g55",
@@ -714,7 +930,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g56",
@@ -727,7 +947,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g57",
@@ -740,7 +964,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g58",
@@ -753,7 +981,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g59",
@@ -766,7 +998,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g60",
@@ -779,7 +1015,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g61",
@@ -792,7 +1032,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g62",
@@ -805,7 +1049,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g63",
@@ -818,7 +1066,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g64",
@@ -831,7 +1083,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g65",
@@ -844,7 +1100,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g66",
@@ -857,7 +1117,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g67",
@@ -870,7 +1134,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g68",
@@ -883,7 +1151,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g69",
@@ -896,7 +1168,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g70",
@@ -909,7 +1185,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g71",
@@ -922,7 +1202,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g72",
@@ -935,7 +1219,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g73",
@@ -948,7 +1236,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g74",
@@ -961,7 +1253,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g75",
@@ -974,7 +1270,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g76",
@@ -987,7 +1287,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g77",
@@ -1000,7 +1304,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g78",
@@ -1013,7 +1321,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g79",
@@ -1026,7 +1338,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g80",
@@ -1039,7 +1355,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g81",
@@ -1052,7 +1372,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g82",
@@ -1065,7 +1389,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g83",
@@ -1078,7 +1406,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g84",
@@ -1091,7 +1423,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g85",
@@ -1104,7 +1440,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g86",
@@ -1117,7 +1457,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g87",
@@ -1130,7 +1474,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g88",
@@ -1143,7 +1491,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g89",
@@ -1156,7 +1508,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g90",
@@ -1169,7 +1525,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g91",
@@ -1182,7 +1542,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g92",
@@ -1195,7 +1559,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g93",
@@ -1208,7 +1576,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g94",
@@ -1221,7 +1593,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g95",
@@ -1234,7 +1610,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g96",
@@ -1247,7 +1627,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g97",
@@ -1260,7 +1644,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g98",
@@ -1273,7 +1661,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g99",
@@ -1286,7 +1678,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g100",
@@ -1299,7 +1695,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g101",
@@ -1312,7 +1712,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g102",
@@ -1325,7 +1729,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g103",
@@ -1338,7 +1746,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g104",
@@ -1351,7 +1763,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g105",
@@ -1364,7 +1780,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g106",
@@ -1377,7 +1797,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g107",
@@ -1390,7 +1814,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g108",
@@ -1403,7 +1831,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g109",
@@ -1416,7 +1848,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g110",
@@ -1429,7 +1865,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g111",
@@ -1442,7 +1882,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g112",
@@ -1455,7 +1899,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g113",
@@ -1468,7 +1916,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g114",
@@ -1481,7 +1933,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g115",
@@ -1494,7 +1950,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g116",
@@ -1507,7 +1967,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g117",
@@ -1520,7 +1984,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g118",
@@ -1533,7 +2001,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g119",
@@ -1546,7 +2018,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g120",
@@ -1559,7 +2035,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g121",
@@ -1572,7 +2052,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g122",
@@ -1585,7 +2069,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g123",
@@ -1598,7 +2086,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g124",
@@ -1611,7 +2103,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g125",
@@ -1624,7 +2120,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g126",
@@ -1637,7 +2137,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g127",
@@ -1650,7 +2154,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g128",
@@ -1663,7 +2171,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g129",
@@ -1676,7 +2188,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g130",
@@ -1689,7 +2205,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g131",
@@ -1702,7 +2222,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g132",
@@ -1715,7 +2239,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g133",
@@ -1728,7 +2256,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g134",
@@ -1741,7 +2273,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g135",
@@ -1754,7 +2290,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g136",
@@ -1767,7 +2307,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g137",
@@ -1780,7 +2324,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g138",
@@ -1793,7 +2341,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g139",
@@ -1806,7 +2358,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g140",
@@ -1819,7 +2375,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g141",
@@ -1832,7 +2392,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g142",
@@ -1845,7 +2409,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g143",
@@ -1858,7 +2426,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g144",
@@ -1871,7 +2443,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g145",
@@ -1884,7 +2460,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g146",
@@ -1897,7 +2477,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g147",
@@ -1910,7 +2494,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g148",
@@ -1923,7 +2511,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g149",
@@ -1936,7 +2528,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g150",
@@ -1949,7 +2545,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g151",
@@ -1962,7 +2562,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g152",
@@ -1975,7 +2579,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g153",
@@ -1988,7 +2596,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g154",
@@ -2001,7 +2613,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g155",
@@ -2014,7 +2630,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g156",
@@ -2027,7 +2647,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g157",
@@ -2040,7 +2664,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g158",
@@ -2053,7 +2681,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g159",
@@ -2066,7 +2698,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g160",
@@ -2079,7 +2715,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g161",
@@ -2092,7 +2732,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g162",
@@ -2105,7 +2749,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g163",
@@ -2118,7 +2766,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g164",
@@ -2131,7 +2783,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g165",
@@ -2144,7 +2800,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g166",
@@ -2157,7 +2817,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g167",
@@ -2170,7 +2834,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g168",
@@ -2183,7 +2851,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g169",
@@ -2196,7 +2868,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g170",
@@ -2209,7 +2885,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g171",
@@ -2222,7 +2902,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g172",
@@ -2235,7 +2919,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g173",
@@ -2248,7 +2936,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g174",
@@ -2261,7 +2953,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g175",
@@ -2274,7 +2970,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g176",
@@ -2287,7 +2987,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g177",
@@ -2300,7 +3004,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g178",
@@ -2313,7 +3021,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g179",
@@ -2326,7 +3038,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g180",
@@ -2339,7 +3055,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g181",
@@ -2352,7 +3072,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g182",
@@ -2365,7 +3089,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g183",
@@ -2378,7 +3106,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g184",
@@ -2391,7 +3123,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g185",
@@ -2404,7 +3140,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g186",
@@ -2417,7 +3157,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g187",
@@ -2430,7 +3174,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g188",
@@ -2443,7 +3191,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g189",
@@ -2456,7 +3208,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g190",
@@ -2469,7 +3225,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g191",
@@ -2482,7 +3242,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g192",
@@ -2495,7 +3259,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g193",
@@ -2508,7 +3276,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g194",
@@ -2521,7 +3293,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g195",
@@ -2534,7 +3310,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g196",
@@ -2547,7 +3327,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g197",
@@ -2560,7 +3344,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g198",
@@ -2573,7 +3361,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g199",
@@ -2586,7 +3378,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g200",
@@ -2599,7 +3395,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g201",
@@ -2612,7 +3412,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g202",
@@ -2625,7 +3429,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g203",
@@ -2638,7 +3446,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g204",
@@ -2651,7 +3463,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g205",
@@ -2664,7 +3480,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g206",
@@ -2677,7 +3497,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g207",
@@ -2690,7 +3514,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g208",
@@ -2703,7 +3531,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g209",
@@ -2716,7 +3548,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g210",
@@ -2729,7 +3565,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g211",
@@ -2742,7 +3582,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g212",
@@ -2755,7 +3599,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g213",
@@ -2768,7 +3616,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g214",
@@ -2781,7 +3633,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g215",
@@ -2794,7 +3650,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g216",
@@ -2807,7 +3667,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g217",
@@ -2820,7 +3684,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g218",
@@ -2833,7 +3701,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g219",
@@ -2846,7 +3718,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g220",
@@ -2859,7 +3735,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g221",
@@ -2872,7 +3752,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g222",
@@ -2885,7 +3769,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g223",
@@ -2898,7 +3786,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g224",
@@ -2911,7 +3803,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g225",
@@ -2924,7 +3820,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g226",
@@ -2937,7 +3837,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g227",
@@ -2950,7 +3854,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g228",
@@ -2963,7 +3871,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g229",
@@ -2976,7 +3888,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g230",
@@ -2989,7 +3905,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g231",
@@ -3002,7 +3922,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g232",
@@ -3015,7 +3939,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g233",
@@ -3028,7 +3956,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g234",
@@ -3041,7 +3973,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g235",
@@ -3054,7 +3990,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g236",
@@ -3067,7 +4007,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g237",
@@ -3080,7 +4024,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g238",
@@ -3093,7 +4041,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g239",
@@ -3106,7 +4058,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g240",
@@ -3119,7 +4075,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g241",
@@ -3132,7 +4092,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g242",
@@ -3145,7 +4109,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g243",
@@ -3158,7 +4126,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g244",
@@ -3171,7 +4143,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g245",
@@ -3184,7 +4160,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g246",
@@ -3197,7 +4177,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g247",
@@ -3210,7 +4194,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g248",
@@ -3223,7 +4211,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g249",
@@ -3236,7 +4228,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g250",
@@ -3249,7 +4245,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g251",
@@ -3262,7 +4262,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g252",
@@ -3275,7 +4279,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g253",
@@ -3288,7 +4296,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g254",
@@ -3301,7 +4313,11 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
     },
     {
       "id": "g255",
@@ -3314,7 +4330,32 @@
       "won": false,
       "secondsRemaining": 0,
       "completedAt": null,
-      "startedAt": null
+      "startedAt": null,
+      "trialGroup": false,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": []
+    },
+    {
+      "id": "g256",
+      "name": "Group 256",
+      "pin": "1256",
+      "trialGroup": true,
+      "requiredSize": null,
+      "permanentlyLocked": false,
+      "lockedRoster": [],
+      "status": "pending",
+      "score": null,
+      "puzzlesDone": 0,
+      "wrongAnswers": 0,
+      "hintPenalty": 0,
+      "won": false,
+      "secondsRemaining": 0,
+      "timeSpentSec": 0,
+      "completedAt": null,
+      "startedAt": null,
+      "resumed": false,
+      "trials": []
     }
   ]
 }

@@ -258,9 +258,9 @@
         Each puzzle (overtime): <strong style="color:var(--text);">× 180 pts</strong><br>
         Each puzzle (resumed game): <strong style="color:var(--text);">× 100 pts</strong><br>
         Time remaining bonus (win, regulation only): <strong style="color:var(--text);">× 2 pts per second</strong> (max ~3,000 pts)<br>
-        Wrong answer penalty: <strong style="color:var(--danger);">−10 pts each</strong><br>
+        Wrong answer penalty: <strong style="color:var(--danger);">−50 pts each</strong><br>
         Hint penalty: <strong style="color:var(--danger);">−50 pts per hint used</strong><br>
-        Overtime penalty: <strong style="color:var(--danger);">−30 pts per minute after 25 min</strong><br>
+        Overtime penalty: <strong style="color:var(--danger);">−30 pts per minute after 30 min</strong><br>
         <em>Maximum possible score: 5,200 pts (all 11 puzzles, regulation, no penalties, instant finish)</em>
       </div>
     </details>
@@ -270,7 +270,7 @@
       <div class="add-group-form">
         <div class="field">
           <label>Group Name</label>
-          <input type="text" id="new-name" placeholder="e.g. Group 9" />
+          <input type="text" id="new-name" placeholder="e.g. Group 9" maxlength="40" />
         </div>
         <div class="field">
           <label>PIN</label>
@@ -293,6 +293,8 @@
             <th>Score</th>
             <th>Puzzles</th>
             <th>Wrong</th>
+            <th>Req. Size</th>
+            <th>Roster</th>
             <th>Trials</th>
             <th>Started</th>
             <th>Finished</th>
@@ -410,19 +412,25 @@ async function loadAdminGroups() {
     tbody.innerHTML = groups.map(g => {
       const trialCount  = Array.isArray(g.trials) ? g.trials.length : 0;
       const canResume   = g.status === 'completed' || g.status === 'playing';
+      const trialBadge  = g.trialGroup ? ' <span style="font-size:0.65rem;color:var(--warn);border:1px solid var(--warn);padding:1px 4px;border-radius:3px;">TRIAL</span>' : '';
+      const pausedBadge = g.livePaused ? ' <span style="font-size:0.65rem;color:var(--danger);border:1px solid var(--danger);padding:1px 4px;border-radius:3px;">PAUSED</span>' : '';
+      const lockedBadge = g.permanentlyLocked ? ' <span style="font-size:0.65rem;color:var(--dim);border:1px solid var(--dim);padding:1px 4px;border-radius:3px;">LOCKED</span>' : '';
+      const roster      = Array.isArray(g.liveRoster) && g.liveRoster.length ? g.liveRoster.join(', ') : (Array.isArray(g.lockedRoster) && g.lockedRoster.length ? g.lockedRoster.join(', ') : '—');
       return `<tr>
-        <td><strong>${escHtml(g.name)}</strong></td>
+        <td><strong>${escHtml(g.name)}</strong>${trialBadge}${lockedBadge}</td>
         <td class="pin-cell">${g.pin}</td>
-        <td>${statusBadge(g.status, g.resumed)}</td>
+        <td>${statusBadge(g.status, g.resumed)}${pausedBadge}</td>
         <td>${g.score !== null && g.score !== undefined ? (g.score).toLocaleString() + ' pts' : (g.livePuzzles > 0 ? `~live ${g.livePuzzles}★` : '—')}</td>
         <td>${(g.livePuzzles||g.puzzlesDone||0)}/11</td>
         <td style="color:var(--danger)">${g.liveWrong || g.wrongAnswers || 0}</td>
+        <td style="color:var(--dim)">${g.requiredSize || '—'}</td>
+        <td style="font-size:0.72rem;color:var(--dim);max-width:120px;overflow:hidden;text-overflow:ellipsis;" title="${escHtml(roster)}">${escHtml(roster)}</td>
         <td style="color:var(--dim)">${trialCount > 0 ? trialCount + ' trial(s)' : '—'}</td>
         <td style="font-size:0.72rem;color:var(--dim)">${fmtDt(g.startedAt)}</td>
         <td style="font-size:0.72rem;color:var(--dim)">${fmtDt(g.completedAt)}</td>
         <td class="action-btns">
           <button class="btn danger" onclick="resetGroup('${g.id}', '${escHtml(g.name)}')">Reset</button>
-          ${canResume ? `<button class="btn warn" onclick="resumeGroup('${g.id}', '${escHtml(g.name)}')">Resume</button>` : ''}
+          ${canResume && !g.trialGroup ? `<button class="btn warn" onclick="resumeGroup('${g.id}', '${escHtml(g.name)}')">Resume</button>` : ''}
         </td>
       </tr>`;
     }).join('');

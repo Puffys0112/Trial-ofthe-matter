@@ -115,6 +115,28 @@
     @keyframes alarmBorder { 0%,100%{border-color:#e63946} 50%{border-color:#ff7b00} }
     @keyframes shake { 0%,100%{transform:translateX(0)} 15%{transform:translateX(-8px)} 30%{transform:translateX(8px)} 45%{transform:translateX(-6px)} 60%{transform:translateX(6px)} 75%{transform:translateX(-3px)} 90%{transform:translateX(3px)} }
 
+    /* ── PAUSE OVERLAY ── */
+    #pause-overlay {
+      display: none;
+      position: fixed; inset: 0; z-index: 10000;
+      background: rgba(0,0,0,0.94);
+      align-items: center; justify-content: center;
+    }
+    #pause-overlay.show { display: flex; }
+    #pause-box {
+      background: #0f0f1a;
+      border: 4px solid var(--danger);
+      border-radius: 14px;
+      padding: 36px 40px;
+      max-width: 520px; width: 94%;
+      text-align: center;
+      animation: alarmPulse 1.4s ease-in-out infinite;
+    }
+    .pause-icon  { font-size: 3.5rem; margin-bottom: 10px; }
+    .pause-title { font-size: 1.7rem; font-weight: bold; color: var(--danger); letter-spacing: 2px; margin-bottom: 12px; }
+    .pause-body  { font-size: 1rem; color: var(--warn); margin-bottom: 14px; font-weight: bold; line-height: 1.5; }
+    .pause-wait  { font-size: 0.85rem; color: var(--dim); line-height: 1.7; }
+
     /* ── ALARM OVERLAY ── */
     #alarm-overlay {
       display: none;
@@ -233,6 +255,32 @@
     .hotspot-btn.hint-btn { border-color: #4a4a1a; color: #b0a040; margin-top: 6px; font-style: italic; }
     .hotspot-btn.hint-btn:hover:not(:disabled) { border-color: #ffd700; color: #ffd700; }
     .hotspot-btn.hint-btn.used { opacity: 0.4; cursor: default; }
+    .hotspot-btn.hidden-spot-btn {
+      opacity: 0.18;
+      border-color: #5a4a00;
+      color: #888;
+      margin-top: 8px;
+      font-style: italic;
+      font-size: 0.82rem;
+      transition: opacity 0.3s, border-color 0.3s, color 0.3s, box-shadow 0.3s;
+    }
+    .hotspot-btn.hidden-spot-btn:hover {
+      opacity: 1;
+      border-color: #ffd700;
+      color: #ffd700;
+      box-shadow: 0 0 10px rgba(255,215,0,0.45);
+    }
+    .hotspot-btn.hidden-spot-btn.answered {
+      opacity: 0.55;
+      border-color: #3a8a3a;
+      color: #7ec87e;
+    }
+    .hotspot-btn.hidden-spot-btn.answered:hover {
+      opacity: 0.85;
+      border-color: #7ec87e;
+      color: #7ec87e;
+      box-shadow: 0 0 8px rgba(0,200,100,0.3);
+    }
 
     /* ── Activity Log ── */
     #log {
@@ -473,36 +521,6 @@
     #chat-send-btn:hover { background: rgba(0,153,230,0.1); }
     #members-online { font-size: 0.64rem; color: var(--accent2); font-weight: normal; letter-spacing: 1px; }
     /* ── Team Confirm Overlay ── */
-    #team-confirm-overlay {
-      display: none; position: fixed; inset: 0;
-      background: rgba(0,0,0,0.88); z-index: 250;
-      align-items: center; justify-content: center;
-    }
-    #team-confirm-overlay.show { display: flex; }
-    #team-confirm-box {
-      background: var(--panel); border: 2px solid var(--warn);
-      border-radius: 10px; padding: 26px 30px;
-      max-width: 460px; width: 92%;
-      box-shadow: 0 0 50px rgba(245,166,35,0.3);
-    }
-    #tc-code-display {
-      background: #0a0c18; border: 1px solid var(--accent);
-      border-radius: 4px; padding: 10px 14px;
-      font-size: 1.1rem; letter-spacing: 3px;
-      text-align: center; color: var(--warn);
-      margin: 12px 0; font-weight: bold;
-    }
-    #tc-input {
-      width: 100%; background: var(--bg); border: 1px solid var(--border);
-      color: var(--text); padding: 8px 12px; border-radius: 4px;
-      font-family: inherit; font-size: 0.88rem;
-      margin-bottom: 10px; outline: none;
-    }
-    #tc-input:focus { border-color: var(--warn); }
-    #tc-progress { font-size: 0.75rem; color: var(--accent2); margin: 8px 0; min-height: 18px; }
-    #tc-feedback { font-size: 0.78rem; min-height: 18px; margin-bottom: 8px; }
-    #tc-feedback.ok  { color: var(--accent2); }
-    #tc-feedback.bad { color: var(--danger); }
 
     /* ── RTL overrides (Hebrew) ── */
     [dir="rtl"] .nav-btn { text-align: right; }
@@ -563,8 +581,17 @@
       <input type="password" id="group-pin" data-t-ph="login.enter_pin" placeholder="Enter your group PIN" maxlength="10" />
     </div>
     <div class="lf">
+      <label data-t="login.group_size">How many people are in your group?</label>
+      <select id="group-size-select">
+        <option value="" data-t="login.group_size_ph">— Select group size —</option>
+        <option value="3" data-t="login.group_size_3">3 players</option>
+        <option value="4" data-t="login.group_size_4">4 players</option>
+        <option value="5" data-t="login.group_size_5">5 players</option>
+      </select>
+    </div>
+    <div class="lf">
       <label data-t="login.your_name">Your Name</label>
-      <input type="text" id="member-name" data-t-ph="login.enter_name" placeholder="e.g. Alice" maxlength="24" autocomplete="off" />
+      <input type="text" id="member-name" data-t-ph="login.enter_name" placeholder="e.g. Alice" maxlength="24" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
     </div>
     <button class="btn primary login-submit" id="login-btn" data-t="login.btn">LOGIN &amp; ENTER FACILITY</button>
     <div class="login-links">
@@ -657,7 +684,7 @@
     As the on-call <strong>Quality Inspector</strong>, you must work through every station:
     verify incoming materials, complete an AQL inspection, calibrate instruments, raise a CAPA,
     and authorise the final batch disposition — all before the <strong>external FDA auditor
-    arrives in 25 minutes</strong>.</span>
+    arrives in 30 minutes</strong>.</span>
   </div>
 
   <div class="start-card">
@@ -686,10 +713,10 @@
         <div>🧩 <strong style="color:var(--text);">Solve puzzles</strong> — every answer is grounded in real quality principles</div>
         <div>📋 <strong style="color:var(--text);">Check Field Notes</strong> — clues and facts are recorded automatically</div>
         <div>💬 <strong style="color:var(--text);">Use Group Chat</strong> — coordinate with your team in real time</div>
-        <div>🔑 <strong style="color:var(--text);">Confirm codes together</strong> — key milestones require all members to enter the code</div>
+        <div>🔑 <strong style="color:var(--text);">Complete tasks individually</strong> — every player must personally solve each puzzle for the group to advance</div>
       </div>
       <div style="margin-top:10px;padding:8px 12px;background:rgba(0,153,230,0.07);border-left:3px solid var(--accent);border-radius:2px;font-size:0.77rem;color:var(--dim);line-height:1.7;">
-        There are <strong style="color:var(--text);">5 areas</strong> and <strong style="color:var(--text);">11 puzzles</strong> to complete in <strong style="color:var(--text);">25 minutes</strong>.
+        There are <strong style="color:var(--text);">5 areas</strong> and <strong style="color:var(--text);">11 puzzles</strong> to complete in <strong style="color:var(--text);">30 minutes</strong>.
         Areas unlock as you progress — you cannot skip ahead.
       </div>
     </div>
@@ -709,7 +736,7 @@
         </tr>
         <tr style="border-bottom:1px solid var(--border);">
           <td style="padding:7px 8px 7px 0;font-size:1rem;">🔑</td>
-          <td style="padding:7px 0;color:var(--dim);"><strong style="color:var(--text);">Team confirmation:</strong> At key checkpoints the code is revealed to all — every member must type it to proceed.</td>
+          <td style="padding:7px 0;color:var(--dim);"><strong style="color:var(--text);">Individual tasks:</strong> Every player must personally solve each puzzle — the group advances only when all members complete it.</td>
         </tr>
         <tr style="border-bottom:1px solid var(--border);">
           <td style="padding:7px 8px 7px 0;font-size:1rem;">🚪</td>
@@ -717,7 +744,7 @@
         </tr>
         <tr style="border-bottom:1px solid var(--border);">
           <td style="padding:7px 8px 7px 0;font-size:1rem;">❌</td>
-          <td style="padding:7px 0;color:var(--dim);"><strong style="color:var(--text);">Wrong answers:</strong> Each incorrect answer deducts <strong style="color:var(--danger);">10 points</strong> from your final score — think before you submit.</td>
+          <td style="padding:7px 0;color:var(--dim);"><strong style="color:var(--text);">Wrong answers:</strong> Each incorrect answer deducts <strong style="color:var(--danger);">50 points</strong> from your final score — think before you submit.</td>
         </tr>
         <tr style="border-bottom:1px solid var(--border);">
           <td style="padding:7px 8px 7px 0;font-size:1rem;">💡</td>
@@ -729,6 +756,7 @@
         </tr>
       </table>
     </div>
+    <p id="rules-english-note" data-t="rules.english_answers" style="margin-top:8px;font-size:0.75rem;color:var(--dim);border-top:1px solid var(--border);padding-top:8px;"></p>
   </div>
 
   <div class="start-card" style="font-size:0.81rem;">
@@ -752,7 +780,7 @@
           </tr>
           <tr style="border-bottom:1px solid #14162a;">
             <td style="padding:8px 0;color:var(--dim);">❌ Each wrong answer</td>
-            <td style="padding:8px 0;text-align:right;color:var(--danger);font-weight:bold;">−10 pts</td>
+            <td style="padding:8px 0;text-align:right;color:var(--danger);font-weight:bold;">−50 pts</td>
           </tr>
           <tr>
             <td style="padding:8px 0;color:var(--dim);">💡 Using a hint</td>
@@ -849,6 +877,16 @@
   </div>
 </div>
 
+<!-- ═══════════════ PAUSE OVERLAY ═══════════════ -->
+<div id="pause-overlay">
+  <div id="pause-box">
+    <div class="pause-icon">⏸</div>
+    <div class="pause-title" data-t="pause.title">GAME PAUSED</div>
+    <div class="pause-body" id="pause-body"></div>
+    <div class="pause-wait" id="pause-waiting"></div>
+  </div>
+</div>
+
 <!-- ═══════════════ MODAL ═══════════════ -->
 <!-- ALARM OVERLAY -->
 <div id="alarm-overlay">
@@ -867,7 +905,7 @@
     <div id="modal-title">Puzzle Title</div>
     <div id="modal-body">Body text.</div>
     <div id="modal-choices"></div>
-    <input type="text" id="modal-input" placeholder="" style="display:none" />
+    <input type="text" id="modal-input" placeholder="" style="display:none" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" maxlength="100" />
     <div id="modal-feedback"></div>
     <div class="modal-btns">
       <button class="btn" id="modal-cancel">Close</button>
@@ -887,22 +925,6 @@
   </a>
 </div>
 
-<!-- ═══════════════ TEAM CONFIRM OVERLAY ═══════════════ -->
-<div id="team-confirm-overlay">
-  <div id="team-confirm-box">
-    <div data-t="tc.header" style="font-size:0.62rem;text-transform:uppercase;letter-spacing:2px;color:var(--warn);margin-bottom:6px;">🔑 TEAM CONFIRMATION REQUIRED</div>
-    <div id="tc-title" style="font-size:1rem;color:var(--text);margin-bottom:10px;font-weight:bold;"></div>
-    <div id="tc-body" style="font-size:0.82rem;color:var(--dim);line-height:1.7;margin-bottom:6px;"></div>
-    <div id="tc-code-display"></div>
-    <p data-t="tc.instruction" style="font-size:0.75rem;color:var(--dim);margin-bottom:8px;">Type the code above to confirm you've received it:</p>
-    <input type="text" id="tc-input" data-t-ph="tc.input_ph" placeholder="Enter the code…" maxlength="20" autocomplete="off" />
-    <div id="tc-feedback"></div>
-    <div id="tc-progress"></div>
-    <div style="display:flex;gap:8px;justify-content:flex-end;">
-      <button class="btn primary" id="tc-submit" data-t="tc.btn">Confirm</button>
-    </div>
-  </div>
-</div>
 
 <!-- ═══════════════ SCRIPT ═══════════════ -->
 <script>
@@ -912,26 +934,33 @@
 // STATE
 // ────────────────────────────────────────────────
 const S = {
-  room:         'receiving',
-  inventory:    [],
-  selectedItem: null,
-  notes:        [],
-  solved:       {},
-  found:        {},
-  puzzlesDone:  0,
-  timerSec:     25 * 60,
-  timerInt:     null,
-  over:         false,
-  wrongAnswers: 0,
-  hintsUsed:    {},
-  hintPenalty:  0,
-  authToken:    null,
-  groupName:    null,
-  demoMode:     false,
-  finalScore:   null,
-  memberName:   null,
-  socket:       null,
-  lang:         localStorage.getItem('qw_lang') || 'en',
+  room:          'receiving',
+  inventory:     [],
+  selectedItem:  null,
+  notes:         [],
+  solved:        {},   // group-level: all players done
+  mySolved:      {},   // per-player: what I personally completed
+  found:         {},
+  puzzlesDone:   0,
+  timerSec:      30 * 60,
+  timerInt:      null,
+  over:          false,
+  wrongAnswers:  0,
+  hintsUsed:     {},
+  hintPenalty:   0,
+  authToken:     null,
+  groupName:     null,
+  demoMode:      false,
+  finalScore:    null,
+  memberName:    null,
+  socket:        null,
+  lang:          localStorage.getItem('qw_lang') || 'en',
+  requiredSize:  0,    // group size selected at login
+  lockedRoster:  [],   // locked player names
+  paused:        false,// game paused due to disconnect
+  membersOnline: [],   // current online members
+  hiddenAnswers: {},   // hqId → result object from server (group-level, one per HQ)
+  hiddenBonus:   0,    // accumulated bonus points from correct hidden questions
 };
 
 // Language selector — run once DOM is ready
@@ -974,8 +1003,9 @@ async function apiCall(path, method = 'GET', body = null) {
 function calcScore(won) {
   return Math.max(0,
     (S.puzzlesDone * 200) +
-    (won ? S.timerSec * 2 : 0) -
-    (S.wrongAnswers * 10) -
+    (won ? S.timerSec * 2 : 0) +
+    (S.hiddenBonus || 0) -
+    (S.wrongAnswers * 50) -
     (S.hintPenalty)
   );
 }
@@ -1013,23 +1043,27 @@ function showStartScreen(groupName) {
 }
 
 document.getElementById('login-btn').onclick = async () => {
-  const groupId = document.getElementById('group-select').value;
-  const pin     = document.getElementById('group-pin').value.trim();
-  const err     = document.getElementById('login-error');
+  const groupId   = document.getElementById('group-select').value;
+  const pin       = document.getElementById('group-pin').value.trim();
+  const groupSize = parseInt(document.getElementById('group-size-select').value, 10);
+  const err       = document.getElementById('login-error');
   err.textContent = '';
-  if (!groupId) { err.textContent = t('login.select_error'); return; }
-  if (!pin)     { err.textContent = t('login.pin_error'); return; }
+  if (!groupId)            { err.textContent = t('login.select_error');     return; }
+  if (!pin)                { err.textContent = t('login.pin_error');        return; }
+  if (![3,4,5].includes(groupSize)) { err.textContent = t('login.group_size_error'); return; }
   const name = document.getElementById('member-name').value.trim() || 'Member';
   try {
-    const res = await apiCall('/api/login', 'POST', { groupId, pin });
+    const res = await apiCall('/api/login', 'POST', { groupId, pin, groupSize });
     if (res.status === 'completed') {
       document.getElementById('login-screen').style.display = 'none';
       document.getElementById('already-played-screen').classList.add('show');
       return;
     }
-    S.authToken  = res.token;
-    S.groupName  = res.groupName;
-    S.memberName = name;
+    S.authToken     = res.token;
+    S.groupName     = res.groupName;
+    S.memberName    = name;
+    S.requiredSize  = res.requiredSize || groupSize;
+    S.groupSize     = groupSize;
     // Connect socket immediately so lobby is live before BEGIN
     connectSocket();
     showStartScreen(res.groupName);
@@ -1229,6 +1263,7 @@ const ROOMS = {
       { label: 'GMP Receiving Terminal',            action: 'gmp_terminal'     },
       { label: 'Quality Week Noticeboard',          action: 'read_noticeboard' },
     ],
+    hiddenSpot: { emoji: '🟡', action: 'find_hq_receiving' },
   },
   production: {
     id: 'production', badge: 'AREA 02 — PRODUCTION LINE',
@@ -1243,6 +1278,7 @@ const ROOMS = {
       { label: 'NCR Filing Station',              action: 'file_ncr'            },
       { label: 'Quality Improvement Poster',      action: 'read_quality_poster' },
     ],
+    hiddenSpot: { emoji: '📋', action: 'find_hq_production' },
   },
   qclab: {
     id: 'qclab', badge: 'AREA 03 — QC LABORATORY',
@@ -1256,6 +1292,7 @@ const ROOMS = {
       { label: 'Equipment Logbook',                  action: 'check_equip_log'     },
       { label: 'ISO 15378 Packaging Compliance File', action: 'check_iso15378'     },
     ],
+    hiddenSpot: { emoji: '🔬', action: 'find_hq_qclab' },
   },
   qaoffice: {
     id: 'qaoffice', badge: 'AREA 04 — QA / COMPLIANCE',
@@ -1270,6 +1307,7 @@ const ROOMS = {
       { label: 'Batch Record Safe',            action: 'open_batch_safe'      },
       { label: 'Quality Pledge (Wall Frame)',  action: 'read_quality_pledge'  },
     ],
+    hiddenSpot: { emoji: '📌', action: 'find_hq_qaoffice' },
   },
   dispatch: {
     id: 'dispatch', badge: 'AREA 05 — DISPATCH / RELEASE',
@@ -1281,6 +1319,7 @@ const ROOMS = {
       { label: 'Quarantine Cage',        action: 'inspect_quarantine'   },
       { label: 'Quality Week Banner',    action: 'read_qw_banner'       },
     ],
+    hiddenSpot: { emoji: '🏷️', action: 'find_hq_dispatch' },
   },
 };
 
@@ -1317,11 +1356,12 @@ const ROOM_PUZZLES = {
   production: ['inspection_done', 'ncr_filed', 'motto_production'],
   qclab:      ['calibration_done', 'iso15378_done'],
   qaoffice:   ['capa_done', 'iso9001_done', 'motto_qaoffice'],
-  dispatch:   ['motto_challenge'],
+  dispatch:   ['motto_challenge', 'batch_retrieved'],
 };
 
 function getMissingInRoom(roomId) {
-  return (ROOM_PUZZLES[roomId] || []).filter(k => !S.solved[k]);
+  // Departure check uses per-player completion (what I personally completed)
+  return (ROOM_PUZZLES[roomId] || []).filter(k => !S.mySolved[k]);
 }
 
 function goTo(roomId) {
@@ -1398,7 +1438,7 @@ function handleAction(action) {
         body: t('body.gmp'),
         questionKey: 'q.gmp',
         placeholder: t('q.gmp.ph'),
-        submitLabel: 'Verify & Release',
+        submitLabel: t('btn.verify_release'),
         onSubmit: val => {
           const v = val.trim().toUpperCase().replace(/\s/g,'');
           if (v === 'RM4471' || v === 'RM-4471' || v === '4471') {
@@ -1411,10 +1451,10 @@ function handleAction(action) {
               log(t('msg.gmp_fact'), 'fact');
               renderNav();
             } else {
-              // Collaborative — notify team, wait for all to confirm
+              // Per-player: each player submits independently
               setFeedback(t('fb.gmp_ok'), 'ok');
-              document.getElementById('modal-submit').disabled = true;
-              S.socket.emit('code_found', { puzzleKey: 'coa_verified', code: 'RM-4471', label: 'GMP Material Verification (Lot RM-4471)' });
+              window._currentPuzzleKey = 'coa_verified';
+              myPuzzleComplete('coa_verified');
             }
           } else {
             S.wrongAnswers++;
@@ -1452,6 +1492,9 @@ function handleAction(action) {
       if (S.solved.inspection_done) {
         return { msg: t('msg.inspection_done'), cls: 'info' };
       }
+      if (S.mySolved.inspection_done) {
+        return { msg: t('msg.your_task_done'), cls: 'info' };
+      }
       openModal({
         tag: t('tag.inspection'),
         title: t('title.inspection'),
@@ -1459,6 +1502,7 @@ function handleAction(action) {
         questionKey: 'q.inspection',
         placeholder: t('ph.inspection'),
         submitLabel: t('btn.record_count'),
+        puzzleKey: 'inspection_done',
         onSubmit: val => {
           const n = parseInt(val.trim(), 10);
           if (n === 4) {
@@ -1471,15 +1515,14 @@ function handleAction(action) {
                 questionKey: 'q.aql',
                 placeholder: 'ACCEPT or REJECT',
                 submitLabel: t('btn.record_disposition'),
+                puzzleKey: 'inspection_done',
                 onSubmit: val2 => {
                   if (val2.trim().toUpperCase() === 'REJECT') {
-                    S.solved.inspection_done = true;
-                    puzzleDone();
-                    if (S.socket) S.socket.emit('puzzle_solved', { key: 'inspection_done', puzzlesDone: S.puzzlesDone });
-                    closeModal();
-                    log(t('msg.aql_result_log'), 'success');
-                    log(t('msg.aql_result_fact'), 'fact');
-                    renderRoom();
+                    myPuzzleComplete('inspection_done', () => {
+                      log(t('msg.aql_result_log'), 'success');
+                      log(t('msg.aql_result_fact'), 'fact');
+                      renderRoom();
+                    });
                   } else if (val2.trim().toUpperCase() === 'ACCEPT') {
                     S.wrongAnswers++;
                     if (S.socket) S.socket.emit('wrong_answer');
@@ -1523,6 +1566,9 @@ function handleAction(action) {
       if (S.solved.ncr_filed) {
         return { msg: t('msg.ncr_already'), cls: 'info' };
       }
+      if (S.mySolved.ncr_filed) {
+        return { msg: t('msg.your_task_done'), cls: 'info' };
+      }
       openModal({
         tag: t('tag.ncr'),
         title: t('title.ncr'),
@@ -1530,18 +1576,17 @@ function handleAction(action) {
         questionKey: 'q.ncr',
         placeholder: 'e.g. BN-2024-XXXX',
         submitLabel: t('btn.raise_ncr'),
+        puzzleKey: 'ncr_filed',
         onSubmit: val => {
           const v = val.trim().toUpperCase().replace(/\s/g,'');
           if (v === 'BN-2024-3200' || v === 'BN20243200' || v === '3200') {
-            S.solved.ncr_filed = true;
             S.found.ncr_form = true;
             addItem('ncr_form');
-            puzzleDone();
-            if (S.socket) S.socket.emit('puzzle_solved', { key: 'ncr_filed', puzzlesDone: S.puzzlesDone });
-            closeModal();
-            log(t('msg.ncr_raised_log'), 'success');
-            log(t('msg.ncr_fact'), 'fact');
-            renderNav();
+            myPuzzleComplete('ncr_filed', () => {
+              log(t('msg.ncr_raised_log'), 'success');
+              log(t('msg.ncr_fact'), 'fact');
+              renderNav();
+            });
           } else {
             S.wrongAnswers++;
             if (S.socket) S.socket.emit('wrong_answer');
@@ -1565,6 +1610,9 @@ function handleAction(action) {
       if (S.solved.calibration_done) {
         return { msg: t('msg.cal_done'), cls: 'success' };
       }
+      if (S.mySolved.calibration_done) {
+        return { msg: t('msg.your_task_done'), cls: 'info' };
+      }
       if (!S.inventory.includes('cal_ref')) {
         return { msg: t('msg.cal_needs_ref'), cls: 'warn' };
       }
@@ -1575,17 +1623,16 @@ function handleAction(action) {
         questionKey: 'q.calibration',
         placeholder: t('ph.calibration'),
         submitLabel: t('btn.apply_correction'),
+        puzzleKey: 'calibration_done',
         onSubmit: val => {
           const v = val.trim().replace(/\s/g, '');
           // Accept -0.03, 0.03, -.03, -0.030 etc.
           if (v === '-0.03' || v === '0.03' || v === '-0.030' || v === '-.03') {
-            S.solved.calibration_done = true;
-            puzzleDone();
-            if (S.socket) S.socket.emit('puzzle_solved', { key: 'calibration_done', puzzlesDone: S.puzzlesDone });
-            closeModal();
-            log(t('msg.cal_log'), 'success');
-            log(t('msg.cal_fact'), 'fact');
-            renderNav();
+            myPuzzleComplete('calibration_done', () => {
+              log(t('msg.cal_log'), 'success');
+              log(t('msg.cal_fact'), 'fact');
+              renderNav();
+            });
           } else {
             S.wrongAnswers++;
             if (S.socket) S.socket.emit('wrong_answer');
@@ -1625,6 +1672,9 @@ function handleAction(action) {
       if (S.solved.capa_done) {
         return { msg: t('msg.capa_done'), cls: 'success' };
       }
+      if (S.mySolved.capa_done) {
+        return { msg: t('msg.your_task_done'), cls: 'info' };
+      }
       if (!S.inventory.includes('maint_log')) {
         return { msg: t('msg.capa_needs_maint'), cls: 'warn' };
       }
@@ -1634,6 +1684,7 @@ function handleAction(action) {
         title: t('title.capa_root'),
         body: t('body.capa_root'),
         questionKey: 'q.capa_root',
+        puzzleKey: 'capa_done',
         choices: tChoices('capa_root', [
           { label: 'A)  Operator fatigue during the night shift', correct: false },
           { label: 'B)  Wrong lubricant grade used on mould tooling (Grade B-7 instead of Grade A-3)', correct: true },
@@ -1650,6 +1701,7 @@ function handleAction(action) {
                 title: t('title.capa_prev'),
                 body: t('body.capa_prev'),
                 questionKey: 'q.capa_prev',
+                puzzleKey: 'capa_done',
                 choices: tChoices('capa_prev', [
                   { label: 'A)  Order Grade B-7 lubricant as an official approved alternative to reduce risk of error', correct: false },
                   { label: 'B)  Update SOP-MAINT-009 with lubricant grade verification step AND retrain all maintenance staff on the SOP', correct: true },
@@ -1658,16 +1710,14 @@ function handleAction(action) {
                 ]),
                 onChoice: (correct2) => {
                   if (correct2) {
-                    S.solved.capa_done = true;
                     S.found.capa_report = true;
                     addItem('capa_report');
-                    puzzleDone();
-                    if (S.socket) S.socket.emit('puzzle_solved', { key: 'capa_done', puzzlesDone: S.puzzlesDone });
-                    closeModal();
-                    log(t('msg.capa_log'), 'success');
-                    log(t('msg.capa_fact'), 'fact');
-                    renderRoom();
-                    renderNav();
+                    myPuzzleComplete('capa_done', () => {
+                      log(t('msg.capa_log'), 'success');
+                      log(t('msg.capa_fact'), 'fact');
+                      renderRoom();
+                      renderNav();
+                    });
                   } else {
                     S.wrongAnswers++;
                     if (S.socket) S.socket.emit('wrong_answer');
@@ -1704,12 +1754,23 @@ function handleAction(action) {
       if (S.solved.batch_retrieved) {
         return { msg: t('msg.batch_cert_already'), cls: 'info' };
       }
-      S.solved.batch_retrieved = true;
-      if (S.socket) S.socket.emit('puzzle_solved', { key: 'batch_retrieved', puzzlesDone: S.puzzlesDone });
-      S.found.batch_cert = true;
-      addItem('batch_cert');
-      addNote(t('note.batch_cert'), true);
-      return { msg: t('msg.batch_safe_opened'), cls: 'success' };
+      if (S.mySolved.batch_retrieved) {
+        return { msg: t('msg.your_task_done'), cls: 'info' };
+      }
+      S.mySolved.batch_retrieved = true;
+      if (!S.inventory.includes('batch_cert')) {
+        S.found.batch_cert = true;
+        addItem('batch_cert');
+        addNote(t('note.batch_cert'), true);
+      }
+      if (S.socket && !S.demoMode) {
+        S.socket.emit('player_puzzle_done', { key: 'batch_retrieved', puzzlesDone: S.puzzlesDone });
+        return { msg: t('msg.your_task_done'), cls: 'info' };
+      } else {
+        S.solved.batch_retrieved = true;
+        puzzleDone();
+        return { msg: t('msg.batch_safe_opened'), cls: 'success' };
+      }
 
     // ── DISPATCH ──────────────────────────────────────────────
     case 'use_release_terminal':
@@ -1738,7 +1799,7 @@ function handleAction(action) {
           // Correct PIN — now check all puzzles complete
           const required = ['coa_verified','inspection_done','ncr_filed','calibration_done',
                             'capa_done','iso15378_done','iso9001_done','motto_challenge',
-                            'motto_production','motto_qaoffice'];
+                            'motto_production','motto_qaoffice','batch_retrieved'];
           const missing = required.filter(k => !S.solved[k]);
           if (missing.length > 0) {
             closeModal();
@@ -1753,8 +1814,8 @@ function handleAction(action) {
             triggerWin();
           } else {
             setFeedback(t('fb.pin_ok'), 'ok');
-            document.getElementById('modal-submit').disabled = true;
-            S.socket.emit('code_found', { puzzleKey: 'game_won', code: '4471', label: 'Final Batch Disposition (PIN 4471)' });
+            window._currentPuzzleKey = 'game_won';
+            myPuzzleComplete('game_won');
           }
         },
       });
@@ -1765,11 +1826,15 @@ function handleAction(action) {
       if (S.solved.motto_production) {
         return { msg: t('msg.motto_prod_done'), cls: 'info' };
       }
+      if (S.mySolved.motto_production) {
+        return { msg: t('msg.your_task_done'), cls: 'ok' };
+      }
       openModal({
         tag: t('tag.motto_prod'),
         title: t('title.motto_prod'),
         body: t('body.motto_prod'),
         questionKey: 'q.motto_prod',
+        puzzleKey: 'motto_production',
         choices: tChoices('motto_prod', [
           { label: 'A)  Reject, quarantine, and move on — the rejection itself is the corrective action', correct: false },
           { label: 'B)  Reject, raise an NCR, investigate root cause, and raise a CAPA to prevent recurrence', correct: true },
@@ -1778,12 +1843,10 @@ function handleAction(action) {
         ]),
         onChoice: (correct) => {
           if (correct) {
-            S.solved.motto_production = true;
-            puzzleDone();
-            if (S.socket) S.socket.emit('puzzle_solved', { key: 'motto_production', puzzlesDone: S.puzzlesDone });
-            closeModal();
-            log(t('msg.motto_prod_log'), 'success');
-            log(t('msg.motto_prod_fact'), 'fact');
+            myPuzzleComplete('motto_production', () => {
+              log(t('msg.motto_prod_log'), 'success');
+              log(t('msg.motto_prod_fact'), 'fact');
+            });
           } else {
             S.wrongAnswers++;
             if (S.socket) S.socket.emit('wrong_answer');
@@ -1798,11 +1861,15 @@ function handleAction(action) {
       if (S.solved.motto_qaoffice) {
         return { msg: t('msg.motto_qa_done'), cls: 'info' };
       }
+      if (S.mySolved.motto_qaoffice) {
+        return { msg: t('msg.your_task_done'), cls: 'ok' };
+      }
       openModal({
         tag: t('tag.motto_qa'),
         title: t('title.motto_qa'),
         body: t('body.motto_qa'),
         questionKey: 'q.motto_qa',
+        puzzleKey: 'motto_qaoffice',
         choices: tChoices('motto_qa', [
           { label: 'A)  Only the QA department — they own all deviation records', correct: false },
           { label: 'B)  Only the maintenance manager — it was their department\'s change', correct: false },
@@ -1811,12 +1878,10 @@ function handleAction(action) {
         ]),
         onChoice: (correct) => {
           if (correct) {
-            S.solved.motto_qaoffice = true;
-            puzzleDone();
-            if (S.socket) S.socket.emit('puzzle_solved', { key: 'motto_qaoffice', puzzlesDone: S.puzzlesDone });
-            closeModal();
-            log(t('msg.motto_qa_log'), 'success');
-            log(t('msg.motto_qa_fact'), 'fact');
+            myPuzzleComplete('motto_qaoffice', () => {
+              log(t('msg.motto_qa_log'), 'success');
+              log(t('msg.motto_qa_fact'), 'fact');
+            });
           } else {
             S.wrongAnswers++;
             if (S.socket) S.socket.emit('wrong_answer');
@@ -1833,11 +1898,15 @@ function handleAction(action) {
       if (S.solved.motto_challenge) {
         return { msg: t('msg.motto_dis_done'), cls: 'info' };
       }
+      if (S.mySolved.motto_challenge) {
+        return { msg: t('msg.your_task_done'), cls: 'ok' };
+      }
       openModal({
         tag: t('tag.motto_dis'),
         title: t('title.motto_dis'),
         body: t('body.motto_dis'),
         questionKey: 'q.motto_dis',
+        puzzleKey: 'motto_challenge',
         choices: tChoices('motto_dis', [
           { label: 'A)  Leadership — management sets the direction and culture for quality', correct: false },
           { label: 'B)  Customer Focus — understanding and meeting patient and customer requirements', correct: false },
@@ -1846,12 +1915,10 @@ function handleAction(action) {
         ]),
         onChoice: (correct) => {
           if (correct) {
-            S.solved.motto_challenge = true;
-            puzzleDone();
-            if (S.socket) S.socket.emit('puzzle_solved', { key: 'motto_challenge', puzzlesDone: S.puzzlesDone });
-            closeModal();
-            log(t('msg.motto_dis_log'), 'success');
-            log(t('msg.motto_dis_fact'), 'fact');
+            myPuzzleComplete('motto_challenge', () => {
+              log(t('msg.motto_dis_log'), 'success');
+              log(t('msg.motto_dis_fact'), 'fact');
+            });
           } else {
             S.wrongAnswers++;
             if (S.socket) S.socket.emit('wrong_answer');
@@ -1866,6 +1933,9 @@ function handleAction(action) {
       if (S.solved.iso15378_done) {
         return { msg: t('msg.iso15378_done'), cls: 'info' };
       }
+      if (S.mySolved.iso15378_done) {
+        return { msg: t('msg.your_task_done'), cls: 'ok' };
+      }
       if (!S.found.stopper_spec) {
         S.found.stopper_spec = true;
         addItem('stopper_spec');
@@ -1876,6 +1946,7 @@ function handleAction(action) {
         title: t('title.iso15378_1'),
         body: t('body.iso15378_1'),
         questionKey: 'q.iso15378_1',
+        puzzleKey: 'iso15378_done',
         choices: tChoices('iso15378_1', [
           { label: 'A)  Use them for non-patient-contact production to avoid waste', correct: false },
           { label: 'B)  Physically segregate, apply a REJECT/HOLD label, and raise a supplier NCR before any disposition decision', correct: true },
@@ -1891,6 +1962,7 @@ function handleAction(action) {
                 title: t('title.iso15378_2'),
                 body: t('body.iso15378_2'),
                 questionKey: 'q.iso15378_2',
+                puzzleKey: 'iso15378_done',
                 choices: tChoices('iso15378_2', [
                   { label: 'A)  Yes — as long as the correct information is visible, the method does not matter', correct: false },
                   { label: 'B)  No — GDP requires a single line through the error leaving it legible, then the correct value, with date and initials', correct: true },
@@ -1899,13 +1971,11 @@ function handleAction(action) {
                 ]),
                 onChoice: (correct2) => {
                   if (correct2) {
-                    S.solved.iso15378_done = true;
-                    puzzleDone();
-                    if (S.socket) S.socket.emit('puzzle_solved', { key: 'iso15378_done', puzzlesDone: S.puzzlesDone });
-                    closeModal();
-                    log(t('msg.iso15378_log'), 'success');
-                    log(t('msg.iso15378_fact'), 'fact');
-                    renderNav();
+                    myPuzzleComplete('iso15378_done', () => {
+                      log(t('msg.iso15378_log'), 'success');
+                      log(t('msg.iso15378_fact'), 'fact');
+                      renderNav();
+                    });
                   } else {
                     S.wrongAnswers++;
                     if (S.socket) S.socket.emit('wrong_answer');
@@ -1928,6 +1998,9 @@ function handleAction(action) {
       if (S.solved.iso9001_done) {
         return { msg: t('msg.iso9001_done'), cls: 'info' };
       }
+      if (S.mySolved.iso9001_done) {
+        return { msg: t('msg.your_task_done'), cls: 'ok' };
+      }
       if (!S.found.iso9001_cert) {
         S.found.iso9001_cert = true;
         addItem('iso9001_cert');
@@ -1938,6 +2011,7 @@ function handleAction(action) {
         title: t('title.iso9001_1'),
         body: t('body.iso9001_1'),
         questionKey: 'q.iso9001_1',
+        puzzleKey: 'iso9001_done',
         choices: tChoices('iso9001_1', [
           { label: 'A)  The monthly audit schedule was too infrequent to catch daily errors', correct: false },
           { label: 'B)  There was no risk assessment on the lubricant change-over procedure — the risk was never identified', correct: true },
@@ -1953,6 +2027,7 @@ function handleAction(action) {
                 title: t('title.iso9001_2'),
                 body: t('body.iso9001_2'),
                 questionKey: 'q.iso9001_2',
+                puzzleKey: 'iso9001_done',
                 choices: tChoices('iso9001_2', [
                   { label: 'A)  Customer delivery schedules and production throughput targets only', correct: false },
                   { label: 'B)  NCR trends, CAPA status, audit results, and process performance data', correct: true },
@@ -1961,13 +2036,11 @@ function handleAction(action) {
                 ]),
                 onChoice: (correct2) => {
                   if (correct2) {
-                    S.solved.iso9001_done = true;
-                    puzzleDone();
-                    if (S.socket) S.socket.emit('puzzle_solved', { key: 'iso9001_done', puzzlesDone: S.puzzlesDone });
-                    closeModal();
-                    log(t('msg.iso9001_log'), 'success');
-                    log(t('msg.iso9001_fact'), 'fact');
-                    renderRoom();
+                    myPuzzleComplete('iso9001_done', () => {
+                      log(t('msg.iso9001_log'), 'success');
+                      log(t('msg.iso9001_fact'), 'fact');
+                      renderRoom();
+                    });
                   } else {
                     S.wrongAnswers++;
                     if (S.socket) S.socket.emit('wrong_answer');
@@ -1985,9 +2058,66 @@ function handleAction(action) {
       });
       return null;
 
+    // ── HIDDEN BONUS QUESTIONS ───────────────────────────────────────────
+    case 'find_hq_receiving':  openHiddenModal('hq_receiving');  return null;
+    case 'find_hq_production': openHiddenModal('hq_production'); return null;
+    case 'find_hq_qclab':      openHiddenModal('hq_qclab');      return null;
+    case 'find_hq_qaoffice':   openHiddenModal('hq_qaoffice');   return null;
+    case 'find_hq_dispatch':   openHiddenModal('hq_dispatch');   return null;
+
     default:
       return { msg: `Unknown action: ${action}`, cls: 'fail' };
   }
+}
+
+function openHiddenModal(hqId) {
+  window._currentHqId = hqId;
+  const result = S.hiddenAnswers[hqId];
+  if (result) {
+    // Already answered — show result only
+    const isCorrect = result.isCorrect;
+    const who       = escHtml(result.answeredBy);
+    const correct   = t('hq.' + hqId + '.' + result.correctOption);
+    const body      = (isCorrect
+      ? t('hq.result_correct')
+      : t('hq.result_wrong'))
+      .replace('{who}', who)
+      .replace('{correct}', correct);
+    openModal({
+      tag:      t('hq.found_badge'),
+      title:    t('hq.' + hqId + '.title'),
+      body:     '✅ ' + body,
+      noInput:  true,
+    });
+    return;
+  }
+  // Build choice list from translations
+  const choices = ['a','b','c','d'].map(opt => ({
+    label:   t('hq.' + hqId + '.' + opt),
+    correct: false,   // correctness determined server-side
+    opt,
+  })).filter(ch => ch.label && ch.label !== 'hq.' + hqId + '.' + ch.opt);
+
+  openModal({
+    tag:     t('hq.found_badge'),
+    title:   t('hq.' + hqId + '.title'),
+    body:    t('hq.intro') + '\n\n' + t('hq.' + hqId + '.body'),
+    noInput: true,
+    choices,
+    onChoice: (_, __, ch) => {
+      if (!S.socket || S.demoMode) {
+        // Demo: treat as correct locally
+        S.hiddenBonus += 20;
+        setFeedback(t('hq.answered_correct'), 'ok');
+        return;
+      }
+      S.socket.emit('hidden_q_submit', { hqId, option: ch.opt });
+      setFeedback(t('hq.submitting'), 'ok');
+      // Disable choices to prevent re-submit
+      const choicesEl = document.getElementById('modal-choices');
+      if (choicesEl) choicesEl.querySelectorAll('button').forEach(b => { b.disabled = true; });
+    },
+  });
 }
 
 // ────────────────────────────────────────────────
@@ -2048,6 +2178,7 @@ function renderRoom() {
     const tLabel = t('hs.' + h.action);
     b.textContent = (tLabel !== 'hs.' + h.action) ? tLabel : h.label;
     b.onclick = () => {
+      if (S.paused || S.over) return;
       const result = handleAction(h.action);
       if (result) log(result.msg, result.cls);
     };
@@ -2060,8 +2191,23 @@ function renderRoom() {
   hintBtn.className = 'hotspot-btn hint-btn' + (hintUsed ? ' used' : '');
   hintBtn.textContent = hintUsed ? `💡 ${t('nav.hint_used')}` : t('nav.hint_btn');
   hintBtn.disabled = !!hintUsed;
-  hintBtn.onclick = () => useHint();
+  hintBtn.onclick = () => { if (!S.paused && !S.over) useHint(); };
   hs.appendChild(hintBtn);
+
+  // Hidden bonus question spot (ultra-low opacity, golden hover)
+  if (r.hiddenSpot) {
+    const hqId      = r.hiddenSpot.action.replace('find_hq_', 'hq_');
+    const hqAnswered = !!S.hiddenAnswers[hqId];
+    const hqBtn = document.createElement('button');
+    hqBtn.className = 'hotspot-btn hidden-spot-btn' + (hqAnswered ? ' answered' : '');
+    hqBtn.textContent = r.hiddenSpot.emoji + ' ' + (hqAnswered ? t('hq.found_badge_done') : '…');
+    hqBtn.title = hqAnswered ? t('hq.found_badge_done') : '';
+    hqBtn.onclick = () => {
+      if (S.paused || S.over) return;
+      handleAction(r.hiddenSpot.action);
+    };
+    hs.appendChild(hqBtn);
+  }
 }
 
 function renderInventory() {
@@ -2164,7 +2310,8 @@ function renderNav() {
 // ────────────────────────────────────────────────
 let _onSubmit  = null;
 
-function openModal({ tag, title, body, questionKey, placeholder, submitLabel, onSubmit, noInput, choices, onChoice }) {
+function openModal({ tag, title, body, questionKey, placeholder, submitLabel, onSubmit, noInput, choices, onChoice, puzzleKey }) {
+  window._currentPuzzleKey = puzzleKey || null;
   document.getElementById('modal-tag').textContent   = tag   || t('modal.default_tag');
   document.getElementById('modal-title').textContent = title || '';
 
@@ -2198,7 +2345,7 @@ function openModal({ tag, title, body, questionKey, placeholder, submitLabel, on
       const b = document.createElement('button');
       b.className = 'choice-btn';
       b.textContent = ch.label;
-      b.onclick = () => onChoice && onChoice(ch.correct, ch.label);
+      b.onclick = () => { if (S.paused || S.over) return; onChoice && onChoice(ch.correct, ch.label, ch); };
       choicesEl.appendChild(b);
     });
   } else if (noInput) {
@@ -2219,6 +2366,7 @@ function openModal({ tag, title, body, questionKey, placeholder, submitLabel, on
 function closeModal() {
   document.getElementById('modal-overlay').classList.remove('show');
   _onSubmit = null;
+  window._currentHqId = null;
 }
 
 function setFeedback(msg, type) {
@@ -2228,24 +2376,25 @@ function setFeedback(msg, type) {
 }
 
 document.getElementById('modal-submit').onclick = () => {
+  if (S.paused || S.over) return;
   if (_onSubmit) _onSubmit(document.getElementById('modal-input').value);
 };
 document.getElementById('modal-input').onkeydown = e => {
-  if (e.key === 'Enter' && _onSubmit) _onSubmit(document.getElementById('modal-input').value);
+  if (e.key === 'Enter' && _onSubmit && !S.paused && !S.over) _onSubmit(document.getElementById('modal-input').value);
 };
 document.getElementById('modal-cancel').onclick = closeModal;
 
 // ────────────────────────────────────────────────
 // TIMER
 // ────────────────────────────────────────────────
-// REG_SECS = 25*60 = 1500, MAX_SECS = 60*60 = 3600, OT_THRESH = 2100
-const REG_SECS_CLIENT = 25 * 60;
+// REG_SECS = 30*60 = 1800, MAX_SECS = 60*60 = 3600, OT_THRESH = 1800
+const REG_SECS_CLIENT = 30 * 60;
 const MAX_SECS_CLIENT = 60 * 60;
-const OT_THRESH_CLIENT = MAX_SECS_CLIENT - REG_SECS_CLIENT; // 2100
+const OT_THRESH_CLIENT = MAX_SECS_CLIENT - REG_SECS_CLIENT; // 1800
 
 function startTimer() {
   S.timerInt = setInterval(() => {
-    if (S.over) return;
+    if (S.over || S.paused) return;
     S.timerSec--;
     const el = document.getElementById('timer');
 
@@ -2301,11 +2450,14 @@ function showEndScreen(won, data) {
   const wrongAnswers     = data.wrongAnswers      || 0;
   const hintPenalty      = S.hintPenalty         || 0;
   const secondsRemaining = data.secondsRemaining  || 0;
+  const hiddenBonus      = data.hiddenBonus       !== undefined ? data.hiddenBonus : S.hiddenBonus;
+  const hiddenFound      = data.hiddenFound       !== undefined ? data.hiddenFound : Object.keys(S.hiddenAnswers).length;
+  const hiddenCorrect    = data.hiddenCorrect     !== undefined ? data.hiddenCorrect : Object.values(S.hiddenAnswers).filter(r => r && r.isCorrect).length;
   const isOvertime       = secondsRemaining < OT_THRESH_CLIENT;
   const ptPerPuzzle      = isOvertime ? 180 : 200;
   const regSecsLeft      = isOvertime ? 0 : (secondsRemaining - OT_THRESH_CLIENT);
   const timeBonusPts     = (won && !isOvertime) ? regSecsLeft * 2 : 0;
-  const penaltyPts       = wrongAnswers * 10;
+  const penaltyPts       = wrongAnswers * 50;
   const overtimeSecs     = isOvertime ? (OT_THRESH_CLIENT - secondsRemaining) : 0;
   const overtimePenalty  = Math.ceil(overtimeSecs / 60) * 30;
   const timeSpentSec     = data.timeSpentSec || (MAX_SECS_CLIENT - secondsRemaining);
@@ -2334,9 +2486,25 @@ function showEndScreen(won, data) {
   statsHtml +=
     t('end.wrong_n').replace('{n}', wrongAnswers) + ': <span style="color:var(--danger);">−' + penaltyPts.toLocaleString() + ' ' + pts + '</span><br>' +
     (hintPenalty ? t('end.hint_pen') + ': <span style="color:var(--danger);">−' + hintPenalty.toLocaleString() + ' ' + pts + '</span><br>' : '') +
+    (hiddenFound > 0
+      ? t('end.hidden_bonus').replace('{found}', hiddenFound).replace('{correct}', hiddenCorrect) + ': <span style="color:' + (hiddenBonus > 0 ? 'var(--accent2)' : 'var(--dim)') + ';">+' + hiddenBonus.toLocaleString() + ' ' + pts + '</span><br>'
+      : '') +
     '<strong>' + t('end.total_score') + ' <span style="font-size:1.2rem;color:' + (won ? 'var(--accent2)' : 'var(--danger)') + ';">' + score.toLocaleString() + '</span> ' + pts + '</strong><br><br>' +
     t('end.time_taken') + ' <span>' + em + ':' + es + '</span><br>' +
     (S.demoMode ? '<em style="color:var(--dim);">' + t('end.demo_note') + '</em>' : '<a href="/admin.html" target="_blank" style="color:var(--accent);">' + t('end.lb_link') + '</a>');
+
+  // HQ per-question breakdown
+  if (hiddenFound > 0) {
+    statsHtml += '<br><strong style="color:var(--dim);font-size:0.78rem;">' + t('end.hq_breakdown_h') + '</strong><br>';
+    const hqMap = data.hiddenAnswers || S.hiddenAnswers || {};
+    Object.entries(hqMap).forEach(([hqId, r]) => {
+      if (!r) return;
+      const qTitle = t('hq.' + hqId + '.title') || hqId;
+      const icon   = r.isCorrect ? '✓' : '✗';
+      const col    = r.isCorrect ? 'var(--accent2)' : 'var(--danger)';
+      statsHtml += '<span style="color:' + col + ';font-size:0.75rem;">' + icon + ' ' + escHtml(qTitle) + (r.isCorrect ? ' (+' + r.bonusPts + ' ' + pts + ')' : '') + '</span><br>';
+    });
+  }
 
   document.getElementById('end-stats').innerHTML = statsHtml;
 }
@@ -2468,6 +2636,9 @@ function connectSocket() {
     document.getElementById('chat-input').placeholder  = t('chat.placeholder');
   });
 
+  // Heartbeat for mobile/unstable connection resilience
+  setInterval(() => { if (S.socket?.connected) S.socket.emit('heartbeat'); }, 8000);
+
   sock.on('state_init', ({ state, chats, members }) => {
     if (state) applyServerState(state);
     if (chats)   chats.forEach(c => appendChat(c.from, c.text, c.ts, c.from === S.memberName));
@@ -2481,12 +2652,78 @@ function connectSocket() {
     }
   });
 
+  // puzzle_solved = ALL players completed this puzzle (group-level done)
   sock.on('puzzle_solved', ({ key, puzzlesDone, fromName }) => {
     if (S.solved[key]) return;
-    S.solved[key]  = true;
-    S.puzzlesDone  = Math.max(S.puzzlesDone, puzzlesDone);
+    S.solved[key]   = true;
+    S.mySolved[key] = true;  // also mark my own (in case server confirmed me)
+    S.puzzlesDone   = Math.max(S.puzzlesDone, puzzlesDone);
+    closeModal();
+    puzzleDone();
     updateProgress(); renderNav(); renderRoom();
-    log(t('log.teammate_done').replace('{name}', fromName).replace('{label}', t('puzzle.label.' + key) || PUZZLE_LABELS[key] || key), 'success');
+    log(t('log.all_players_done').replace('{label}', t('puzzle.label.' + key) || PUZZLE_LABELS[key] || key), 'success');
+    // Per-puzzle post-actions
+    if (key === 'coa_verified') {
+      log(t('msg.gmp_fact'), 'fact');
+    } else if (key === 'game_won') {
+      triggerWin();
+    }
+  });
+
+  // player_puzzle_progress = individual player completed their task
+  sock.on('player_puzzle_progress', ({ key, memberName: who, completedCount, total }) => {
+    appendSystemChat(t('msg.team_progress').replace('{done}', completedCount).replace('{total}', total) + ' — ' + escHtml(who));
+    const fb = document.getElementById('modal-feedback');
+    if (fb && window._currentPuzzleKey === key && !S.solved[key]) {
+      fb.textContent = t('msg.team_progress').replace('{done}', completedCount).replace('{total}', total);
+      fb.className   = 'ok';
+    }
+  });
+
+  // game_paused = a locked player disconnected
+  sock.on('game_paused', ({ memberName: who, lockedRoster }) => {
+    S.paused = true;
+    clearInterval(S.timerInt);
+    const body = t('pause.body').replace('{name}', escHtml(who)).replace('{total}', lockedRoster.length);
+    document.getElementById('pause-body').textContent = body;
+    const onlineNow = S.membersOnline || [];
+    const missing = lockedRoster.filter(n => !onlineNow.includes(n));
+    document.getElementById('pause-waiting').textContent =
+      t('pause.waiting_for').replace('{names}', missing.join(', ') || who);
+    document.getElementById('pause-overlay').classList.add('show');
+    log(t('pause.body').replace('{name}', escHtml(who)).replace('{total}', lockedRoster.length), 'warn');
+  });
+
+  // game_resumed = all players back
+  sock.on('game_resumed', ({ timerSec }) => {
+    S.paused   = false;
+    S.timerSec = timerSec;
+    document.getElementById('pause-overlay').classList.remove('show');
+    log(t('pause.resumed'), 'success');
+    startTimer();
+  });
+
+  // hidden_q_state = group answered a hidden bonus question
+  sock.on('hidden_q_state', ({ hqId, result }) => {
+    S.hiddenAnswers[hqId] = result;
+    // Recompute hiddenBonus total
+    S.hiddenBonus = Object.values(S.hiddenAnswers).reduce((sum, r) => sum + (r && r.bonusPts ? r.bonusPts : 0), 0);
+    renderRoom();  // re-render to update hidden-spot button state
+    // If this player's modal for this HQ is currently open, update it
+    if (window._currentHqId === hqId) {
+      const fb = document.getElementById('modal-feedback');
+      if (fb) {
+        fb.textContent = result.isCorrect ? t('hq.answered_correct') : t('hq.answered_wrong');
+        fb.className   = result.isCorrect ? 'ok' : 'bad';
+      }
+    }
+    // Log the outcome
+    const who = escHtml(result.answeredBy);
+    if (result.isCorrect) {
+      log(t('hq.answered_correct_log').replace('{who}', who).replace('{pts}', result.bonusPts), 'success');
+    } else {
+      log(t('hq.answered_wrong_log').replace('{who}', who), 'warn');
+    }
   });
 
   sock.on('item_found', ({ itemId, fromName }) => {
@@ -2517,14 +2754,14 @@ function connectSocket() {
   sock.on('member_join', ({ memberName, members }) => {
     updateMembersOnline(members);
     updateLobbyMembers(members);
-    appendSystemChat(memberName + ' joined the team');
+    appendSystemChat(t('msg.member_joined').replace('{name}', memberName));
     if (memberName !== S.memberName) log(t('msg.member_joined').replace('{name}', memberName), 'hint');
   });
 
   sock.on('member_leave', ({ memberName, members }) => {
     updateMembersOnline(members);
     updateLobbyMembers(members);
-    appendSystemChat(memberName + ' left');
+    appendSystemChat(t('msg.member_left').replace('{name}', memberName));
   });
 
   // ── Lobby events ──────────────────────────────────────────────────────────
@@ -2540,10 +2777,12 @@ function connectSocket() {
     doStartGame(timerSec);
   });
 
-  sock.on('lobby_error', ({ message }) => {
+  sock.on('lobby_error', ({ message, code, required, online }) => {
+    let msg = message || '';
+    if (code === 'wrong_count') msg = t('lobby.wrong_count').replace('{required}', required).replace('{online}', online);
+    else if (code === 'too_many') msg = t('lobby.too_many').replace('{required}', required).replace('{online}', online);
     const el = document.getElementById('lobby-error-msg');
-    if (el) el.textContent = message;
-    // Re-enable the begin button so player can try again
+    if (el) el.textContent = msg;
     const btn = document.getElementById('start-btn');
     btn.disabled = false;
     btn.textContent = t('login.demo_start_btn');
@@ -2557,54 +2796,9 @@ function connectSocket() {
     showEndScreen(data.won, data);
   });
 
-  // ── Collaborative code events ─────────────────────────────────────────────
-  sock.on('code_revealed', ({ puzzleKey, code, fromName, label, required, confirmed: confirmedCount }) => {
-    const tLabel = t('puzzle.label.' + puzzleKey) || label;
-    appendSystemChat(`🔑 ${fromName} found: ${tLabel}`);
-    if (fromName === S.memberName) {
-      const fb = document.getElementById('modal-feedback');
-      fb.className = 'ok';
-      fb.dataset.teamWaiting = '1';
-      fb.textContent = t('modal.waiting_team').replace('{done}', confirmedCount).replace('{required}', required);
-      document.getElementById('modal-submit').disabled = true;
-      log(t('log.code_found').replace('{label}', tLabel).replace('{n}', required - confirmedCount), 'hint');
-    } else {
-      showTeamConfirm({ puzzleKey, code, fromName, label: tLabel, required, confirmedCount });
-      log(t('log.code_found_other').replace('{name}', escHtml(fromName)).replace('{label}', tLabel), 'warn');
-    }
-  });
-
-  sock.on('confirm_progress', ({ puzzleKey, count, required, fromName }) => {
-    if (fromName !== S.memberName) appendSystemChat(`✓ ${fromName} confirmed (${count}/${required})`);
-    if (window._tcPuzzleKey === puzzleKey) {
-      document.getElementById('tc-progress').textContent = t('tc.progress').replace('{count}', count).replace('{required}', required);
-    }
-    const fb = document.getElementById('modal-feedback');
-    if (fb && fb.dataset.teamWaiting === '1') {
-      fb.textContent = t('modal.confirming_team').replace('{done}', count).replace('{required}', required);
-    }
-  });
-
-  sock.on('puzzle_complete', ({ puzzleKey, puzzlesDone: pd }) => {
-    closeTeamConfirm();
-    if (S.solved[puzzleKey]) return;
-    S.puzzlesDone = Math.max(S.puzzlesDone, pd);
-    if (puzzleKey === 'coa_verified') {
-      S.solved.coa_verified = true;
-      updateProgress(); closeModal();
-      log(t('msg.all_confirmed_gmp'), 'success');
-      log(t('msg.gmp_fact'), 'fact');
-      renderNav(); renderRoom();
-    } else if (puzzleKey === 'game_won') {
-      S.solved.game_won = true;
-      updateProgress(); closeModal();
-      log(t('msg.all_confirmed_pin'), 'success');
-      triggerWin();
-    }
-  });
 
   sock.on('kicked', ({ reason }) => {
-    alert('Admin action: ' + reason + '\nPlease refresh and login again.');
+    alert(t('msg.kicked').replace('{reason}', reason));
     location.reload();
   });
 
@@ -2612,64 +2806,57 @@ function connectSocket() {
     document.getElementById('chat-input').disabled    = true;
     document.getElementById('chat-input').placeholder = t('chat.reconnecting');
   });
+
+  // iOS Safari: re-connect when tab becomes visible again after being hidden
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && !sock.connected) {
+      sock.connect();
+    }
+  });
 }
 
-// ── Team Confirmation Helpers ─────────────────────────────────────────────
-window._tcPuzzleKey = null;
-
-function showTeamConfirm({ puzzleKey, code, fromName, label, required, confirmedCount }) {
-  window._tcPuzzleKey = puzzleKey;
-  document.getElementById('tc-title').textContent = label;
-  document.getElementById('tc-body').innerHTML =
-    t('tc.body_html').replace('{name}', escHtml(fromName)).replace('{required}', required);
-  document.getElementById('tc-code-display').textContent = code;
-  document.getElementById('tc-input').value = '';
-  document.getElementById('tc-input').disabled = false;
-  document.getElementById('tc-feedback').textContent = '';
-  document.getElementById('tc-feedback').className = '';
-  document.getElementById('tc-progress').textContent = t('tc.progress').replace('{count}', confirmedCount).replace('{required}', required);
-  document.getElementById('tc-submit').disabled = false;
-  document.getElementById('team-confirm-overlay').classList.add('show');
-  setTimeout(() => document.getElementById('tc-input').focus(), 60);
-}
-
-function closeTeamConfirm() {
-  document.getElementById('team-confirm-overlay').classList.remove('show');
-  window._tcPuzzleKey = null;
-}
-
-document.getElementById('tc-submit').onclick = () => {
-  const puzzleKey = window._tcPuzzleKey;
-  if (!puzzleKey || !S.socket) return;
-  const inp = document.getElementById('tc-input');
-  const val = inp.value.trim().toUpperCase().replace(/[-\s]/g, '');
-  const code = document.getElementById('tc-code-display').textContent;
-  const expected = code.toUpperCase().replace(/[-\s]/g, '');
-  if (val === expected) {
-    document.getElementById('tc-feedback').textContent = t('tc.confirmed_waiting');
-    document.getElementById('tc-feedback').className = 'ok';
-    document.getElementById('tc-submit').disabled = true;
-    inp.disabled = true;
-    S.socket.emit('confirm_code', { puzzleKey, code });
+// Helper: record my personal puzzle completion and notify server
+function myPuzzleComplete(key, demoAfterFn) {
+  S.mySolved[key] = true;
+  window._currentPuzzleKey = null;
+  if (S.socket && !S.demoMode) {
+    S.socket.emit('player_puzzle_done', { key, puzzlesDone: S.puzzlesDone });
+    setFeedback(t('msg.your_task_done'), 'ok');
+    const sub = document.getElementById('modal-submit');
+    if (sub) sub.disabled = true;
+    // Remove modal choices to prevent re-submission
+    const ch = document.getElementById('modal-choices');
+    if (ch) ch.innerHTML = '';
   } else {
-    document.getElementById('tc-feedback').textContent = t('tc.incorrect');
-    document.getElementById('tc-feedback').className = 'bad';
-    S.wrongAnswers++;
-    if (S.socket) S.socket.emit('wrong_answer');
+    // Demo / no-socket: complete immediately
+    S.solved[key] = true;
+    puzzleDone();
+    closeModal();
+    if (demoAfterFn) demoAfterFn();
   }
-};
-
-document.getElementById('tc-input').addEventListener('keydown', e => {
-  if (e.key === 'Enter') document.getElementById('tc-submit').click();
-});
+}
 
 function applyServerState(state) {
   if (!state) return;
-  if (state.solved)   Object.entries(state.solved).forEach(([k, v]) => { if (v) S.solved[k] = true; });
+  if (state.solved)      Object.entries(state.solved).forEach(([k, v]) => { if (v) S.solved[k] = true; });
+  if (state.playerSolved) Object.entries(state.playerSolved).forEach(([k, v]) => { if (v) S.mySolved[k] = true; });
+  if (state.hiddenAnswers) {
+    S.hiddenAnswers = { ...state.hiddenAnswers };
+    S.hiddenBonus   = Object.values(S.hiddenAnswers).reduce((sum, r) => sum + (r && r.bonusPts ? r.bonusPts : 0), 0);
+  }
+  if (state.lockedRoster) S.lockedRoster = state.lockedRoster;
+  if (state.groupSize)    S.requiredSize  = state.groupSize;
   if (state.inventory) state.inventory.forEach(id => { if (!S.inventory.includes(id)) S.inventory.push(id); });
   if (state.notes && state.notes.length) S.notes = [...state.notes];
-  if (state.puzzlesDone !== undefined)   S.puzzlesDone = Math.max(S.puzzlesDone, state.puzzlesDone);
-  if (state.timerSec   !== undefined)    S.timerSec    = state.timerSec;
+  if (state.puzzlesDone  !== undefined)  S.puzzlesDone  = Math.max(S.puzzlesDone, state.puzzlesDone);
+  if (state.wrongAnswers !== undefined)  S.wrongAnswers = Math.max(S.wrongAnswers, state.wrongAnswers);
+  if (state.hintPenalty  !== undefined)  S.hintPenalty  = Math.max(S.hintPenalty, state.hintPenalty);
+  if (state.timerSec     !== undefined)  S.timerSec     = state.timerSec;
+  // Restore pause state
+  if (state.paused) {
+    S.paused = true;
+    document.getElementById('pause-overlay').classList.add('show');
+  }
   renderInventory(); renderNotes(); renderNav(); updateProgress();
   // Update timer display accounting for overtime
   const el = document.getElementById('timer');
@@ -2692,11 +2879,22 @@ function updateMembersOnline(members) {
 function updateLobbyMembers(members) {
   const el = document.getElementById('lobby-members');
   if (!el) return;
-  const count = members.length;
-  const names = members.join(', ') || '—';
-  const statusColor = count >= 3 ? 'var(--accent2)' : 'var(--warn)';
-  el.innerHTML = `<span style="color:${statusColor};">${t('lobby.connected').replace('{count}', count)}</span> &nbsp;— ${escHtml(names)}<br>`
-    + `<span style="font-size:0.72rem;color:var(--dim);">${count < 3 ? t('lobby.need_3') : count < 5 ? t('lobby.waiting_ready') : t('lobby.all_5')}</span>`;
+  const count  = members.length;
+  const req    = S.requiredSize || 0;
+  const names  = members.join(', ') || '—';
+  const needed = req > 0 ? req - count : 0;
+  const statusColor = (req > 0 ? count >= req : count >= 3) ? 'var(--accent2)' : 'var(--warn)';
+  let statusMsg;
+  if (req > 0) {
+    statusMsg = needed > 0
+      ? t('lobby.need_exact').replace('{needed}', needed)
+      : t('lobby.all_ready');
+  } else {
+    statusMsg = count < 3 ? t('lobby.need_3') : count < 5 ? t('lobby.waiting_ready') : t('lobby.all_5');
+  }
+  el.innerHTML = `<span style="color:${statusColor};">${count}${req > 0 ? '/'+req : ''} ${t('lobby.connected_of')}</span> &nbsp;— ${escHtml(names)}<br>`
+    + `<span style="font-size:0.72rem;color:var(--dim);">${statusMsg}</span>`;
+  S.membersOnline = members;
 }
 
 // ── Chat helpers ────────────────────────────────
@@ -2741,3 +2939,4 @@ document.getElementById('chat-input').addEventListener('keydown', e => {
 </script>
 </body>
 </html>
+
