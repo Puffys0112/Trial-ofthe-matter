@@ -8504,6 +8504,12 @@ const TRANSLATIONS = {
     'hq.hq_dispatch.b':                            'בצעו בדיקה חושית: אם הוא נראה, מריח ומרגיש רגיל — כנראה עדיין טוב. עדיף לפני הוא מדריך איכות, לא גבול בטיחות ללחם.',
     'hq.hq_dispatch.c':                            'הקפיאו מיד — הקפאה עוצרת את ההתדרדרות.',
     'hq.hq_dispatch.d':                            'הכינו טוסט — חום הורג חיידקים ועושה אותו בטוח.',
+    'lobby.connected': '{count}/{total} מחוברים',
+    'lobby.ready_status': '✓ מוכן: {count} / {total}  ({names})',
+    'members.online': '{n} מחוברים',
+    'pts': "נק'",
+    'btn.verify_release': 'אמת ושחרר',
+    'msg.kicked': 'הודעת מנהל: {reason}\nאנא רענן את הדף והתחבר מחדש.',
   },
 };
 
@@ -8544,10 +8550,4 @@ function applyTranslations() {
   document.querySelectorAll('[data-t-ph]').forEach(el => {
     el.placeholder = t(el.dataset.tPh);
   });
-    'lobby.connected': '{count}/{total} מחוברים',
-    'lobby.ready_status': '✓ מוכן: {count} / {total}  ({names})',
-    'members.online': '{n} מחוברים',
-    'pts': "נק'",
-    'btn.verify_release': 'אמת ושחרר',
-    'msg.kicked': 'הודעת מנהל: {reason}\nאנא רענן את הדף והתחבר מחדש.',
 }

@@ -629,6 +629,7 @@ io.on('connection', (socket) => {
   socket.on('player_puzzle_done', ({ key, puzzlesDone }) => {
     const gs = groupSessions.get(groupId);
     if (!gs || gs.paused) return;  // block submissions while paused
+    if (!REQUIRED_PUZZLES.includes(key)) return;  // reject unknown puzzle keys
     if (!gs.playerSolved) gs.playerSolved = {};
     if (!gs.playerSolved[memberName]) gs.playerSolved[memberName] = {};
     if (gs.playerSolved[memberName][key]) return;  // already done by me
