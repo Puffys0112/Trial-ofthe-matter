@@ -725,8 +725,7 @@ io.on('connection', (socket) => {
     const group    = data.groups.find(g => g.id === groupId);
     const required = group ? (group.requiredSize || 0) : 0;
 
-    const room   = io.sockets.adapter.rooms.get(groupId);
-    const online = room ? room.size : 1;
+    const online = getOnlineMembers(groupId).length || 1;
     const readyNames  = [...rs.values()];
     const readyCount  = readyNames.length;
 
@@ -838,10 +837,9 @@ io.on('connection', (socket) => {
       rs.delete(socket.id);
       if (rs.size === 0) groupReadyState.delete(groupId);
       else {
-        const room   = io.sockets.adapter.rooms.get(groupId);
-        const online = room ? room.size : 0;
+        const online = getOnlineMembers(groupId).length;
         io.to(groupId).emit('ready_update', {
-          readyCount: rs.size, total: Math.max(online - 1, rs.size),
+          readyCount: rs.size, total: Math.max(online, rs.size),
           readyNames: [...rs.values()],
         });
       }

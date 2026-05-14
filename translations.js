@@ -593,6 +593,8 @@ const TRANSLATIONS = {
     'hq.hq_dispatch.b':                            'Apply sensory checks: if it looks, smells, and feels normal it is likely still fine. Best before is a quality guide, not a safety limit for bread.',
     'hq.hq_dispatch.c':                            'Freeze it immediately — freezing resets the clock.',
     'hq.hq_dispatch.d':                            'Toast it — heat kills bacteria, making it safe regardless.',
+    'btn.verify_release': 'Verify & Release',
+    'msg.kicked': 'Admin notification: {reason}\nPlease refresh and log in again.',
   },
 
   /* ─── GERMAN ────────────────────────────────────────────── */
@@ -1154,6 +1156,12 @@ const TRANSLATIONS = {
     'hq.hq_dispatch.b':                            'Sensorische Prüfung: Wenn es normal aussieht, riecht und sich anfühlt, ist es wahrscheinlich noch gut. Mindesthaltbar bis ist eine Qualitätsrichtlinie, kein Sicherheitslimit für Brot.',
     'hq.hq_dispatch.c':                            'Sofort einfrieren — Einfrieren stoppt den Verfall.',
     'hq.hq_dispatch.d':                            'Toasten — Hitze tötet Bakterien und macht es sicher.',
+    'lobby.connected': '{count}/{total} verbunden',
+    'lobby.ready_status': '✓ Bereit: {count} / {total}  ({names})',
+    'members.online': '{n} online',
+    'pts': 'Pkt.',
+    'btn.verify_release': 'Prüfen & Freigeben',
+    'msg.kicked': 'Admin-Benachrichtigung: {reason}\nBitte aktualisiere die Seite und melde dich erneut an.',
   },
 
   /* ─── SPANISH ───────────────────────────────────────────── */
@@ -1721,6 +1729,12 @@ const TRANSLATIONS = {
     'hq.hq_dispatch.b':                            'Aplicar controles sensoriales: si parece, huele y se siente normal, probablemente este bien. Esta fecha es una guia de calidad, no un limite de seguridad para el pan.',
     'hq.hq_dispatch.c':                            'Congelarlo de inmediato — la congelacion detiene el deterioro.',
     'hq.hq_dispatch.d':                            'Tostarlo — el calor mata las bacterias y lo hace seguro.',
+    'lobby.connected': '{count}/{total} conectados',
+    'lobby.ready_status': '✓ Listo: {count} / {total}  ({names})',
+    'members.online': '{n} en línea',
+    'pts': 'pts',
+    'btn.verify_release': 'Verificar y liberar',
+    'msg.kicked': 'Notificación de administrador: {reason}\nActualice la página e inicie sesión de nuevo.',
   },
 
   /* ─── BRAZILIAN PORTUGUESE ──────────────────────────────── */
@@ -2287,6 +2301,12 @@ const TRANSLATIONS = {
     'msg.incomplete_tasks':     'Por favor, complete todas as interações necessárias antes de prosseguir.',
     'msg.pin_incomplete':       'O PIN final está correto, mas seu grupo ainda não concluiu todas as tarefas obrigatórias.',
     'rules.english_answers':    'Algumas respostas devem ser digitadas em inglês exatamente como mostrado (ex.: números de lote, ACCEPT/REJECT). Campos com distinção de maiúsculas/minúsculas são indicados na pergunta.',
+    'lobby.connected': '{count}/{total} conectados',
+    'lobby.ready_status': '✓ Pronto: {count} / {total}  ({names})',
+    'members.online': '{n} online',
+    'pts': 'pts',
+    'btn.verify_release': 'Verificar e liberar',
+    'msg.kicked': 'Notificação do administrador: {reason}\nAtualize a página e faça login novamente.',
   },
 
   /* ─── FRENCH ────────────────────────────────────────────── */
@@ -2847,6 +2867,12 @@ const TRANSLATIONS = {
     'hq.hq_dispatch.b':                            'Appliquer des contrôles sensoriels: s\'il semble, sent et est normal, il est probablement encore bon. La date est un indicateur de qualité, pas une limite de sécurité pour le pain.',
     'hq.hq_dispatch.c':                            'Le congeler immédiatement — la congélation stoppe la dégradation.',
     'hq.hq_dispatch.d':                            'Le toaster — la chaleur tue les bactéries et le rend sûr.',
+    'lobby.connected': '{count}/{total} connecté(s)',
+    'lobby.ready_status': '✓ Prêt : {count} / {total}  ({names})',
+    'members.online': '{n} en ligne',
+    'pts': 'pts',
+    'btn.verify_release': 'Vérifier et libérer',
+    'msg.kicked': 'Notification admin : {reason}\nVeuillez actualiser la page et vous reconnecter.',
   },
 
   /* ─── KOREAN ────────────────────────────────────────────── */
@@ -3414,6 +3440,12 @@ const TRANSLATIONS = {
     'hq.hq_dispatch.b':                            '감각 검사를 합니다: 보기, 냄새, 느낌이 정상이라면 아마도 괜찮습니다. 소비기한은 식빵의 안전 한계가 아닌 품질 가이드입니다.',
     'hq.hq_dispatch.c':                            '즉시 냉동합니다 — 냉동이 부패를 멈춥니다.',
     'hq.hq_dispatch.d':                            '토스트합니다 — 열이 세균을 죽여 안전하게 만듭니다.',
+    'lobby.connected': '{count}/{total} 연결됨',
+    'lobby.ready_status': '✓ 준비: {count} / {total}  ({names})',
+    'members.online': '{n}명 온라인',
+    'pts': '점',
+    'btn.verify_release': '검증 및 출시',
+    'msg.kicked': '관리자 알림: {reason}\n페이지를 새로고침하고 다시 로그인하세요.',
   },
 
   /* ─── DANISH ────────────────────────────────────────────── */
@@ -3942,6 +3974,8 @@ const TRANSLATIONS = {
     'topic.risk_thinking':  'ISO 9001 Risikobaseret tænkning',
     'topic.sop_compliance':  'SOP-overholdelse og smøremiddel',
     'topic.visual_inspection':  'Visuel inspektionsmetode',
+    'btn.verify_release': 'Verificer & frigiv',
+    'msg.kicked': 'Administratorbesked: {reason}\nOpdater siden og log ind igen.',
   },
 
   /* ─── SIMPLIFIED CHINESE (China & Singapore Mandarin) ───── */
@@ -4514,6 +4548,8 @@ const TRANSLATIONS = {
     'msg.incomplete_tasks':     '请在继续之前完成所有必要的互动。',
     'msg.pin_incomplete':       '最终PIN码正确，但您的团队尚未完成所有必要任务。',
     'rules.english_answers':    '某些答案必须完全按照所示用英语输入（例如：批号、ACCEPT/REJECT）。区分大小写的字段在问题中有标注。',
+    'btn.verify_release': '验证并释放',
+    'msg.kicked': '管理员通知：{reason}\n请刷新页面并重新登录。',
   },
 
   /* ─── TRADITIONAL CHINESE (Taiwan Mandarin) ─────────────── */
@@ -5080,6 +5116,12 @@ const TRANSLATIONS = {
     'msg.incomplete_tasks':     '請在繼續之前完成所有必要的互動。',
     'msg.pin_incomplete':       '最終PIN碼正確，但您的團隊尚未完成所有必要任務。',
     'rules.english_answers':    '某些答案必須完全按照所示用英語輸入（例如：批號、ACCEPT/REJECT）。區分大小寫的欄位在問題中有標注。',
+    'lobby.connected': '{count}/{total} 已連接',
+    'lobby.ready_status': '✓ 已準備：{count} / {total}（{names}）',
+    'members.online': '{n} 名在線',
+    'pts': '分',
+    'btn.verify_release': '驗證並釋放',
+    'msg.kicked': '管理員通知：{reason}\n請重新整理頁面並重新登入。',
   },
 
   /* ─── MALAY (Singapore / Malaysia) ──────────────────────── */
@@ -5654,6 +5696,8 @@ const TRANSLATIONS = {
     'hq.hq_dispatch.b':                            'Gunakan semakan deria: jika kelihatan, berbau dan terasa normal, ia mungkin masih baik. Terbaik sebelum adalah panduan kualiti, bukan had keselamatan untuk roti.',
     'hq.hq_dispatch.c':                            'Bekukan segera — pembekuan menghentikan kemerosotan.',
     'hq.hq_dispatch.d':                            'Bakar — haba membunuh bakteria dan menjadikannya selamat.',
+    'btn.verify_release': 'Sahkan & Lepaskan',
+    'msg.kicked': 'Pemberitahuan admin: {reason}\nSila muat semula halaman dan log masuk semula.',
   },
 
   /* ─── TAMIL ─────────────────────────────────────────────── */
@@ -6186,6 +6230,12 @@ const TRANSLATIONS = {
     'hq.hq_dispatch.b':                            'உணர் சோதனைகளை பயன்படுத்துங்கள்: தெரிவும், வாசனையும், உணர்வும் சாதாரணமாக இருந்தால் அது இன்னும் நல்லதாக இருக்கலாம். சிறந்தது முன் என்பது பாண்னுக்கு பாதுகாப்பு வரம்பு அல்ல, தர வழிகாட்டி.',
     'hq.hq_dispatch.c':                            'உடனடியாக உறைய வையுங்கள் — உறைவு சிதைவை நிறுத்துகிறது.',
     'hq.hq_dispatch.d':                            'டோஸ்ட் செய்யுங்கள் — வெப்பம் பாக்டீரியாவை கொல்லும்.',
+    'lobby.connected': '{count}/{total} இணைந்தனர்',
+    'lobby.ready_status': '✓ தயார்: {count} / {total}  ({names})',
+    'members.online': '{n} ஆன்லைன்',
+    'pts': 'புள்',
+    'btn.verify_release': 'சரிபார்த்து வெளியிடவும்',
+    'msg.kicked': 'நிர்வாகி அறிவிப்பு: {reason}\nபக்கத்தை புதுப்பித்து மீண்டும் உள்நுழையவும்.',
   },
 
   /* ─── HINDI ─────────────────────────────────────────────── */
@@ -6776,6 +6826,8 @@ const TRANSLATIONS = {
     'puzzle.label.motto_production':  'गुणवत्ता सुधार मोटो (उत्पादन)',
     'puzzle.label.motto_qaoffice':  'गुणवत्ता स्वामित्व मोटो (QA कार्यालय)',
     'puzzle.label.ncr_filed':  'गैर-अनुरूपता रिपोर्ट',
+    'btn.verify_release': 'सत्यापित करें और जारी करें',
+    'msg.kicked': 'प्रशासक सूचना: {reason}\nपेज रिफ्रेश करें और फिर से लॉगिन करें।',
   },
 
   /* ─── SERBIAN (LATIN) ──────────────────────────────────── */
@@ -7359,6 +7411,8 @@ const TRANSLATIONS = {
     'puzzle.label.motto_production':  'Motto poboljšanja kvaliteta (Produkcija)',
     'puzzle.label.motto_qaoffice':  'Motto vlasništva nad kvalitetom (QA kancelarija)',
     'puzzle.label.ncr_filed':  'Izveštaj o neusklađenosti',
+    'btn.verify_release': 'Proverite i pustite',
+    'msg.kicked': 'Obaveštenje administratora: {reason}\nOsvežite stranicu i prijavite se ponovo.',
   },
 
 
@@ -7869,6 +7923,8 @@ const TRANSLATIONS = {
     'puzzle.label.motto_production':  'Мото побољшања квалитета (Продукција)',
     'puzzle.label.motto_qaoffice':  'Мото власништва над квалитетом (QA канцеларија)',
     'puzzle.label.ncr_filed':  'Извештај о неусклађености',
+    'btn.verify_release': 'Проверите и пустите',
+    'msg.kicked': 'Обавештење администратора: {reason}\nОсвежите страницу и пријавите се поново.',
   },
 
   /* ─── HEBREW ────────────────────────────────────────────── */
@@ -8488,4 +8544,10 @@ function applyTranslations() {
   document.querySelectorAll('[data-t-ph]').forEach(el => {
     el.placeholder = t(el.dataset.tPh);
   });
+    'lobby.connected': '{count}/{total} מחוברים',
+    'lobby.ready_status': '✓ מוכן: {count} / {total}  ({names})',
+    'members.online': '{n} מחוברים',
+    'pts': "נק'",
+    'btn.verify_release': 'אמת ושחרר',
+    'msg.kicked': 'הודעת מנהל: {reason}\nאנא רענן את הדף והתחבר מחדש.',
 }

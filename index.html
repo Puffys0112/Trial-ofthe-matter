@@ -591,7 +591,7 @@
     </div>
     <div class="lf">
       <label data-t="login.your_name">Your Name</label>
-      <input type="text" id="member-name" data-t-ph="login.enter_name" placeholder="e.g. Alice" maxlength="24" autocomplete="off" />
+      <input type="text" id="member-name" data-t-ph="login.enter_name" placeholder="e.g. Alice" maxlength="24" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
     </div>
     <button class="btn primary login-submit" id="login-btn" data-t="login.btn">LOGIN &amp; ENTER FACILITY</button>
     <div class="login-links">
@@ -713,10 +713,10 @@
         <div>🧩 <strong style="color:var(--text);">Solve puzzles</strong> — every answer is grounded in real quality principles</div>
         <div>📋 <strong style="color:var(--text);">Check Field Notes</strong> — clues and facts are recorded automatically</div>
         <div>💬 <strong style="color:var(--text);">Use Group Chat</strong> — coordinate with your team in real time</div>
-        <div>🔑 <strong style="color:var(--text);">Confirm codes together</strong> — key milestones require all members to enter the code</div>
+        <div>🔑 <strong style="color:var(--text);">Complete tasks individually</strong> — every player must personally solve each puzzle for the group to advance</div>
       </div>
       <div style="margin-top:10px;padding:8px 12px;background:rgba(0,153,230,0.07);border-left:3px solid var(--accent);border-radius:2px;font-size:0.77rem;color:var(--dim);line-height:1.7;">
-        There are <strong style="color:var(--text);">5 areas</strong> and <strong style="color:var(--text);">11 puzzles</strong> to complete in <strong style="color:var(--text);">25 minutes</strong>.
+        There are <strong style="color:var(--text);">5 areas</strong> and <strong style="color:var(--text);">11 puzzles</strong> to complete in <strong style="color:var(--text);">30 minutes</strong>.
         Areas unlock as you progress — you cannot skip ahead.
       </div>
     </div>
@@ -736,7 +736,7 @@
         </tr>
         <tr style="border-bottom:1px solid var(--border);">
           <td style="padding:7px 8px 7px 0;font-size:1rem;">🔑</td>
-          <td style="padding:7px 0;color:var(--dim);"><strong style="color:var(--text);">Team confirmation:</strong> At key checkpoints the code is revealed to all — every member must type it to proceed.</td>
+          <td style="padding:7px 0;color:var(--dim);"><strong style="color:var(--text);">Individual tasks:</strong> Every player must personally solve each puzzle — the group advances only when all members complete it.</td>
         </tr>
         <tr style="border-bottom:1px solid var(--border);">
           <td style="padding:7px 8px 7px 0;font-size:1rem;">🚪</td>
@@ -744,7 +744,7 @@
         </tr>
         <tr style="border-bottom:1px solid var(--border);">
           <td style="padding:7px 8px 7px 0;font-size:1rem;">❌</td>
-          <td style="padding:7px 0;color:var(--dim);"><strong style="color:var(--text);">Wrong answers:</strong> Each incorrect answer deducts <strong style="color:var(--danger);">10 points</strong> from your final score — think before you submit.</td>
+          <td style="padding:7px 0;color:var(--dim);"><strong style="color:var(--text);">Wrong answers:</strong> Each incorrect answer deducts <strong style="color:var(--danger);">50 points</strong> from your final score — think before you submit.</td>
         </tr>
         <tr style="border-bottom:1px solid var(--border);">
           <td style="padding:7px 8px 7px 0;font-size:1rem;">💡</td>
@@ -1438,7 +1438,7 @@ function handleAction(action) {
         body: t('body.gmp'),
         questionKey: 'q.gmp',
         placeholder: t('q.gmp.ph'),
-        submitLabel: 'Verify & Release',
+        submitLabel: t('btn.verify_release'),
         onSubmit: val => {
           const v = val.trim().toUpperCase().replace(/\s/g,'');
           if (v === 'RM4471' || v === 'RM-4471' || v === '4471') {
@@ -2798,7 +2798,7 @@ function connectSocket() {
 
 
   sock.on('kicked', ({ reason }) => {
-    alert('Admin action: ' + reason + '\nPlease refresh and login again.');
+    alert(t('msg.kicked').replace('{reason}', reason));
     location.reload();
   });
 
