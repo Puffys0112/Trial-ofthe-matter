@@ -25,6 +25,17 @@ const OT_THRESH  = MAX_SECS - REG_SECS;  // 1800 — timerSec below this = overt
 // ── Scoring constant ────────────────────────────────────────────────────────
 const WRONG_PTS = 50;  // penalty per wrong answer
 
+// ── Hidden bonus questions ────────────────────────────────────────────────────
+const HQ_BONUS = 20;  // bonus points per correct hidden question
+const HQ_ANSWERS = {
+  hq_receiving:  'b',
+  hq_production: 'b',
+  hq_qclab:      'c',
+  hq_qaoffice:   'b',
+  hq_dispatch:   'b',
+};
+const HQ_IDS = Object.keys(HQ_ANSWERS);
+
 app.use(express.json());
 app.use(express.static(__dirname));
 
@@ -85,7 +96,7 @@ function calcSecsRemaining(groupId) {
 // ── Score calculation ──────────────────────────────────────────────────────
 // timerSec: remaining seconds out of MAX_SECS (3600)
 // OT_THRESH = 1800: when timerSec < OT_THRESH, we are in overtime
-function calcScore({ puzzlesDone, wrongAnswers, hintPenalty, timerSec, won, resumed }) {
+function calcScore({ puzzlesDone, wrongAnswers, hintPenalty, timerSec, won, resumed, hiddenBonus }) {
   const isOvertime      = timerSec < OT_THRESH;
   const ptPerPuzzle     = resumed ? 100 : (isOvertime ? 180 : 200);
   const regSecsLeft     = isOvertime ? 0 : (timerSec - OT_THRESH);
@@ -96,7 +107,8 @@ function calcScore({ puzzlesDone, wrongAnswers, hintPenalty, timerSec, won, resu
 
   return Math.max(0,
     (puzzlesDone  * ptPerPuzzle) +
-    timeBonus -
+    timeBonus +
+    (hiddenBonus  || 0) -
     (wrongAnswers * WRONG_PTS) -
     (hintPenalty  || 0) -
     overtimePenalty
@@ -188,7 +200,7 @@ app.post('/api/game/start', requireGroup, (req, res) => {
   if (!groupSessions.has(req.groupId)) {
     const online = getOnlineMembers(req.groupId);
     groupSessions.set(req.groupId, {
-      solved: {}, playerSolved: {}, inventory: [], notes: [],
+      solved: {}, playerSolved: {}, hiddenAnswers: {}, inventory: [], notes: [],
       puzzlesDone: 0, wrongAnswers: 0, hintPenalty: 0,
       startedAt: Date.now(),
       lockedRoster: online,
@@ -218,7 +230,12 @@ app.post('/api/game/submit', requireGroup, (req, res) => {
   const secsLeft     = calcSecsRemaining(req.groupId);
   const resumed      = !!sess.resumed;
 
-  const score = calcScore({ puzzlesDone, wrongAnswers, hintPenalty, timerSec: secsLeft, won: !!won, resumed });
+  const hiddenAnswers  = sess.hiddenAnswers || {};
+  const hiddenFound    = Object.keys(hiddenAnswers).length;
+  const hiddenCorrect  = Object.values(hiddenAnswers).filter(a => a && a.isCorrect).length;
+  const hiddenBonus    = hiddenCorrect * HQ_BONUS;
+
+  const score = calcScore({ puzzlesDone, wrongAnswers, hintPenalty, timerSec: secsLeft, won: !!won, resumed, hiddenBonus });
 
   const startedAtMs  = sess.startedAt || Date.now();
   const completedAt  = new Date().toISOString();
@@ -244,6 +261,7 @@ app.post('/api/game/submit', requireGroup, (req, res) => {
   group.trials.push({
     trialNumber:    group.trials.length + 1,
     score, puzzlesDone, wrongAnswers, hintPenalty,
+    hiddenFound, hiddenCorrect, hiddenBonus,
     won: !!won, secondsRemaining: secsLeft,
     timeSpentSec, completedAt, resumed,
   });
@@ -252,9 +270,10 @@ app.post('/api/game/submit', requireGroup, (req, res) => {
 
   io.to(req.groupId).emit('game_over', {
     won: !!won, score, puzzlesDone, wrongAnswers, secondsRemaining: secsLeft,
+    hiddenFound, hiddenCorrect, hiddenBonus,
   });
 
-  res.json({ score, puzzlesDone, wrongAnswers, secondsRemaining: secsLeft, timeSpentSec });
+  res.json({ score, puzzlesDone, wrongAnswers, secondsRemaining: secsLeft, timeSpentSec, hiddenFound, hiddenCorrect, hiddenBonus });
 });
 
 // Admin-only leaderboard — returns every trial as a separate row
@@ -392,6 +411,7 @@ app.post('/api/admin/resume', requireAdmin, (req, res) => {
     groupSessions.set(groupId, {
       solved:       group.solved || {},
       playerSolved: {},
+      hiddenAnswers: {},
       inventory:    group.inventory || [],
       notes:        group.notes || [],
       puzzlesDone:  group.puzzlesDone || 0,
@@ -504,6 +524,7 @@ io.on('connection', (socket) => {
     state: sess ? {
       solved:        sess.solved,
       playerSolved:  (sess.playerSolved || {})[memberName] || {},
+      hiddenAnswers: sess.hiddenAnswers || {},
       inventory:     sess.inventory,
       notes:         sess.notes,
       puzzlesDone:   sess.puzzlesDone,
@@ -617,6 +638,32 @@ io.on('connection', (socket) => {
     socket.to(groupId).emit('hint_broadcast', { room, timeCost, ptsCost, fromName: memberName });
   });
 
+  // ── Hidden bonus question submission ─────────────────────────────────────
+  socket.on('hidden_q_submit', ({ hqId, option }) => {
+    const gs = groupSessions.get(groupId);
+    if (!gs) return;
+    if (!HQ_IDS.includes(hqId)) return;
+    if (!gs.hiddenAnswers) gs.hiddenAnswers = {};
+
+    // Already answered — resend current state to this socket only
+    if (gs.hiddenAnswers[hqId] != null) {
+      socket.emit('hidden_q_state', { hqId, result: gs.hiddenAnswers[hqId] });
+      return;
+    }
+
+    const isCorrect = String(option).toLowerCase() === HQ_ANSWERS[hqId];
+    gs.hiddenAnswers[hqId] = {
+      answeredBy:      memberName,
+      isCorrect,
+      bonusPts:        isCorrect ? HQ_BONUS : 0,
+      submittedOption: String(option).toLowerCase(),
+      correctOption:   HQ_ANSWERS[hqId],
+      submittedAt:     Date.now(),
+    };
+
+    io.to(groupId).emit('hidden_q_state', { hqId, result: gs.hiddenAnswers[hqId] });
+  });
+
   // ── Lobby: player ready ───────────────────────────────────────────────────
   socket.on('player_ready', () => {
     if (groupSessions.has(groupId)) return;
@@ -677,7 +724,7 @@ io.on('connection', (socket) => {
       if (!groupSessions.has(groupId)) {
         const roster = getOnlineMembers(groupId);
         groupSessions.set(groupId, {
-          solved: {}, playerSolved: {}, inventory: [], notes: [],
+          solved: {}, playerSolved: {}, hiddenAnswers: {}, inventory: [], notes: [],
           puzzlesDone: 0, wrongAnswers: 0, hintPenalty: 0,
           startedAt: Date.now(),
           lockedRoster: roster,
@@ -779,18 +826,24 @@ io.on('connection', (socket) => {
   socket.on('overtime_hardstop', () => {
     const gs = groupSessions.get(groupId);
     if (!gs || gs.solved.game_won) return;
-    const secsLeft = 0;
-    const score    = calcScore({
+    const secsLeft      = 0;
+    const hiddenAnswers = gs.hiddenAnswers || {};
+    const hiddenCorrect = Object.values(hiddenAnswers).filter(a => a && a.isCorrect).length;
+    const hiddenFound   = Object.keys(hiddenAnswers).length;
+    const hiddenBonus   = hiddenCorrect * HQ_BONUS;
+    const score = calcScore({
       puzzlesDone:  gs.puzzlesDone,
       wrongAnswers: gs.wrongAnswers,
       hintPenalty:  gs.hintPenalty || 0,
       timerSec:     secsLeft,
       won:          false,
       resumed:      !!gs.resumed,
+      hiddenBonus,
     });
     io.to(groupId).emit('game_over', {
       won: false, score, puzzlesDone: gs.puzzlesDone,
       wrongAnswers: gs.wrongAnswers, secondsRemaining: 0,
+      hiddenFound, hiddenCorrect, hiddenBonus,
     });
   });
 

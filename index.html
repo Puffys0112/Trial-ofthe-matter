@@ -255,6 +255,32 @@
     .hotspot-btn.hint-btn { border-color: #4a4a1a; color: #b0a040; margin-top: 6px; font-style: italic; }
     .hotspot-btn.hint-btn:hover:not(:disabled) { border-color: #ffd700; color: #ffd700; }
     .hotspot-btn.hint-btn.used { opacity: 0.4; cursor: default; }
+    .hotspot-btn.hidden-spot-btn {
+      opacity: 0.18;
+      border-color: #5a4a00;
+      color: #888;
+      margin-top: 8px;
+      font-style: italic;
+      font-size: 0.82rem;
+      transition: opacity 0.3s, border-color 0.3s, color 0.3s, box-shadow 0.3s;
+    }
+    .hotspot-btn.hidden-spot-btn:hover {
+      opacity: 1;
+      border-color: #ffd700;
+      color: #ffd700;
+      box-shadow: 0 0 10px rgba(255,215,0,0.45);
+    }
+    .hotspot-btn.hidden-spot-btn.answered {
+      opacity: 0.55;
+      border-color: #3a8a3a;
+      color: #7ec87e;
+    }
+    .hotspot-btn.hidden-spot-btn.answered:hover {
+      opacity: 0.85;
+      border-color: #7ec87e;
+      color: #7ec87e;
+      box-shadow: 0 0 8px rgba(0,200,100,0.3);
+    }
 
     /* ── Activity Log ── */
     #log {
@@ -978,6 +1004,8 @@ const S = {
   lockedRoster:  [],   // locked player names
   paused:        false,// game paused due to disconnect
   membersOnline: [],   // current online members
+  hiddenAnswers: {},   // hqId → result object from server (group-level, one per HQ)
+  hiddenBonus:   0,    // accumulated bonus points from correct hidden questions
 };
 
 // Language selector — run once DOM is ready
@@ -1020,7 +1048,8 @@ async function apiCall(path, method = 'GET', body = null) {
 function calcScore(won) {
   return Math.max(0,
     (S.puzzlesDone * 200) +
-    (won ? S.timerSec * 2 : 0) -
+    (won ? S.timerSec * 2 : 0) +
+    (S.hiddenBonus || 0) -
     (S.wrongAnswers * 50) -
     (S.hintPenalty)
   );
@@ -1279,6 +1308,7 @@ const ROOMS = {
       { label: 'GMP Receiving Terminal',            action: 'gmp_terminal'     },
       { label: 'Quality Week Noticeboard',          action: 'read_noticeboard' },
     ],
+    hiddenSpot: { emoji: '🟡', action: 'find_hq_receiving' },
   },
   production: {
     id: 'production', badge: 'AREA 02 — PRODUCTION LINE',
@@ -1293,6 +1323,7 @@ const ROOMS = {
       { label: 'NCR Filing Station',              action: 'file_ncr'            },
       { label: 'Quality Improvement Poster',      action: 'read_quality_poster' },
     ],
+    hiddenSpot: { emoji: '📋', action: 'find_hq_production' },
   },
   qclab: {
     id: 'qclab', badge: 'AREA 03 — QC LABORATORY',
@@ -1306,6 +1337,7 @@ const ROOMS = {
       { label: 'Equipment Logbook',                  action: 'check_equip_log'     },
       { label: 'ISO 15378 Packaging Compliance File', action: 'check_iso15378'     },
     ],
+    hiddenSpot: { emoji: '🔬', action: 'find_hq_qclab' },
   },
   qaoffice: {
     id: 'qaoffice', badge: 'AREA 04 — QA / COMPLIANCE',
@@ -1320,6 +1352,7 @@ const ROOMS = {
       { label: 'Batch Record Safe',            action: 'open_batch_safe'      },
       { label: 'Quality Pledge (Wall Frame)',  action: 'read_quality_pledge'  },
     ],
+    hiddenSpot: { emoji: '📌', action: 'find_hq_qaoffice' },
   },
   dispatch: {
     id: 'dispatch', badge: 'AREA 05 — DISPATCH / RELEASE',
@@ -1331,6 +1364,7 @@ const ROOMS = {
       { label: 'Quarantine Cage',        action: 'inspect_quarantine'   },
       { label: 'Quality Week Banner',    action: 'read_qw_banner'       },
     ],
+    hiddenSpot: { emoji: '🏷️', action: 'find_hq_dispatch' },
   },
 };
 
@@ -2069,9 +2103,66 @@ function handleAction(action) {
       });
       return null;
 
+    // ── HIDDEN BONUS QUESTIONS ───────────────────────────────────────────
+    case 'find_hq_receiving':  openHiddenModal('hq_receiving');  return null;
+    case 'find_hq_production': openHiddenModal('hq_production'); return null;
+    case 'find_hq_qclab':      openHiddenModal('hq_qclab');      return null;
+    case 'find_hq_qaoffice':   openHiddenModal('hq_qaoffice');   return null;
+    case 'find_hq_dispatch':   openHiddenModal('hq_dispatch');   return null;
+
     default:
       return { msg: `Unknown action: ${action}`, cls: 'fail' };
   }
+}
+
+function openHiddenModal(hqId) {
+  window._currentHqId = hqId;
+  const result = S.hiddenAnswers[hqId];
+  if (result) {
+    // Already answered — show result only
+    const isCorrect = result.isCorrect;
+    const who       = escHtml(result.answeredBy);
+    const correct   = t('hq.' + hqId + '.' + result.correctOption);
+    const body      = (isCorrect
+      ? t('hq.result_correct')
+      : t('hq.result_wrong'))
+      .replace('{who}', who)
+      .replace('{correct}', correct);
+    openModal({
+      tag:      t('hq.found_badge'),
+      title:    t('hq.' + hqId + '.title'),
+      body:     '✅ ' + body,
+      noInput:  true,
+    });
+    return;
+  }
+  // Build choice list from translations
+  const choices = ['a','b','c','d'].map(opt => ({
+    label:   t('hq.' + hqId + '.' + opt),
+    correct: false,   // correctness determined server-side
+    opt,
+  })).filter(ch => ch.label && ch.label !== 'hq.' + hqId + '.' + ch.opt);
+
+  openModal({
+    tag:     t('hq.found_badge'),
+    title:   t('hq.' + hqId + '.title'),
+    body:    t('hq.intro') + '\n\n' + t('hq.' + hqId + '.body'),
+    noInput: true,
+    choices,
+    onChoice: (_, __, ch) => {
+      if (!S.socket || S.demoMode) {
+        // Demo: treat as correct locally
+        S.hiddenBonus += 20;
+        setFeedback(t('hq.answered_correct'), 'ok');
+        return;
+      }
+      S.socket.emit('hidden_q_submit', { hqId, option: ch.opt });
+      setFeedback(t('hq.submitting'), 'ok');
+      // Disable choices to prevent re-submit
+      const choicesEl = document.getElementById('modal-choices');
+      if (choicesEl) choicesEl.querySelectorAll('button').forEach(b => { b.disabled = true; });
+    },
+  });
 }
 
 // ────────────────────────────────────────────────
@@ -2147,6 +2238,21 @@ function renderRoom() {
   hintBtn.disabled = !!hintUsed;
   hintBtn.onclick = () => { if (!S.paused && !S.over) useHint(); };
   hs.appendChild(hintBtn);
+
+  // Hidden bonus question spot (ultra-low opacity, golden hover)
+  if (r.hiddenSpot) {
+    const hqId      = r.hiddenSpot.action.replace('find_hq_', 'hq_');
+    const hqAnswered = !!S.hiddenAnswers[hqId];
+    const hqBtn = document.createElement('button');
+    hqBtn.className = 'hotspot-btn hidden-spot-btn' + (hqAnswered ? ' answered' : '');
+    hqBtn.textContent = r.hiddenSpot.emoji + ' ' + (hqAnswered ? t('hq.found_badge_done') : '…');
+    hqBtn.title = hqAnswered ? t('hq.found_badge_done') : '';
+    hqBtn.onclick = () => {
+      if (S.paused || S.over) return;
+      handleAction(r.hiddenSpot.action);
+    };
+    hs.appendChild(hqBtn);
+  }
 }
 
 function renderInventory() {
@@ -2284,7 +2390,7 @@ function openModal({ tag, title, body, questionKey, placeholder, submitLabel, on
       const b = document.createElement('button');
       b.className = 'choice-btn';
       b.textContent = ch.label;
-      b.onclick = () => onChoice && onChoice(ch.correct, ch.label);
+      b.onclick = () => onChoice && onChoice(ch.correct, ch.label, ch);
       choicesEl.appendChild(b);
     });
   } else if (noInput) {
@@ -2305,6 +2411,7 @@ function openModal({ tag, title, body, questionKey, placeholder, submitLabel, on
 function closeModal() {
   document.getElementById('modal-overlay').classList.remove('show');
   _onSubmit = null;
+  window._currentHqId = null;
 }
 
 function setFeedback(msg, type) {
@@ -2388,11 +2495,14 @@ function showEndScreen(won, data) {
   const wrongAnswers     = data.wrongAnswers      || 0;
   const hintPenalty      = S.hintPenalty         || 0;
   const secondsRemaining = data.secondsRemaining  || 0;
+  const hiddenBonus      = data.hiddenBonus       !== undefined ? data.hiddenBonus : S.hiddenBonus;
+  const hiddenFound      = data.hiddenFound       !== undefined ? data.hiddenFound : Object.keys(S.hiddenAnswers).length;
+  const hiddenCorrect    = data.hiddenCorrect     !== undefined ? data.hiddenCorrect : Object.values(S.hiddenAnswers).filter(r => r && r.isCorrect).length;
   const isOvertime       = secondsRemaining < OT_THRESH_CLIENT;
   const ptPerPuzzle      = isOvertime ? 180 : 200;
   const regSecsLeft      = isOvertime ? 0 : (secondsRemaining - OT_THRESH_CLIENT);
   const timeBonusPts     = (won && !isOvertime) ? regSecsLeft * 2 : 0;
-  const penaltyPts       = wrongAnswers * 10;
+  const penaltyPts       = wrongAnswers * 50;
   const overtimeSecs     = isOvertime ? (OT_THRESH_CLIENT - secondsRemaining) : 0;
   const overtimePenalty  = Math.ceil(overtimeSecs / 60) * 30;
   const timeSpentSec     = data.timeSpentSec || (MAX_SECS_CLIENT - secondsRemaining);
@@ -2421,6 +2531,9 @@ function showEndScreen(won, data) {
   statsHtml +=
     t('end.wrong_n').replace('{n}', wrongAnswers) + ': <span style="color:var(--danger);">−' + penaltyPts.toLocaleString() + ' ' + pts + '</span><br>' +
     (hintPenalty ? t('end.hint_pen') + ': <span style="color:var(--danger);">−' + hintPenalty.toLocaleString() + ' ' + pts + '</span><br>' : '') +
+    (hiddenFound > 0
+      ? t('end.hidden_bonus').replace('{found}', hiddenFound).replace('{correct}', hiddenCorrect) + ': <span style="color:' + (hiddenBonus > 0 ? 'var(--accent2)' : 'var(--dim)') + ';">+' + hiddenBonus.toLocaleString() + ' ' + pts + '</span><br>'
+      : '') +
     '<strong>' + t('end.total_score') + ' <span style="font-size:1.2rem;color:' + (won ? 'var(--accent2)' : 'var(--danger)') + ';">' + score.toLocaleString() + '</span> ' + pts + '</strong><br><br>' +
     t('end.time_taken') + ' <span>' + em + ':' + es + '</span><br>' +
     (S.demoMode ? '<em style="color:var(--dim);">' + t('end.demo_note') + '</em>' : '<a href="/admin.html" target="_blank" style="color:var(--accent);">' + t('end.lb_link') + '</a>');
@@ -2615,6 +2728,29 @@ function connectSocket() {
     document.getElementById('pause-overlay').classList.remove('show');
     log(t('pause.resumed'), 'success');
     startTimer();
+  });
+
+  // hidden_q_state = group answered a hidden bonus question
+  sock.on('hidden_q_state', ({ hqId, result }) => {
+    S.hiddenAnswers[hqId] = result;
+    // Recompute hiddenBonus total
+    S.hiddenBonus = Object.values(S.hiddenAnswers).reduce((sum, r) => sum + (r && r.bonusPts ? r.bonusPts : 0), 0);
+    renderRoom();  // re-render to update hidden-spot button state
+    // If this player's modal for this HQ is currently open, update it
+    if (window._currentHqId === hqId) {
+      const fb = document.getElementById('modal-feedback');
+      if (fb) {
+        fb.textContent = result.isCorrect ? t('hq.answered_correct') : t('hq.answered_wrong');
+        fb.className   = result.isCorrect ? 'ok' : 'bad';
+      }
+    }
+    // Log the outcome
+    const who = escHtml(result.answeredBy);
+    if (result.isCorrect) {
+      log(t('hq.answered_correct_log').replace('{who}', who).replace('{pts}', result.bonusPts), 'success');
+    } else {
+      log(t('hq.answered_wrong_log').replace('{who}', who), 'warn');
+    }
   });
 
   sock.on('item_found', ({ itemId, fromName }) => {
@@ -2816,6 +2952,10 @@ function applyServerState(state) {
   if (!state) return;
   if (state.solved)      Object.entries(state.solved).forEach(([k, v]) => { if (v) S.solved[k] = true; });
   if (state.playerSolved) Object.entries(state.playerSolved).forEach(([k, v]) => { if (v) S.mySolved[k] = true; });
+  if (state.hiddenAnswers) {
+    S.hiddenAnswers = { ...state.hiddenAnswers };
+    S.hiddenBonus   = Object.values(S.hiddenAnswers).reduce((sum, r) => sum + (r && r.bonusPts ? r.bonusPts : 0), 0);
+  }
   if (state.lockedRoster) S.lockedRoster = state.lockedRoster;
   if (state.groupSize)    S.requiredSize  = state.groupSize;
   if (state.inventory) state.inventory.forEach(id => { if (!S.inventory.includes(id)) S.inventory.push(id); });
