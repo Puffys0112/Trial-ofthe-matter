@@ -28,11 +28,16 @@ const WRONG_PTS = 50;  // penalty per wrong answer
 // ── Hidden bonus questions ────────────────────────────────────────────────────
 const HQ_BONUS = 20;  // bonus points per correct hidden question
 const HQ_ANSWERS = {
-  hq_receiving:  'b',
-  hq_production: 'b',
-  hq_qclab:      'c',
-  hq_qaoffice:   'b',
-  hq_dispatch:   'b',
+  hq_receiving_1:  'a',  // Food Quality — egg float test
+  hq_receiving_2:  'c',  // Air Quality — green = good
+  hq_production_1: 'b',  // Water Quality — unusual odor
+  hq_production_2: 'b',  // Manufacturing Quality — barcode tracking
+  hq_qclab_1:      'b',  // Environmental Quality — trees filter pollution
+  hq_qclab_2:      'b',  // Product Quality — electronics inspection
+  hq_qaoffice_1:   'b',  // Quality Systems — expiration dates
+  hq_qaoffice_2:   'a',  // Digital Security — updates fix vulnerabilities
+  hq_dispatch_1:   'a',  // Honey Quality — crystallization = natural
+  hq_dispatch_2:   'a',  // Quality Control — random sampling
 };
 const HQ_IDS = Object.keys(HQ_ANSWERS);
 
@@ -157,7 +162,13 @@ function getOnlineMembers(groupId) {
 // List all groups (for login dropdown)
 app.get('/api/groups', (req, res) => {
   const data = load();
-  res.json(data.groups.map(g => ({ id: g.id, name: g.name })));
+  res.json(data.groups.map(g => ({
+    id:                g.id,
+    name:              g.name,
+    status:            g.status,
+    permanentlyLocked: !!g.permanentlyLocked,
+    trialGroup:        !!g.trialGroup,
+  })));
 });
 
 // Group member login

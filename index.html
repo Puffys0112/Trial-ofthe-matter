@@ -559,9 +559,10 @@
         <option value="de">🇩🇪 Deutsch</option>
         <option value="fr">🇫🇷 Français</option>
         <option value="es">🇪🇸 Español</option>
+        <option value="da">🇩🇰 Dansk</option>
         <option value="pt-BR">🇧🇷 Português (Brasil)</option>
         <option value="ko">🇰🇷 한국어</option>
-        <option value="da">🇩🇰 Dansk</option>
+        <option value="kn">🇮🇳 ಕನ್ನಡ</option>
         <option value="zh-Hans">🇨🇳 中文（简体）</option>
         <option value="zh-Hant">🇹🇼 中文（繁體）</option>
         <option value="ms">🇸🇬 Bahasa Melayu</option>
@@ -574,7 +575,8 @@
     </div>
     <div class="lf">
       <label data-t="login.select_group">Select Your Group</label>
-      <select id="group-select"><option value="" data-t="start.connecting">Loading groups…</option></select>
+      <select id="group-select"><option value="">Loading groups…</option></select>
+      <button id="groups-retry-btn" type="button" data-t="login.retry_groups" style="display:none;margin-top:6px;padding:5px 14px;font-size:0.78rem;cursor:pointer;background:var(--accent);color:#fff;border:none;border-radius:4px;" onclick="initLogin()">↺ Retry</button>
     </div>
     <div class="lf">
       <label data-t="login.group_pin">Group PIN</label>
@@ -1024,13 +1026,21 @@ async function submitScore(won) {
 async function initLogin() {
   const sel = document.getElementById('group-select');
   const err = document.getElementById('login-error');
+  const retryBtn = document.getElementById('groups-retry-btn');
+  sel.innerHTML = `<option value="">${t('login.loading_groups')}</option>`;
+  if (retryBtn) retryBtn.style.display = 'none';
   try {
     const groups = await apiCall('/api/groups');
     sel.innerHTML = `<option value="">${t('login.select_group_placeholder')}</option>` +
-      groups.map(g => `<option value="${g.id}">${g.name}</option>`).join('');
+      groups.map(g => {
+        const locked = g.permanentlyLocked && !g.trialGroup;
+        const label  = locked ? `${g.name} ✓` : g.name;
+        return `<option value="${g.id}"${locked ? ' disabled' : ''}>${label}</option>`;
+      }).join('');
   } catch {
     sel.innerHTML = `<option value="">${t('login.server_unavailable')}</option>`;
     err.textContent = t('login.server_error');
+    if (retryBtn) retryBtn.style.display = 'inline-block';
   }
 }
 
@@ -1263,7 +1273,10 @@ const ROOMS = {
       { label: 'GMP Receiving Terminal',            action: 'gmp_terminal'     },
       { label: 'Quality Week Noticeboard',          action: 'read_noticeboard' },
     ],
-    hiddenSpot: { emoji: '🟡', action: 'find_hq_receiving' },
+    hiddenSpots: [
+      { emoji: '🥚', action: 'find_hq_receiving_1' },
+      { emoji: '🌬️', action: 'find_hq_receiving_2' },
+    ],
   },
   production: {
     id: 'production', badge: 'AREA 02 — PRODUCTION LINE',
@@ -1278,7 +1291,10 @@ const ROOMS = {
       { label: 'NCR Filing Station',              action: 'file_ncr'            },
       { label: 'Quality Improvement Poster',      action: 'read_quality_poster' },
     ],
-    hiddenSpot: { emoji: '📋', action: 'find_hq_production' },
+    hiddenSpots: [
+      { emoji: '💧', action: 'find_hq_production_1' },
+      { emoji: '📊', action: 'find_hq_production_2' },
+    ],
   },
   qclab: {
     id: 'qclab', badge: 'AREA 03 — QC LABORATORY',
@@ -1292,7 +1308,10 @@ const ROOMS = {
       { label: 'Equipment Logbook',                  action: 'check_equip_log'     },
       { label: 'ISO 15378 Packaging Compliance File', action: 'check_iso15378'     },
     ],
-    hiddenSpot: { emoji: '🔬', action: 'find_hq_qclab' },
+    hiddenSpots: [
+      { emoji: '🌳', action: 'find_hq_qclab_1' },
+      { emoji: '💻', action: 'find_hq_qclab_2' },
+    ],
   },
   qaoffice: {
     id: 'qaoffice', badge: 'AREA 04 — QA / COMPLIANCE',
@@ -1307,7 +1326,10 @@ const ROOMS = {
       { label: 'Batch Record Safe',            action: 'open_batch_safe'      },
       { label: 'Quality Pledge (Wall Frame)',  action: 'read_quality_pledge'  },
     ],
-    hiddenSpot: { emoji: '📌', action: 'find_hq_qaoffice' },
+    hiddenSpots: [
+      { emoji: '📅', action: 'find_hq_qaoffice_1' },
+      { emoji: '🔒', action: 'find_hq_qaoffice_2' },
+    ],
   },
   dispatch: {
     id: 'dispatch', badge: 'AREA 05 — DISPATCH / RELEASE',
@@ -1319,7 +1341,10 @@ const ROOMS = {
       { label: 'Quarantine Cage',        action: 'inspect_quarantine'   },
       { label: 'Quality Week Banner',    action: 'read_qw_banner'       },
     ],
-    hiddenSpot: { emoji: '🏷️', action: 'find_hq_dispatch' },
+    hiddenSpots: [
+      { emoji: '🍯', action: 'find_hq_dispatch_1' },
+      { emoji: '🎲', action: 'find_hq_dispatch_2' },
+    ],
   },
 };
 
@@ -2059,11 +2084,16 @@ function handleAction(action) {
       return null;
 
     // ── HIDDEN BONUS QUESTIONS ───────────────────────────────────────────
-    case 'find_hq_receiving':  openHiddenModal('hq_receiving');  return null;
-    case 'find_hq_production': openHiddenModal('hq_production'); return null;
-    case 'find_hq_qclab':      openHiddenModal('hq_qclab');      return null;
-    case 'find_hq_qaoffice':   openHiddenModal('hq_qaoffice');   return null;
-    case 'find_hq_dispatch':   openHiddenModal('hq_dispatch');   return null;
+    case 'find_hq_receiving_1':  openHiddenModal('hq_receiving_1');  return null;
+    case 'find_hq_receiving_2':  openHiddenModal('hq_receiving_2');  return null;
+    case 'find_hq_production_1': openHiddenModal('hq_production_1'); return null;
+    case 'find_hq_production_2': openHiddenModal('hq_production_2'); return null;
+    case 'find_hq_qclab_1':      openHiddenModal('hq_qclab_1');      return null;
+    case 'find_hq_qclab_2':      openHiddenModal('hq_qclab_2');      return null;
+    case 'find_hq_qaoffice_1':   openHiddenModal('hq_qaoffice_1');   return null;
+    case 'find_hq_qaoffice_2':   openHiddenModal('hq_qaoffice_2');   return null;
+    case 'find_hq_dispatch_1':   openHiddenModal('hq_dispatch_1');   return null;
+    case 'find_hq_dispatch_2':   openHiddenModal('hq_dispatch_2');   return null;
 
     default:
       return { msg: `Unknown action: ${action}`, cls: 'fail' };
@@ -2194,19 +2224,21 @@ function renderRoom() {
   hintBtn.onclick = () => { if (!S.paused && !S.over) useHint(); };
   hs.appendChild(hintBtn);
 
-  // Hidden bonus question spot (ultra-low opacity, golden hover)
-  if (r.hiddenSpot) {
-    const hqId      = r.hiddenSpot.action.replace('find_hq_', 'hq_');
-    const hqAnswered = !!S.hiddenAnswers[hqId];
-    const hqBtn = document.createElement('button');
-    hqBtn.className = 'hotspot-btn hidden-spot-btn' + (hqAnswered ? ' answered' : '');
-    hqBtn.textContent = r.hiddenSpot.emoji + ' ' + (hqAnswered ? t('hq.found_badge_done') : '…');
-    hqBtn.title = hqAnswered ? t('hq.found_badge_done') : '';
-    hqBtn.onclick = () => {
-      if (S.paused || S.over) return;
-      handleAction(r.hiddenSpot.action);
-    };
-    hs.appendChild(hqBtn);
+  // Hidden bonus question spots (2 per room)
+  if (r.hiddenSpots) {
+    r.hiddenSpots.forEach(spot => {
+      const hqId      = spot.action.replace('find_hq_', 'hq_');
+      const hqAnswered = !!S.hiddenAnswers[hqId];
+      const hqBtn = document.createElement('button');
+      hqBtn.className = 'hotspot-btn hidden-spot-btn' + (hqAnswered ? ' answered' : '');
+      hqBtn.textContent = spot.emoji + ' ' + (hqAnswered ? t('hq.found_badge_done') : '…');
+      hqBtn.title = hqAnswered ? t('hq.found_badge_done') : '';
+      hqBtn.onclick = () => {
+        if (S.paused || S.over) return;
+        handleAction(spot.action);
+      };
+      hs.appendChild(hqBtn);
+    });
   }
 }
 
