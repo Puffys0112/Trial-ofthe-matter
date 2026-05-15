@@ -162,7 +162,13 @@ function getOnlineMembers(groupId) {
 // List all groups (for login dropdown)
 app.get('/api/groups', (req, res) => {
   const data = load();
-  res.json(data.groups.map(g => ({ id: g.id, name: g.name })));
+  res.json(data.groups.map(g => ({
+    id:                g.id,
+    name:              g.name,
+    status:            g.status,
+    permanentlyLocked: !!g.permanentlyLocked,
+    trialGroup:        !!g.trialGroup,
+  })));
 });
 
 // Group member login

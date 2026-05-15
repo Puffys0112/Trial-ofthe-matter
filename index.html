@@ -559,9 +559,9 @@
         <option value="de">🇩🇪 Deutsch</option>
         <option value="fr">🇫🇷 Français</option>
         <option value="es">🇪🇸 Español</option>
+        <option value="da">🇩🇰 Dansk</option>
         <option value="pt-BR">🇧🇷 Português (Brasil)</option>
         <option value="ko">🇰🇷 한국어</option>
-        <option value="da">🇩🇰 Dansk</option>
         <option value="kn">🇮🇳 ಕನ್ನಡ</option>
         <option value="zh-Hans">🇨🇳 中文（简体）</option>
         <option value="zh-Hant">🇹🇼 中文（繁體）</option>
@@ -575,7 +575,8 @@
     </div>
     <div class="lf">
       <label data-t="login.select_group">Select Your Group</label>
-      <select id="group-select"><option value="" data-t="start.connecting">Loading groups…</option></select>
+      <select id="group-select"><option value="">Loading groups…</option></select>
+      <button id="groups-retry-btn" type="button" data-t="login.retry_groups" style="display:none;margin-top:6px;padding:5px 14px;font-size:0.78rem;cursor:pointer;background:var(--accent);color:#fff;border:none;border-radius:4px;" onclick="initLogin()">↺ Retry</button>
     </div>
     <div class="lf">
       <label data-t="login.group_pin">Group PIN</label>
@@ -1025,13 +1026,21 @@ async function submitScore(won) {
 async function initLogin() {
   const sel = document.getElementById('group-select');
   const err = document.getElementById('login-error');
+  const retryBtn = document.getElementById('groups-retry-btn');
+  sel.innerHTML = `<option value="">${t('login.loading_groups')}</option>`;
+  if (retryBtn) retryBtn.style.display = 'none';
   try {
     const groups = await apiCall('/api/groups');
     sel.innerHTML = `<option value="">${t('login.select_group_placeholder')}</option>` +
-      groups.map(g => `<option value="${g.id}">${g.name}</option>`).join('');
+      groups.map(g => {
+        const locked = g.permanentlyLocked && !g.trialGroup;
+        const label  = locked ? `${g.name} ✓` : g.name;
+        return `<option value="${g.id}"${locked ? ' disabled' : ''}>${label}</option>`;
+      }).join('');
   } catch {
     sel.innerHTML = `<option value="">${t('login.server_unavailable')}</option>`;
     err.textContent = t('login.server_error');
+    if (retryBtn) retryBtn.style.display = 'inline-block';
   }
 }
 
