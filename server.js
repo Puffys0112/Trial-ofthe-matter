@@ -680,8 +680,11 @@ io.on('connection', (socket) => {
   socket.on('note_added', ({ html, important }) => {
     const gs = groupSessions.get(groupId);
     if (!gs) return;
-    // Sanitize: strip all HTML tags except <strong> / </strong>
-    const sanitized = String(html || '').replace(/<(?!\/?strong\b)[^>]*>/gi, '');
+    // Sanitize: strip script/style blocks (including content), then all tags except <strong>
+    const sanitized = String(html || '')
+      .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '')
+      .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, '')
+      .replace(/<(?!\/?strong\b)[^>]*>/gi, '');
     const note = { html: sanitized, important: !!important };
     gs.notes.push(note);
     socket.to(groupId).emit('note_added', { ...note, fromName: memberName });
