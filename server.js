@@ -409,6 +409,7 @@ app.get('/api/admin/groups', requireAdmin, (req, res) => {
       liveMembers:      getOnlineMembers(g.id).length,
       livePaused:       sess ? !!sess.paused : false,
       liveRoster:       sess ? (sess.lockedRoster || []) : [],
+      livePlayerSolved: sess ? (sess.playerSolved || {}) : {},
       livePuzzles:      sess ? sess.puzzlesDone : (g.puzzlesDone || 0),
       liveWrong:        sess ? sess.wrongAnswers : (g.wrongAnswers || 0),
     };
@@ -659,7 +660,9 @@ io.on('connection', (socket) => {
     const allDone = roster.every(n => !!gs.playerSolved[n]?.[key]);
     if (allDone && !gs.solved[key]) {
       gs.solved[key]  = true;
-      gs.puzzlesDone  = Math.max(gs.puzzlesDone, Number(puzzlesDone) || Object.keys(gs.solved).length);
+      // Count only scored room puzzles (game_won is the win marker, not a scored puzzle)
+      const scored = REQUIRED_PUZZLES.filter(k => k !== 'game_won' && gs.solved[k]).length;
+      gs.puzzlesDone  = scored;
       saveSessions();
       io.to(groupId).emit('puzzle_solved', {
         key, puzzlesDone: gs.puzzlesDone, fromName: memberName,

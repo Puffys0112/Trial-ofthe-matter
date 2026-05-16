@@ -1017,7 +1017,8 @@ const S = {
   memberName:    null,
   socket:        null,
   lang:          localStorage.getItem('qw_lang') || 'en',
-  requiredSize:  0,    // group size selected at login
+  requiredSize:  0,    // required group size (from server)
+  groupSize:     0,    // group size selected at login
   lockedRoster:  [],   // locked player names
   paused:        false,// game paused due to disconnect
   membersOnline: [],   // current online members
