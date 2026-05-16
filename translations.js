@@ -1224,6 +1224,8 @@ const TRANSLATIONS = {
     'pts': 'Pkt.',
     'btn.verify_release': 'Prüfen & Freigeben',
     'msg.kicked': 'Admin-Benachrichtigung: {reason}\nBitte aktualisiere die Seite und melde dich erneut an.',
+    'login.loading_groups': 'Gruppen werden geladen…',
+    'login.retry_groups':   '↺ Wiederholen',
   },
 
   /* ─── SPANISH ───────────────────────────────────────────── */
@@ -1827,6 +1829,8 @@ const TRANSLATIONS = {
     'pts': 'pts',
     'btn.verify_release': 'Verificar y liberar',
     'msg.kicked': 'Notificación de administrador: {reason}\nActualice la página e inicie sesión de nuevo.',
+    'login.loading_groups': 'Cargando grupos…',
+    'login.retry_groups':   '↺ Reintentar',
   },
 
   /* ─── BRAZILIAN PORTUGUESE ──────────────────────────────── */
@@ -2429,6 +2433,8 @@ const TRANSLATIONS = {
     'pts': 'pts',
     'btn.verify_release': 'Verificar e liberar',
     'msg.kicked': 'Notificação do administrador: {reason}\nAtualize a página e faça login novamente.',
+    'login.loading_groups': 'Carregando grupos…',
+    'login.retry_groups':   '↺ Tentar novamente',
   },
 
   /* ─── FRENCH ────────────────────────────────────────────── */
@@ -3025,6 +3031,8 @@ const TRANSLATIONS = {
     'pts': 'pts',
     'btn.verify_release': 'Vérifier et libérer',
     'msg.kicked': 'Notification admin : {reason}\nVeuillez actualiser la page et vous reconnecter.',
+    'login.loading_groups': 'Chargement des groupes…',
+    'login.retry_groups':   '↺ Réessayer',
   },
 
   /* ─── KOREAN ────────────────────────────────────────────── */
@@ -3628,6 +3636,8 @@ const TRANSLATIONS = {
     'pts': '점',
     'btn.verify_release': '검증 및 출시',
     'msg.kicked': '관리자 알림: {reason}\n페이지를 새로고침하고 다시 로그인하세요.',
+    'login.loading_groups': '그룹 로딩 중…',
+    'login.retry_groups':   '↺ 다시 시도',
   },
 
   /* ─── DANISH ────────────────────────────────────────────── */
@@ -4188,6 +4198,8 @@ const TRANSLATIONS = {
     'topic.visual_inspection':  'Visuel inspektionsmetode',
     'btn.verify_release': 'Verificer & frigiv',
     'msg.kicked': 'Administratorbesked: {reason}\nOpdater siden og log ind igen.',
+    'login.loading_groups': 'Indlæser grupper…',
+    'login.retry_groups':   '↺ Prøv igen',
   },
 
   /* ─── SIMPLIFIED CHINESE (China & Singapore Mandarin) ───── */
@@ -4792,6 +4804,8 @@ const TRANSLATIONS = {
     'rules.english_answers':    '某些答案必须完全按照所示用英语输入（例如：批号、ACCEPT/REJECT）。区分大小写的字段在问题中有标注。',
     'btn.verify_release': '验证并释放',
     'msg.kicked': '管理员通知：{reason}\n请刷新页面并重新登录。',
+    'login.loading_groups': '正在加载小组…',
+    'login.retry_groups':   '↺ 重试',
   },
 
   /* ─── TRADITIONAL CHINESE (Taiwan Mandarin) ─────────────── */
@@ -5394,6 +5408,8 @@ const TRANSLATIONS = {
     'pts': '分',
     'btn.verify_release': '驗證並釋放',
     'msg.kicked': '管理員通知：{reason}\n請重新整理頁面並重新登入。',
+    'login.loading_groups': '正在載入組別…',
+    'login.retry_groups':   '↺ 重試',
   },
 
   /* ─── MALAY (Singapore / Malaysia) ──────────────────────── */
@@ -6000,6 +6016,8 @@ const TRANSLATIONS = {
     'hq.hq_dispatch_2.d':                            'Pensampelan mengurangkan masa yang diperlukan untuk melengkapkan audit kualiti.',
     'btn.verify_release': 'Sahkan & Lepaskan',
     'msg.kicked': 'Pemberitahuan admin: {reason}\nSila muat semula halaman dan log masuk semula.',
+    'login.loading_groups': 'Memuatkan kumpulan…',
+    'login.retry_groups':   '↺ Cuba semula',
   },
 
   /* ─── KANNADA (ಕನ್ನಡ) ──────────────────────────────────── */
@@ -7136,6 +7154,8 @@ const TRANSLATIONS = {
     'pts': 'புள்',
     'btn.verify_release': 'சரிபார்த்து வெளியிடவும்',
     'msg.kicked': 'நிர்வாகி அறிவிப்பு: {reason}\nபக்கத்தை புதுப்பித்து மீண்டும் உள்நுழையவும்.',
+    'login.loading_groups': 'குழுக்கள் ஏற்றப்படுகின்றன…',
+    'login.retry_groups':   '↺ மீண்டும் முயற்சி',
   },
 
   /* ─── HINDI ─────────────────────────────────────────────── */
@@ -7758,6 +7778,8 @@ const TRANSLATIONS = {
     'puzzle.label.ncr_filed':  'गैर-अनुरूपता रिपोर्ट',
     'btn.verify_release': 'सत्यापित करें और जारी करें',
     'msg.kicked': 'प्रशासक सूचना: {reason}\nपेज रिफ्रेश करें और फिर से लॉगिन करें।',
+    'login.loading_groups': 'समूह लोड हो रहे हैं…',
+    'login.retry_groups':   '↺ पुनः प्रयास',
   },
 
   /* ─── SERBIAN (LATIN) ──────────────────────────────────── */
@@ -8373,6 +8395,8 @@ const TRANSLATIONS = {
     'puzzle.label.ncr_filed':  'Izveštaj o neusklađenosti',
     'btn.verify_release': 'Proverite i pustite',
     'msg.kicked': 'Obaveštenje administratora: {reason}\nOsvežite stranicu i prijavite se ponovo.',
+    'login.loading_groups': 'Učitavanje grupa…',
+    'login.retry_groups':   '↺ Pokušaj ponovo',
   },
 
 
@@ -8915,6 +8939,8 @@ const TRANSLATIONS = {
     'puzzle.label.ncr_filed':  'Извештај о неусклађености',
     'btn.verify_release': 'Проверите и пустите',
     'msg.kicked': 'Обавештење администратора: {reason}\nОсвежите страницу и пријавите се поново.',
+    'login.loading_groups': 'Учитавање група…',
+    'login.retry_groups':   '↺ Покушај поново',
   },
 
   /* ─── HEBREW ────────────────────────────────────────────── */
@@ -9530,6 +9556,8 @@ const TRANSLATIONS = {
     'pts': "נק'",
     'btn.verify_release': 'אמת ושחרר',
     'msg.kicked': 'הודעת מנהל: {reason}\nאנא רענן את הדף והתחבר מחדש.',
+    'login.loading_groups': 'קבוצות בטעינה…',
+    'login.retry_groups':   '↺ נסה שוב',
   },
 };
 
