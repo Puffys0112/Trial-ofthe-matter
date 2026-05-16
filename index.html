@@ -615,7 +615,7 @@
     </div>
     <div class="lf">
       <label data-t="login.group_pin">Group PIN</label>
-      <input type="password" id="group-pin" data-t-ph="login.enter_pin" placeholder="Enter your group PIN" maxlength="10" />
+      <input type="password" id="group-pin" data-t-ph="login.enter_pin" placeholder="Enter your group PIN" maxlength="10" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
     </div>
     <div class="lf">
       <label data-t="login.group_size">How many people are in your group?</label>
@@ -838,7 +838,7 @@
         </div>
       </div>
       <div style="margin-top:8px;padding:8px 12px;background:rgba(255,215,0,0.06);border:1px solid rgba(255,215,0,0.25);border-radius:4px;text-align:center;font-size:0.78rem;color:#ffd700;">
-        🏆 Maximum possible score: <strong>5,200 pts</strong> — all puzzles solved, no wrong answers, no hints, instant finish
+        🏆 Maximum possible score: <strong>5,800 pts</strong> — all puzzles solved, no wrong answers, no hints, instant finish
       </div>
     </div>
     <div data-t-html="start.scoring_hq"></div>
@@ -870,7 +870,7 @@
     <h1 data-t="header.title">🏭 MediSeal — Quality Week</h1>
     <span data-t="header.motto">PROGRESS IN EVERY STEP · QUALITY IN EVERY DETAIL</span>
   </div>
-  <div id="timer">25:00</div>
+  <div id="timer">30:00</div>
 </header>
 
 <!-- ═══════════════ GAME LAYOUT ═══════════════ -->
@@ -1058,17 +1058,29 @@ async function apiCall(path, method = 'GET', body = null) {
   if (body) opts.body = JSON.stringify(body);
   const res  = await fetch(path, opts);
   const data = await res.json();
-  if (!res.ok) throw new Error(data.error || 'Request failed');
+  if (!res.ok) {
+    const err = new Error(data.error || 'Request failed');
+    if (data.code)     err.code     = data.code;
+    if (data.required) err.required = data.required;
+    throw err;
+  }
   return data;
 }
 
 function calcScore(won) {
+  const isOvertime    = S.timerSec < OT_THRESH_CLIENT;
+  const ptPer         = S.resumed ? 100 : (isOvertime ? 180 : 200);
+  const regSecsLeft   = isOvertime ? 0 : (S.timerSec - OT_THRESH_CLIENT);
+  const timeBonus     = (won && !isOvertime) ? regSecsLeft * 2 : 0;
+  const otSecs        = isOvertime ? (OT_THRESH_CLIENT - S.timerSec) : 0;
+  const otPenalty     = Math.ceil(otSecs / 60) * 30;
   return Math.max(0,
-    (S.puzzlesDone * 200) +
-    (won ? S.timerSec * 2 : 0) +
+    (S.puzzlesDone * ptPer) +
+    timeBonus +
     (S.hiddenBonus || 0) -
     (S.wrongAnswers * 50) -
-    (S.hintPenalty)
+    (S.hintPenalty || 0) -
+    otPenalty
   );
 }
 
@@ -1139,7 +1151,13 @@ document.getElementById('login-btn').onclick = async () => {
     showStartScreen(res.groupName);
     document.getElementById('lobby-status').style.display = 'block';
   } catch (e) {
-    err.textContent = e.message || t('login.fail');
+    if (e.code) {
+      let msg = t(e.code);
+      if (e.required !== undefined) msg = msg.replace('{required}', e.required);
+      err.textContent = (msg !== e.code) ? msg : (e.message || t('login.fail'));
+    } else {
+      err.textContent = e.message || t('login.fail');
+    }
   }
 };
 
@@ -2596,7 +2614,7 @@ function startTimer() {
     const el = document.getElementById('timer');
 
     if (S.timerSec >= OT_THRESH_CLIENT) {
-      // Regulation time: count down from 25:00
+      // Regulation time: count down from 30:00
       const regLeft = S.timerSec - OT_THRESH_CLIENT;
       const m = Math.floor(regLeft / 60);
       const s = regLeft % 60;

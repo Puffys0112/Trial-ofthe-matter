@@ -294,6 +294,7 @@
             <th>Puzzles</th>
             <th>Wrong</th>
             <th>Req. Size</th>
+            <th>Online</th>
             <th>Roster</th>
             <th>Trials</th>
             <th>Started</th>
@@ -424,6 +425,7 @@ async function loadAdminGroups() {
         <td>${(g.livePuzzles||g.puzzlesDone||0)}/11</td>
         <td style="color:var(--danger)">${g.liveWrong || g.wrongAnswers || 0}</td>
         <td style="color:var(--dim)">${g.requiredSize || '—'}</td>
+        <td style="color:${g.liveMembers > 0 ? 'var(--accent2)' : 'var(--dim)'}">${g.liveMembers || 0}${g.requiredSize ? '/' + g.requiredSize : ''}</td>
         <td style="font-size:0.72rem;color:var(--dim);max-width:120px;overflow:hidden;text-overflow:ellipsis;" title="${escHtml(roster)}">${escHtml(roster)}</td>
         <td style="color:var(--dim)">${trialCount > 0 ? trialCount + ' trial(s)' : '—'}</td>
         <td style="font-size:0.72rem;color:var(--dim)">${fmtDt(g.startedAt)}</td>
