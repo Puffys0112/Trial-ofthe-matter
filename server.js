@@ -176,13 +176,13 @@ app.post('/api/login', (req, res) => {
   const { groupId, pin, groupSize } = req.body || {};
   const size = Number(groupSize);
 
-  if (!groupId || !pin) return res.status(400).json({ error: 'Group and PIN required.' });
-  if (![3, 4, 5].includes(size)) return res.status(400).json({ error: 'Invalid group size. Must be 3, 4, or 5.' });
+  if (!groupId || !pin) return res.status(400).json({ error: 'Group and PIN required.', code: 'login.required_fields' });
+  if (![3, 4, 5].includes(size)) return res.status(400).json({ error: 'Invalid group size.', code: 'login.group_size_error' });
 
   const data  = load();
   const group = data.groups.find(g => g.id === groupId);
   if (!group || group.pin !== String(pin)) {
-    return res.status(401).json({ error: 'Invalid group or PIN.' });
+    return res.status(401).json({ error: 'Invalid group or PIN.', code: 'login.fail' });
   }
 
   // Permanently locked groups (non-trial, completed)
@@ -192,7 +192,7 @@ app.post('/api/login', (req, res) => {
 
   // Group already has a size set — validate match
   if (group.requiredSize && group.requiredSize !== size) {
-    return res.status(400).json({ error: `This group already set ${group.requiredSize} players.` });
+    return res.status(400).json({ error: `This group already set ${group.requiredSize} players.`, code: 'login.size_mismatch', required: group.requiredSize });
   }
 
   // Pre-game join count check
@@ -203,7 +203,7 @@ app.post('/api/login', (req, res) => {
     const existing  = new Set([...onlineNow, ...joining]);
     const effectiveLimit = group.requiredSize || size;
     if (existing.size >= effectiveLimit) {
-      return res.status(403).json({ error: `Group is full (${effectiveLimit} players already connected).` });
+      return res.status(403).json({ error: `Group is full (${effectiveLimit} players already connected).`, code: 'login.group_full', required: effectiveLimit });
     }
   }
 
@@ -409,6 +409,7 @@ app.get('/api/admin/groups', requireAdmin, (req, res) => {
       liveMembers:      getOnlineMembers(g.id).length,
       livePaused:       sess ? !!sess.paused : false,
       liveRoster:       sess ? (sess.lockedRoster || []) : [],
+      livePlayerSolved: sess ? (sess.playerSolved || {}) : {},
       livePuzzles:      sess ? sess.puzzlesDone : (g.puzzlesDone || 0),
       liveWrong:        sess ? sess.wrongAnswers : (g.wrongAnswers || 0),
     };
@@ -659,7 +660,9 @@ io.on('connection', (socket) => {
     const allDone = roster.every(n => !!gs.playerSolved[n]?.[key]);
     if (allDone && !gs.solved[key]) {
       gs.solved[key]  = true;
-      gs.puzzlesDone  = Math.max(gs.puzzlesDone, Number(puzzlesDone) || Object.keys(gs.solved).length);
+      // Count only scored room puzzles (game_won is the win marker, not a scored puzzle)
+      const scored = REQUIRED_PUZZLES.filter(k => k !== 'game_won' && gs.solved[k]).length;
+      gs.puzzlesDone  = scored;
       saveSessions();
       io.to(groupId).emit('puzzle_solved', {
         key, puzzlesDone: gs.puzzlesDone, fromName: memberName,
@@ -671,7 +674,7 @@ io.on('connection', (socket) => {
   // ── Item found ────────────────────────────────────────────────────────────
   socket.on('item_found', ({ itemId }) => {
     const gs = groupSessions.get(groupId);
-    if (!gs || gs.inventory.includes(itemId)) return;
+    if (!gs || gs.paused || gs.inventory.includes(itemId)) return;
     gs.inventory.push(itemId);
     socket.to(groupId).emit('item_found', { itemId, fromName: memberName });
   });
@@ -679,8 +682,13 @@ io.on('connection', (socket) => {
   // ── Note added ────────────────────────────────────────────────────────────
   socket.on('note_added', ({ html, important }) => {
     const gs = groupSessions.get(groupId);
-    if (!gs) return;
-    const note = { html: String(html || ''), important: !!important };
+    if (!gs || gs.paused) return;
+    // Sanitize: strip script/style blocks (including content), then all tags except <strong>
+    const sanitized = String(html || '')
+      .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '')
+      .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, '')
+      .replace(/<(?!\/?strong\b)[^>]*>/gi, '');
+    const note = { html: sanitized, important: !!important };
     gs.notes.push(note);
     socket.to(groupId).emit('note_added', { ...note, fromName: memberName });
   });
@@ -688,13 +696,13 @@ io.on('connection', (socket) => {
   // ── Wrong answer ──────────────────────────────────────────────────────────
   socket.on('wrong_answer', () => {
     const gs = groupSessions.get(groupId);
-    if (gs) gs.wrongAnswers++;
+    if (gs && !gs.paused) gs.wrongAnswers++;
   });
 
   // ── Hint used ─────────────────────────────────────────────────────────────
   socket.on('hint_used', ({ room, timeCost, ptsCost }) => {
     const gs = groupSessions.get(groupId);
-    if (!gs) return;
+    if (!gs || gs.paused) return;
     gs.hintPenalty = (gs.hintPenalty || 0) + (ptsCost || 50);
     socket.to(groupId).emit('hint_broadcast', { room, timeCost, ptsCost, fromName: memberName });
   });
@@ -702,7 +710,7 @@ io.on('connection', (socket) => {
   // ── Hidden bonus question submission ─────────────────────────────────────
   socket.on('hidden_q_submit', ({ hqId, option }) => {
     const gs = groupSessions.get(groupId);
-    if (!gs) return;
+    if (!gs || gs.paused) return;
     if (!HQ_IDS.includes(hqId)) return;
     if (!gs.hiddenAnswers) gs.hiddenAnswers = {};
 
