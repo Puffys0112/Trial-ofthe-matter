@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&family=Noto+Sans+Tamil:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&family=Noto+Sans+Tamil:wght@400;700&family=Noto+Sans+Kannada:wght@400;700&display=swap" rel="stylesheet">
   <title data-t="page.title">MediSeal Quality Week — Escape Room</title>
   <style>
     /* ── Login Screen ── */
@@ -88,7 +88,7 @@
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: 'Heebo', 'Noto Sans Tamil', 'Noto Sans Devanagari', 'Mangal', 'Sanskrit Text', 'Courier New', monospace;
+      font-family: 'Heebo', 'Noto Sans Kannada', 'Noto Sans Tamil', 'Noto Sans Devanagari', 'Mangal', 'Sanskrit Text', 'Courier New', monospace;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -255,31 +255,27 @@
     .hotspot-btn.hint-btn { border-color: #4a4a1a; color: #b0a040; margin-top: 6px; font-style: italic; }
     .hotspot-btn.hint-btn:hover:not(:disabled) { border-color: #ffd700; color: #ffd700; }
     .hotspot-btn.hint-btn.used { opacity: 0.4; cursor: default; }
-    .hotspot-btn.hidden-spot-btn {
-      opacity: 0.18;
-      border-color: #5a4a00;
-      color: #888;
-      margin-top: 8px;
-      font-style: italic;
-      font-size: 0.82rem;
-      transition: opacity 0.3s, border-color 0.3s, color 0.3s, box-shadow 0.3s;
+    /* Hidden bonus question search spots — placed inside room art, not as list buttons */
+    .hidden-search-spot {
+      position: absolute;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: transparent;
+      border: none;
+      cursor: crosshair;
+      z-index: 10;
+      transform: translate(-50%, -50%);
+      -webkit-tap-highlight-color: transparent;
     }
-    .hotspot-btn.hidden-spot-btn:hover {
-      opacity: 1;
-      border-color: #ffd700;
-      color: #ffd700;
-      box-shadow: 0 0 10px rgba(255,215,0,0.45);
+    .hidden-search-spot:hover,
+    .hidden-search-spot:focus {
+      outline: none;
+      background: radial-gradient(circle, rgba(255,215,0,0.07) 0%, transparent 70%);
     }
-    .hotspot-btn.hidden-spot-btn.answered {
-      opacity: 0.55;
-      border-color: #3a8a3a;
-      color: #7ec87e;
-    }
-    .hotspot-btn.hidden-spot-btn.answered:hover {
-      opacity: 0.85;
-      border-color: #7ec87e;
-      color: #7ec87e;
-      box-shadow: 0 0 8px rgba(0,200,100,0.3);
+    .hidden-search-spot.answered {
+      background: radial-gradient(circle, rgba(0,200,100,0.15) 0%, transparent 70%);
+      cursor: default;
     }
 
     /* ── Activity Log ── */
@@ -932,6 +928,30 @@
 <script>
 'use strict';
 
+// ── Client-side correct answers for hidden bonus questions (mirror of server HQ_ANSWERS) ──
+const HQ_CORRECT_OPTS = {
+  hq_receiving_1:  'a',
+  hq_receiving_2:  'c',
+  hq_production_1: 'b',
+  hq_production_2: 'b',
+  hq_qclab_1:      'b',
+  hq_qclab_2:      'b',
+  hq_qaoffice_1:   'b',
+  hq_qaoffice_2:   'a',
+  hq_dispatch_1:   'a',
+  hq_dispatch_2:   'a',
+};
+
+// Deterministic position hash — same group+room+spot → same position for all players
+function strHash(s) {
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+
 // ────────────────────────────────────────────────
 // STATE
 // ────────────────────────────────────────────────
@@ -1385,8 +1405,9 @@ const ROOM_PUZZLES = {
 };
 
 function getMissingInRoom(roomId) {
-  // Departure check uses per-player completion (what I personally completed)
-  return (ROOM_PUZZLES[roomId] || []).filter(k => !S.mySolved[k]);
+  // A puzzle counts as done if I personally completed it OR the whole group completed it.
+  // Group-complete implies all roster members (including me) did it, so S.solved is a valid fallback.
+  return (ROOM_PUZZLES[roomId] || []).filter(k => !S.mySolved[k] && !S.solved[k]);
 }
 
 function goTo(roomId) {
@@ -1469,7 +1490,8 @@ function handleAction(action) {
           if (v === 'RM4471' || v === 'RM-4471' || v === '4471') {
             if (S.demoMode || !S.socket) {
               // Demo / no socket — solve immediately
-              S.solved.coa_verified = true;
+              S.solved.coa_verified  = true;
+              S.mySolved.coa_verified = true;
               puzzleDone();
               closeModal();
               log(t('msg.gmp_verified_log'), 'success');
@@ -2136,9 +2158,27 @@ function openHiddenModal(hqId) {
     choices,
     onChoice: (_, __, ch) => {
       if (!S.socket || S.demoMode) {
-        // Demo: treat as correct locally
-        S.hiddenBonus += 20;
-        setFeedback(t('hq.answered_correct'), 'ok');
+        // Demo mode: validate locally with correct-answer table; store result to prevent re-answering
+        if (S.hiddenAnswers[hqId]) return;  // already answered — ignore repeat clicks
+        const correctOpt = HQ_CORRECT_OPTS[hqId];
+        const isCorrect  = ch.opt === correctOpt;
+        const bonusPts   = isCorrect ? 20 : 0;
+        S.hiddenAnswers[hqId] = {
+          answeredBy:      S.memberName || 'Demo',
+          isCorrect,
+          bonusPts,
+          submittedOption: ch.opt,
+          correctOption:   correctOpt,
+        };
+        S.hiddenBonus = Object.values(S.hiddenAnswers)
+          .reduce((sum, r) => sum + (r && r.bonusPts ? r.bonusPts : 0), 0);
+        if (isCorrect) {
+          setFeedback(t('hq.answered_correct'), 'ok');
+        } else {
+          const correctLabel = t('hq.' + hqId + '.' + correctOpt);
+          setFeedback(t('hq.answered_wrong') + (correctLabel ? ' (' + correctLabel + ')' : ''), 'bad');
+        }
+        renderRoom();  // update answered state on search spot
         return;
       }
       S.socket.emit('hidden_q_submit', { hqId, option: ch.opt });
@@ -2224,20 +2264,33 @@ function renderRoom() {
   hintBtn.onclick = () => { if (!S.paused && !S.over) useHint(); };
   hs.appendChild(hintBtn);
 
-  // Hidden bonus question spots (2 per room)
+  // Hidden bonus question spots — placed as invisible search targets inside #room-art
+  // Remove any spots from a previous renderRoom call before adding new ones
+  const artEl = document.getElementById('room-art');
+  artEl.querySelectorAll('.hidden-search-spot').forEach(el => el.remove());
+
   if (r.hiddenSpots) {
     r.hiddenSpots.forEach(spot => {
       const hqId      = spot.action.replace('find_hq_', 'hq_');
       const hqAnswered = !!S.hiddenAnswers[hqId];
-      const hqBtn = document.createElement('button');
-      hqBtn.className = 'hotspot-btn hidden-spot-btn' + (hqAnswered ? ' answered' : '');
-      hqBtn.textContent = spot.emoji + ' ' + (hqAnswered ? t('hq.found_badge_done') : '…');
-      hqBtn.title = hqAnswered ? t('hq.found_badge_done') : '';
-      hqBtn.onclick = () => {
+
+      // Deterministic position: same group + room + spot → same coordinates for all players
+      const seed = strHash((S.groupName || 'demo') + '|' + S.room + '|' + spot.action);
+      // x: 8–92% of width, y: 15–85% of height — keeps spots away from emoji centre and badge corner
+      const xPct = 8  + ((seed & 0xFF) * 84 / 255);
+      const yPct = 15 + (((seed >> 8) & 0x7F) * 70 / 127);
+
+      const searchEl = document.createElement('div');
+      searchEl.className = 'hidden-search-spot' + (hqAnswered ? ' answered' : '');
+      searchEl.style.left = xPct.toFixed(1) + '%';
+      searchEl.style.top  = yPct.toFixed(1) + '%';
+      searchEl.setAttribute('role', 'button');
+      searchEl.setAttribute('aria-label', hqAnswered ? t('hq.found_badge_done') : '');
+      searchEl.onclick = () => {
         if (S.paused || S.over) return;
         handleAction(spot.action);
       };
-      hs.appendChild(hqBtn);
+      artEl.appendChild(searchEl);
     });
   }
 }
@@ -2870,7 +2923,13 @@ function myPuzzleComplete(key, demoAfterFn) {
 
 function applyServerState(state) {
   if (!state) return;
-  if (state.solved)      Object.entries(state.solved).forEach(([k, v]) => { if (v) S.solved[k] = true; });
+  if (state.solved) Object.entries(state.solved).forEach(([k, v]) => {
+    if (v) {
+      S.solved[k]   = true;
+      // Group-complete means every roster member did it — credit me too to keep mySolved in sync
+      S.mySolved[k] = true;
+    }
+  });
   if (state.playerSolved) Object.entries(state.playerSolved).forEach(([k, v]) => { if (v) S.mySolved[k] = true; });
   if (state.hiddenAnswers) {
     S.hiddenAnswers = { ...state.hiddenAnswers };
