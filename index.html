@@ -2332,24 +2332,28 @@ function attachHQSpot(triggerType, emoji, done, fire) {
 
     case 'room-emoji': {
       const el = document.getElementById('room-emoji');
+      if (!el) break;
       el.classList.add('hq-trigger'); if (done) el.classList.add('hq-answered');
       el.onclick = fire;
       break;
     }
     case 'badge': {
       const el = document.getElementById('room-badge');
+      if (!el) break;
       el.classList.add('hq-trigger'); if (done) el.classList.add('hq-answered');
       el.onclick = fire;
       break;
     }
     case 'room-title': {
       const el = document.getElementById('room-title');
+      if (!el) break;
       el.classList.add('hq-trigger'); if (done) el.classList.add('hq-answered');
       el.onclick = fire;
       break;
     }
     case 'desc-append': {
       const desc = document.getElementById('room-desc');
+      if (!desc) break;
       const span = document.createElement('span');
       span.className = 'hq-spot hq-spot-inline' + (done ? ' hq-done' : '');
       span.textContent = ' ' + emoji;
@@ -2362,6 +2366,7 @@ function attachHQSpot(triggerType, emoji, done, fire) {
     }
     case 'progress-prefix': {
       const prog = document.getElementById('progress-label');
+      if (!prog) break;
       const span = document.createElement('span');
       span.className = 'hq-spot hq-spot-inline' + (done ? ' hq-done' : '');
       span.textContent = emoji + ' ';
@@ -2374,6 +2379,7 @@ function attachHQSpot(triggerType, emoji, done, fire) {
     }
     case 'hotspot-suffix': {
       const hs = document.getElementById('hotspots');
+      if (!hs) break;
       const span = document.createElement('span');
       span.className = 'hq-spot hq-spot-hs-suffix' + (done ? ' hq-done' : '');
       span.textContent = emoji;
@@ -2386,6 +2392,7 @@ function attachHQSpot(triggerType, emoji, done, fire) {
     }
     case 'art-corner': {
       const art = document.getElementById('room-art');
+      if (!art) break;
       const div = document.createElement('div');
       div.className = 'hq-spot hq-spot-art-corner' + (done ? ' hq-done' : '');
       div.setAttribute('role', 'button');

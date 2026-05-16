@@ -680,7 +680,9 @@ io.on('connection', (socket) => {
   socket.on('note_added', ({ html, important }) => {
     const gs = groupSessions.get(groupId);
     if (!gs) return;
-    const note = { html: String(html || ''), important: !!important };
+    // Sanitize: strip all HTML tags except <strong> / </strong>
+    const sanitized = String(html || '').replace(/<(?!\/?strong\b)[^>]*>/gi, '');
+    const note = { html: sanitized, important: !!important };
     gs.notes.push(note);
     socket.to(groupId).emit('note_added', { ...note, fromName: memberName });
   });
