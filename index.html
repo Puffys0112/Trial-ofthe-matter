@@ -206,6 +206,7 @@
     #room-art::before {
       content: '';
       position: absolute; inset: 0;
+      pointer-events: none;
       background: repeating-linear-gradient(
         90deg, transparent, transparent 40px,
         rgba(0,153,230,0.03) 40px, rgba(0,153,230,0.03) 41px
@@ -256,26 +257,24 @@
     .hotspot-btn.hint-btn:hover:not(:disabled) { border-color: #ffd700; color: #ffd700; }
     .hotspot-btn.hint-btn.used { opacity: 0.4; cursor: default; }
     /* Hidden bonus question search spots — placed inside room art, not as list buttons */
-    .hidden-search-spot {
-      position: absolute;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: transparent;
-      border: none;
-      cursor: crosshair;
-      z-index: 10;
-      transform: translate(-50%, -50%);
+    /* Hidden bonus question triggers on stable room-art elements */
+    #room-emoji.hq-trigger {
+      cursor: pointer;
       -webkit-tap-highlight-color: transparent;
     }
-    .hidden-search-spot:hover,
-    .hidden-search-spot:focus {
-      outline: none;
-      background: radial-gradient(circle, rgba(255,215,0,0.07) 0%, transparent 70%);
+    #room-badge.hq-trigger {
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
     }
-    .hidden-search-spot.answered {
-      background: radial-gradient(circle, rgba(0,200,100,0.15) 0%, transparent 70%);
-      cursor: default;
+    #room-badge.hq-trigger:hover {
+      color: var(--text);
+      opacity: 1;
+    }
+    #room-emoji.hq-answered {
+      opacity: 0.65;
+    }
+    #room-badge.hq-answered {
+      opacity: 0.5;
     }
 
     /* ── Activity Log ── */
@@ -1412,11 +1411,15 @@ function getMissingInRoom(roomId) {
 
 function goTo(roomId) {
   if (!canEnter(roomId)) { log(lockReason(roomId), 'fail'); return; }
-  // Check if current room has unsolved puzzles before departing
-  const missing = getMissingInRoom(S.room);
-  if (missing.length > 0) {
-    showAlarm(missing, 'depart');
-    return;
+  // Only enforce room completion when moving FORWARD (backward navigation is always allowed)
+  const currentIdx = ROOM_ORDER.indexOf(S.room);
+  const targetIdx  = ROOM_ORDER.indexOf(roomId);
+  if (targetIdx > currentIdx) {
+    const missing = getMissingInRoom(S.room);
+    if (missing.length > 0) {
+      showAlarm(missing, 'depart');
+      return;
+    }
   }
   S.room = roomId;
   renderRoom(); renderNav();
@@ -2178,7 +2181,7 @@ function openHiddenModal(hqId) {
           const correctLabel = t('hq.' + hqId + '.' + correctOpt);
           setFeedback(t('hq.answered_wrong') + (correctLabel ? ' (' + correctLabel + ')' : ''), 'bad');
         }
-        renderRoom();  // update answered state on search spot
+        renderRoom();  // update hq-answered class on emoji/badge trigger
         return;
       }
       S.socket.emit('hidden_q_submit', { hqId, option: ch.opt });
@@ -2264,34 +2267,39 @@ function renderRoom() {
   hintBtn.onclick = () => { if (!S.paused && !S.over) useHint(); };
   hs.appendChild(hintBtn);
 
-  // Hidden bonus question spots — placed as invisible search targets inside #room-art
-  // Remove any spots from a previous renderRoom call before adding new ones
-  const artEl = document.getElementById('room-art');
-  artEl.querySelectorAll('.hidden-search-spot').forEach(el => el.remove());
+  // Hidden bonus question triggers — attached to the room emoji (spot 1) and room badge (spot 2).
+  // These are stable, touch-friendly elements that curious players will naturally try clicking.
+  const emojiEl = document.getElementById('room-emoji');
+  const badgeEl = document.getElementById('room-badge');
 
-  if (r.hiddenSpots) {
-    r.hiddenSpots.forEach(spot => {
-      const hqId      = spot.action.replace('find_hq_', 'hq_');
-      const hqAnswered = !!S.hiddenAnswers[hqId];
+  // Reset any previously attached handlers and styles
+  emojiEl.classList.remove('hq-trigger', 'hq-answered');
+  emojiEl.onclick = null;
+  badgeEl.classList.remove('hq-trigger', 'hq-answered');
+  badgeEl.onclick = null;
 
-      // Deterministic position: same group + room + spot → same coordinates for all players
-      const seed = strHash((S.groupName || 'demo') + '|' + S.room + '|' + spot.action);
-      // x: 8–92% of width, y: 15–85% of height — keeps spots away from emoji centre and badge corner
-      const xPct = 8  + ((seed & 0xFF) * 84 / 255);
-      const yPct = 15 + (((seed >> 8) & 0x7F) * 70 / 127);
+  if (r.hiddenSpots && r.hiddenSpots.length >= 1) {
+    const spot1   = r.hiddenSpots[0];
+    const hq1Id   = spot1.action.replace('find_hq_', 'hq_');
+    const answered1 = !!S.hiddenAnswers[hq1Id];
+    emojiEl.classList.add('hq-trigger');
+    if (answered1) emojiEl.classList.add('hq-answered');
+    emojiEl.onclick = () => {
+      if (S.paused || S.over) return;
+      handleAction(spot1.action);
+    };
+  }
 
-      const searchEl = document.createElement('div');
-      searchEl.className = 'hidden-search-spot' + (hqAnswered ? ' answered' : '');
-      searchEl.style.left = xPct.toFixed(1) + '%';
-      searchEl.style.top  = yPct.toFixed(1) + '%';
-      searchEl.setAttribute('role', 'button');
-      searchEl.setAttribute('aria-label', hqAnswered ? t('hq.found_badge_done') : '');
-      searchEl.onclick = () => {
-        if (S.paused || S.over) return;
-        handleAction(spot.action);
-      };
-      artEl.appendChild(searchEl);
-    });
+  if (r.hiddenSpots && r.hiddenSpots.length >= 2) {
+    const spot2   = r.hiddenSpots[1];
+    const hq2Id   = spot2.action.replace('find_hq_', 'hq_');
+    const answered2 = !!S.hiddenAnswers[hq2Id];
+    badgeEl.classList.add('hq-trigger');
+    if (answered2) badgeEl.classList.add('hq-answered');
+    badgeEl.onclick = () => {
+      if (S.paused || S.over) return;
+      handleAction(spot2.action);
+    };
   }
 }
 
@@ -2793,7 +2801,7 @@ function connectSocket() {
     S.hiddenAnswers[hqId] = result;
     // Recompute hiddenBonus total
     S.hiddenBonus = Object.values(S.hiddenAnswers).reduce((sum, r) => sum + (r && r.bonusPts ? r.bonusPts : 0), 0);
-    renderRoom();  // re-render to update hidden-spot button state
+    renderRoom();  // re-render to update hq-answered state on emoji/badge triggers
     // If this player's modal for this HQ is currently open, update it
     if (window._currentHqId === hqId) {
       const fb = document.getElementById('modal-feedback');
